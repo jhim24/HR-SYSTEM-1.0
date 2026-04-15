@@ -1,1 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Attendance System</title>
 
+<style>
+* {
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #141e30, #243b55);
+  padding: 20px;
+  color: white;
+}
+
+h2 {
+  text-align: center;
+}
+
+/* TOP BAR */
+.top-bar {
+  margin-bottom: 10px;
+}
+
+.back-btn {
+  background: #34495e;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+/* CARD */
+.card {
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+/* FORM */
+.form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 10px;
+}
+
+select, button {
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+}
+
+/* BUTTONS */
+.timein { background: #2ecc71; color: white; }
+.timeout { background: #e67e22; color: white; }
+
+/* TABLE */
+.table-box {
+  background: white;
+  color: black;
+  border-radius: 10px;
+  padding: 10px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 6px;
+  text-align: center;
+}
+
+th {
+  background: #2ecc71;
+  color: white;
+}
+</style>
+
+<script>
+if(localStorage.getItem("loggedIn") !== "true") {
+  window.location.href = "login.html";
+}
+</script>
+
+</head>
+<body>
+
+<div class="top-bar">
+  <button class="back-btn" onclick="goBack()">⬅ Back to Dashboard</button>
+</div>
+
+<h2>ATTENDANCE SYSTEM</h2>
+
+<div class="card">
+  <div class="form">
+    <select id="employee"></select>
+    <button class="timein" onclick="timeIn()">Time In</button>
+    <button class="timeout" onclick="timeOut()">Time Out</button>
+  </div>
+</div>
+
+<div class="table-box">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Time In</th>
+        <th>Time Out</th>
+      </tr>
+    </thead>
+    <tbody id="table"></tbody>
+  </table>
+</div>
+
+<script>
+let employees = JSON.parse(localStorage.getItem("employees")) || [];
+let attendance = JSON.parse(localStorage.getItem("attendance")) || [];
+
+/* BACK */
+function goBack() {
+  window.location.href = "index.html";
+}
+
+/* LOAD EMPLOYEES */
+function loadEmployees() {
+  let select = document.getElementById("employee");
+  select.innerHTML = "<option value=''>Select Employee</option>";
+
+  employees.forEach((e,i) => {
+    let name = e.fname + " " + e.lname;
+    select.innerHTML += `<option value="${i}">${name}</option>`;
+  });
+}
+
+/* TIME IN */
+function timeIn() {
+  let index = employee.value;
+  if(index === "") return alert("Select employee");
+
+  let now = new Date();
+
+  attendance.push({
+    name: employees[index].fname + " " + employees[index].lname,
+    date: now.toLocaleDateString(),
+    timein: now.toLocaleTimeString(),
+    timeout: ""
+  });
+
+  save();
+  display();
+}
+
+/* TIME OUT */
+function timeOut() {
+  let index = employee.value;
+  if(index === "") return alert("Select employee");
+
+  let now = new Date();
+
+  for(let i = attendance.length - 1; i >= 0; i--) {
+    if(attendance[i].name === employees[index].fname + " " + employees[index].lname && attendance[i].timeout === "") {
+      attendance[i].timeout = now.toLocaleTimeString();
+      break;
+    }
+  }
+
+  save();
+  display();
+}
+
+/* DISPLAY */
+function display() {
+  table.innerHTML = "";
+
+  attendance.forEach(a => {
+    table.innerHTML += `
+      <tr>
+        <td>${a.name}</td>
+        <td>${a.date}</td>
+        <td>${a.timein}</td>
+        <td>${a.timeout}</td>
+      </tr>
+    `;
+  });
+}
+
+/* SAVE */
+function save() {
+  localStorage.setItem("attendance", JSON.stringify(attendance));
+}
+
+/* INIT */
+loadEmployees();
+display();
+</script>
+
+</body>
+</html>
