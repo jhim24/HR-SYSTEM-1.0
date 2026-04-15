@@ -68,7 +68,7 @@ button {
 
 table {
   border-collapse: collapse;
-  min-width: 1600px; /* ✅ FIX */
+  min-width: 1600px;
 }
 
 th, td {
@@ -76,7 +76,7 @@ th, td {
   padding: 7px;
   text-align: center;
   font-size: 12px;
-  white-space: nowrap; /* ✅ FIX */
+  white-space: nowrap;
 }
 
 th {
@@ -159,58 +159,48 @@ if(localStorage.getItem("loggedIn") !== "true"){
 
 <script>
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
-  let employees = JSON.parse(localStorage.getItem("employees")) || [];
 
-/* ✅ ADD THIS */
+/* AUTO FIX EMPLOYEE */
 if(employees.length === 0){
-  employees = [
-    {fname:"Sample", lname:"Employee", empid:"EMP-001"}
-  ];
+  employees = [{fname:"Sample", lname:"Employee", empid:"EMP-001"}];
   localStorage.setItem("employees", JSON.stringify(employees));
 }
+
 let payroll = JSON.parse(localStorage.getItem("payroll")) || [];
 let editIndex = -1;
 
 /* BACK */
 function goBack(){
-  window.location.href="index.html";
+  window.location.href = "./index.html";
 }
 
 /* LOAD EMPLOYEES */
 function loadEmployees(){
   let emp = document.getElementById("employee");
-
   emp.innerHTML = "<option value=''>Select Employee</option>";
 
-  let data = JSON.parse(localStorage.getItem("employees")) || [];
-
-  data.forEach((e,i)=>{
+  employees.forEach((e,i)=>{
     emp.innerHTML += `<option value="${i}">${e.fname} ${e.lname}</option>`;
   });
 }
+
 /* COMPUTE */
 function compute(){
-  let r = +rate.value || 0;
-  let d = +days.value || 0;
-  let otv = +ot.value || 0;
-  let hol = +holiday.value || 0;
-  let sickv = +sick.value || 0;
-  let bday = +birthday.value || 0;
-  let vac = +vacation.value || 0;
+  let gross = (+rate.value || 0) * (
+    (+days.value || 0) +
+    (+ot.value || 0) +
+    (+holiday.value || 0) +
+    (+sick.value || 0) +
+    (+birthday.value || 0) +
+    (+vacation.value || 0)
+  );
 
-  let gross = r * (d + otv + hol + sickv + bday + vac);
+  let totalDed =
+    (+sss.value||0)+(+pagibig.value||0)+(+philhealth.value||0)+(+healthcard.value||0)+(+other.value||0);
 
-  let s = +sss.value || 0;
-  let p = +pagibig.value || 0;
-  let ph = +philhealth.value || 0;
-  let hc = +healthcard.value || 0;
-  let o = +other.value || 0;
-
-  let totalDed = s+p+ph+hc+o;
-  let net = gross - totalDed;
-
-  return {gross, totalDed, net};
+  return {gross, totalDed, net: gross - totalDed};
 }
+
 /* SAVE */
 function savePayroll(){
   let i = employee.value;
@@ -248,31 +238,12 @@ function savePayroll(){
     empid: employees[i].empid || "",
     salary: c.gross.toFixed(2),
     net: c.net.toFixed(2),
-    sss: sss.value,
-    pagibig: pagibig.value,
-    philhealth: philhealth.value,
-    other: other.value,
     totalDeduction: c.totalDed.toFixed(2)
   });
   localStorage.setItem("payrollHistory", JSON.stringify(history));
 
   display();
   clearForm();
-  let history = JSON.parse(localStorage.getItem("payrollHistory")) || [];
-
-history.push({
-  name: name,
-  empid: employees[i].empid || "",
-  salary: c.gross.toFixed(2),
-  net: c.net.toFixed(2),
-  sss: sss.value,
-  pagibig: pagibig.value,
-  philhealth: philhealth.value,
-  other: other.value,
-  totalDeduction: c.totalDed.toFixed(2)
-});
-
-localStorage.setItem("payrollHistory", JSON.stringify(history));
 }
 
 /* EDIT */
@@ -302,17 +273,6 @@ function updatePayroll(){
     ...payroll[editIndex],
     rate: rate.value,
     days: days.value,
-    ot: ot.value,
-    holiday: holiday.value,
-    sick: sick.value,
-    birthday: birthday.value,
-    vacation: vacation.value,
-    sss: sss.value,
-    pagibig: pagibig.value,
-    philhealth: philhealth.value,
-    healthcard: healthcard.value,
-    other: other.value,
-    othername: othername.value,
     gross: c.gross.toFixed(2),
     totalDed: c.totalDed.toFixed(2),
     net: c.net.toFixed(2)
@@ -328,7 +288,6 @@ function updatePayroll(){
 function cancelEdit(){
   editIndex = -1;
   clearForm();
-
   updateBtn.style.display="none";
   cancelBtn.style.display="none";
 }
@@ -345,7 +304,6 @@ function del(i){
 /* DISPLAY */
 function display(){
   table.innerHTML="";
-
   payroll.forEach((p,i)=>{
     table.innerHTML += `
       <tr>
@@ -369,8 +327,7 @@ function display(){
           <button onclick="editPayroll(${i})">Edit</button>
           <button class="delete" onclick="del(${i})">Delete</button>
         </td>
-      </tr>
-    `;
+      </tr>`;
   });
 }
 
@@ -380,13 +337,6 @@ function clearForm(){
   employee.value="";
 }
 
-function cancelEdit(){
-  editIndex = -1;
-  clearForm();
-
-  updateBtn.style.display = "none";
-  cancelBtn.style.display = "none";
-}
 /* INIT */
 loadEmployees();
 display();
