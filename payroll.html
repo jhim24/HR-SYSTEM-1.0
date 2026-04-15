@@ -238,6 +238,7 @@ function compute(){
   let net = gross - totalDed;
 
   return {gross, totalDed, net};
+}
 
 history.push({
   name: employeeName,
@@ -311,7 +312,7 @@ function editPayroll(i){
       document.getElementById(k).value = p[k];
     }
   });
-
+employee.value = i;
   editIndex = i;
   updateBtn.style.display="inline-block";
   cancelBtn.style.display="inline-block";
@@ -394,6 +395,12 @@ function save(){
 
 function clearForm(){
   document.querySelectorAll("input").forEach(i=>i.value="");
+  function cancelEdit(){
+  editIndex = -1;
+  clearForm();
+
+  updateBtn.style.display = "none";
+  cancelBtn.style.display = "none";
 }
 
 /* INIT */
