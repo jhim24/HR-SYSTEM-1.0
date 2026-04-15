@@ -1,1 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HR System Login</title>
 
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* BACKGROUND DESIGN */
+  background: linear-gradient(135deg, #1abc9c, #3498db, #9b59b6);
+}
+
+/* GLASS EFFECT BOX */
+.login-box {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  border-radius: 15px;
+  width: 320px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+}
+
+/* BUTTON DESIGN */
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #2ecc71;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #27ae60;
+  transform: scale(1.05);
+}
+
+/* ERROR TEXT */
+#error {
+  margin-top: 10px;
+  font-size: 14px;
+}
+</style>
+
+</head>
+<body>
+
+<div class="login-box">
+  <h2>HR SYSTEM</h2>
+
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+
+  <button onclick="login()">Login</button>
+  <p id="error"></p>
+</div>
+
+<script>
+function login() {
+  let user = document.getElementById("username").value;
+  let pass = document.getElementById("password").value;
+
+  if(user === "admin" && pass === "1234") {
+    localStorage.setItem("loggedIn", "true");
+    window.location.href = "index.html";
+  } else {
+    document.getElementById("error").innerText = "Invalid login!";
+  }
+}
+</script>
+
+</body>
+</html>
