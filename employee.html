@@ -20,6 +20,25 @@ h2 {
   text-align: center;
 }
 
+/* TOP BAR */
+.top-bar {
+  margin-bottom: 10px;
+}
+
+.back-btn {
+  background: #34495e;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.back-btn:hover {
+  background: #2c3e50;
+}
+
 /* CARD */
 .card {
   background: rgba(255,255,255,0.1);
@@ -29,7 +48,7 @@ h2 {
   margin-bottom: 20px;
 }
 
-/* GRID FORM */
+/* GRID */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -63,7 +82,7 @@ button {
 .cancel { background: #7f8c8d; color: white; }
 .delete { background: #e74c3c; color: white; }
 
-/* TABLE BOX WITH SCROLL */
+/* TABLE SCROLL */
 .table-box {
   background: white;
   border-radius: 10px;
@@ -71,7 +90,6 @@ button {
   color: black;
 
   overflow-x: auto;
-  overflow-y: hidden;
 }
 
 /* SCROLLBAR */
@@ -89,7 +107,7 @@ button {
 /* TABLE */
 table {
   border-collapse: collapse;
-  min-width: 1600px; /* force scroll */
+  min-width: 1600px;
 }
 
 th, td {
@@ -117,6 +135,10 @@ if(localStorage.getItem("loggedIn") !== "true") {
 
 </head>
 <body>
+
+<div class="top-bar">
+  <button class="back-btn" onclick="goBack()">⬅ Back to Dashboard</button>
+</div>
 
 <h2>EMPLOYEE REGISTRATION</h2>
 
@@ -186,6 +208,11 @@ if(localStorage.getItem("loggedIn") !== "true") {
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
 let editIndex = -1;
 
+/* BACK */
+function goBack() {
+  window.location.href = "index.html";
+}
+
 /* AGE */
 function computeAge() {
   let b = birthdate.value;
@@ -204,7 +231,7 @@ function computeAge() {
   age.value = ageVal;
 }
 
-/* GET DATA */
+/* GET */
 function getFormData() {
   return {
     fname: fname.value,
