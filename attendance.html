@@ -24,6 +24,7 @@ h2 { text-align:center; }
   cursor:pointer;
 }
 
+/* CARD */
 .card {
   background: rgba(255,255,255,0.1);
   padding: 20px;
@@ -31,22 +32,29 @@ h2 { text-align:center; }
   margin-bottom: 20px;
 }
 
+/* FORM GRID */
 .form {
   display:grid;
   grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
   gap:10px;
 }
 
-button {
+input, select {
   padding:10px;
+  border:none;
+  border-radius:6px;
+}
+
+/* BUTTON */
+button {
+  padding:8px;
   border:none;
   border-radius:5px;
   cursor:pointer;
 }
 
-.in { background:#2ecc71; }
-.break { background:#f1c40f; }
-.out { background:#e74c3c; }
+.save { background:#2ecc71; }
+.delete { background:#e74c3c; }
 
 /* TABLE */
 .table-box {
@@ -88,16 +96,22 @@ if(localStorage.getItem("loggedIn") !== "true"){
   <button class="back-btn" onclick="goBack()">⬅ Back</button>
 </div>
 
-<h2>ATTENDANCE SYSTEM</h2>
+<h2>ATTENDANCE SYSTEM (MANUAL)</h2>
 
 <div class="card">
   <div class="form">
+
     <select id="employee"></select>
 
-    <button class="in" onclick="timeIn()">Time In</button>
-    <button class="break" onclick="breakOut()">Break Out</button>
-    <button class="break" onclick="breakIn()">Break In</button>
-    <button class="out" onclick="timeOut()">Time Out</button>
+    <input type="date" id="date">
+
+    <input type="time" id="timein">
+    <input type="time" id="breakout">
+    <input type="time" id="breakin">
+    <input type="time" id="timeout">
+
+    <button class="save" onclick="saveAttendance()">Save</button>
+
   </div>
 </div>
 
@@ -114,6 +128,7 @@ if(localStorage.getItem("loggedIn") !== "true"){
         <th>Late</th>
         <th>OT</th>
         <th>Total Hours</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody id="table"></tbody>
@@ -138,111 +153,79 @@ function loadEmployees(){
   });
 }
 
-/* GET LAST RECORD */
-function getLast(name){
-  return attendance.reverse().find(a => a.name === name && !a.timeout);
+/* TIME TO HOURS */
+function toHours(t){
+  if(!t) return 0;
+  let [h,m] = t.split(":");
+  return parseInt(h) + (parseInt(m)/60);
 }
 
-/* TIME IN */
-function timeIn(){
+/* SAVE */
+function saveAttendance(){
   let i = employee.value;
   if(i==="") return alert("Select employee");
 
-  let now = new Date();
+  let empName = employees[i].fname + " " + employees[i].lname;
+
+  let tin = toHours(timein.value);
+  let tout = toHours(timeout.value);
+  let bout = toHours(breakout.value);
+  let bin = toHours(breakin.value);
+
+  let breakTime = (bin - bout) || 0;
+  let total = (tout - tin) - breakTime;
+
+  let late = tin > 8 ? (tin - 8).toFixed(2) : 0;
+  let ot = tout > 17 ? (tout - 17).toFixed(2) : 0;
 
   attendance.push({
-    name: employees[i].fname + " " + employees[i].lname,
-    date: now.toLocaleDateString(),
-    timein: now,
-    breakout:"",
-    breakin:"",
-    timeout:"",
+    name: empName,
+    date: date.value,
+    timein: timein.value,
+    breakout: breakout.value,
+    breakin: breakin.value,
+    timeout: timeout.value,
+    late,
+    ot,
+    total: total.toFixed(2)
   });
 
-  save(); display();
+  save();
+  display();
 }
 
-/* BREAK OUT */
-function breakOut(){
-  let i = employee.value;
-  let name = employees[i].fname + " " + employees[i].lname;
-  let rec = getLast(name);
-  if(rec) rec.breakout = new Date();
-  save(); display();
-}
-
-/* BREAK IN */
-function breakIn(){
-  let i = employee.value;
-  let name = employees[i].fname + " " + employees[i].lname;
-  let rec = getLast(name);
-  if(rec) rec.breakin = new Date();
-  save(); display();
-}
-
-/* TIME OUT */
-function timeOut(){
-  let i = employee.value;
-  let name = employees[i].fname + " " + employees[i].lname;
-  let rec = getLast(name);
-
-  if(rec){
-    rec.timeout = new Date();
-
-    /* COMPUTE */
-    let start = new Date(rec.timein);
-    let end = new Date(rec.timeout);
-
-    let total = (end - start) / 1000 / 60 / 60;
-
-    if(rec.breakout && rec.breakin){
-      let b1 = new Date(rec.breakout);
-      let b2 = new Date(rec.breakin);
-      total -= (b2 - b1) / 1000 / 60 / 60;
-    }
-
-    /* LATE (after 8AM) */
-    let late = start.getHours() >= 8 ? (start.getHours() - 8) : 0;
-
-    /* OT (after 5PM) */
-    let ot = end.getHours() > 17 ? (end.getHours() - 17) : 0;
-
-    rec.total = total.toFixed(2);
-    rec.late = late;
-    rec.ot = ot;
+/* DELETE */
+function del(i){
+  if(confirm("Delete?")){
+    attendance.splice(i,1);
+    save();
+    display();
   }
-
-  save(); display();
 }
 
 /* DISPLAY */
 function display(){
   table.innerHTML="";
 
-  attendance.forEach(a=>{
+  attendance.forEach((a,i)=>{
     table.innerHTML += `
       <tr>
         <td>${a.name}</td>
         <td>${a.date}</td>
-        <td>${format(a.timein)}</td>
-        <td>${format(a.breakout)}</td>
-        <td>${format(a.breakin)}</td>
-        <td>${format(a.timeout)}</td>
-        <td>${a.late || 0}</td>
-        <td>${a.ot || 0}</td>
-        <td>${a.total || 0}</td>
+        <td>${a.timein}</td>
+        <td>${a.breakout}</td>
+        <td>${a.breakin}</td>
+        <td>${a.timeout}</td>
+        <td>${a.late}</td>
+        <td>${a.ot}</td>
+        <td>${a.total}</td>
+        <td><button class="delete" onclick="del(${i})">Delete</button></td>
       </tr>
     `;
   });
 }
 
-/* FORMAT TIME */
-function format(t){
-  if(!t) return "";
-  return new Date(t).toLocaleTimeString();
-}
-
-/* SAVE */
+/* SAVE STORAGE */
 function save(){
   localStorage.setItem("attendance", JSON.stringify(attendance));
 }
