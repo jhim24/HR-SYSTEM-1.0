@@ -33,13 +33,18 @@ h2 {
   padding: 8px 15px;
   border-radius: 6px;
   cursor: pointer;
+  transition: 0.3s;
+}
+
+.logout:hover {
+  background: #c0392b;
 }
 
 /* GRID */
 .container {
-  margin-top: 20px;
+  margin-top: 25px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
   gap: 15px;
 }
 
@@ -47,11 +52,12 @@ h2 {
 .card {
   background: rgba(255,255,255,0.15);
   backdrop-filter: blur(10px);
-  padding: 30px;
+  padding: 40px;
   border-radius: 15px;
   text-align: center;
   cursor: pointer;
   transition: 0.3s;
+  font-size: 18px;
 }
 
 .card:hover {
@@ -59,11 +65,11 @@ h2 {
   background: rgba(255,255,255,0.25);
 }
 
-/* LINK */
-.card a {
-  text-decoration: none;
-  color: white;
-  font-size: 18px;
+/* ICON */
+.icon {
+  font-size: 30px;
+  display: block;
+  margin-bottom: 10px;
 }
 </style>
 
@@ -84,20 +90,24 @@ if(localStorage.getItem("loggedIn") !== "true") {
 
 <div class="container">
 
-  <div class="card">
-    <a href="employee.html" target="_blank">👨‍💼 Employee</a>
+  <div class="card" onclick="goPage('employee.html')">
+    <span class="icon">👨‍💼</span>
+    Employee
   </div>
 
-  <div class="card">
-    <a href="attendance.html" target="_blank">🕒 Attendance</a>
+  <div class="card" onclick="goPage('attendance.html')">
+    <span class="icon">🕒</span>
+    Attendance
   </div>
 
-  <div class="card">
-    <a href="payroll.html" target="_blank">💰 Payroll</a>
+  <div class="card" onclick="goPage('payroll.html')">
+    <span class="icon">💰</span>
+    Payroll
   </div>
 
-  <div class="card">
-    <a href="payslip.html" target="_blank">🧾 Payslip</a>
+  <div class="card" onclick="goPage('payslip.html')">
+    <span class="icon">🧾</span>
+    Payslip
   </div>
 
 </div>
@@ -106,6 +116,11 @@ if(localStorage.getItem("loggedIn") !== "true") {
 function logout() {
   localStorage.removeItem("loggedIn");
   window.location.href = "login.html";
+}
+
+/* SAME TAB NAVIGATION (FIXED) */
+function goPage(page){
+  window.location.href = page;
 }
 </script>
 
