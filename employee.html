@@ -29,13 +29,6 @@ h2 {
   margin-bottom: 20px;
 }
 
-/* SECTION */
-.section {
-  grid-column: 1 / -1;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
 /* GRID */
 .form-grid {
   display: grid;
@@ -52,25 +45,18 @@ input, select {
   outline: none;
 }
 
-input[readonly] {
-  background: #ddd;
-}
-
-/* BUTTON */
+/* BUTTONS */
 button {
-  grid-column: 1 / -1;
-  padding: 14px;
-  background: #2ecc71;
+  padding: 10px;
   border: none;
-  color: white;
-  font-size: 16px;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
 }
 
-button:hover {
-  background: #27ae60;
-}
+.save { background: #2ecc71; color: white; }
+.update { background: #f39c12; color: white; }
+.cancel { background: #7f8c8d; color: white; }
+.delete { background: #e74c3c; color: white; }
 
 /* TABLE */
 .table-box {
@@ -96,15 +82,6 @@ th, td {
   text-align: center;
   font-size: 12px;
 }
-
-.delete {
-  background: #e74c3c;
-  border: none;
-  color: white;
-  padding: 6px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
 </style>
 
 <script>
@@ -121,8 +98,6 @@ if(localStorage.getItem("loggedIn") !== "true") {
 <div class="card">
   <div class="form-grid">
 
-    <div class="section">Personal Information</div>
-
     <input id="fname" placeholder="First Name">
     <input id="mname" placeholder="Middle Name">
     <input id="lname" placeholder="Last Name">
@@ -131,21 +106,16 @@ if(localStorage.getItem("loggedIn") !== "true") {
     <input id="address" placeholder="Address">
     <input type="date" id="birthdate" onchange="computeAge()">
 
-    <div class="section">Bank Details</div>
-
     <select id="bank">
       <option value="">Select Bank</option>
       <option>BPI</option>
       <option>BDO</option>
       <option>Metrobank</option>
       <option>Landbank</option>
-      <option>PNB</option>
     </select>
 
     <input id="bankacc" placeholder="Bank Account Number">
     <input id="empid" placeholder="Employee ID">
-
-    <div class="section">Government IDs</div>
 
     <input id="passport" placeholder="Passport Number">
     <input id="philhealth" placeholder="PhilHealth Number">
@@ -154,7 +124,10 @@ if(localStorage.getItem("loggedIn") !== "true") {
     <input id="sss" placeholder="SSS Number">
     <input id="healthcard" placeholder="Health Card">
 
-    <button onclick="addEmployee()">Save Employee</button>
+    <!-- BUTTONS -->
+    <button class="save" onclick="addEmployee()">Save</button>
+    <button class="update" onclick="updateEmployee()" id="updateBtn" style="display:none;">Update</button>
+    <button class="cancel" onclick="cancelEdit()" id="cancelBtn" style="display:none;">Cancel</button>
 
   </div>
 </div>
@@ -163,7 +136,9 @@ if(localStorage.getItem("loggedIn") !== "true") {
   <table>
     <thead>
       <tr>
-        <th>Full Name</th>
+        <th>First</th>
+        <th>Middle</th>
+        <th>Last</th>
         <th>Age</th>
         <th>Bank</th>
         <th>Emp ID</th>
@@ -177,87 +152,148 @@ if(localStorage.getItem("loggedIn") !== "true") {
 
 <script>
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
+let editIndex = -1;
 
-/* AUTO AGE */
+/* AGE */
 function computeAge() {
-  let birthdate = document.getElementById("birthdate").value;
-  if(!birthdate) return;
+  let b = birthdate.value;
+  if(!b) return;
 
   let today = new Date();
-  let birth = new Date(birthdate);
+  let birth = new Date(b);
 
-  let age = today.getFullYear() - birth.getFullYear();
+  let ageVal = today.getFullYear() - birth.getFullYear();
   let m = today.getMonth() - birth.getMonth();
 
   if(m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-    age--;
+    ageVal--;
   }
 
-  document.getElementById("age").value = age;
+  age.value = ageVal;
 }
 
-/* SAVE EMPLOYEE */
+/* SAVE */
 function addEmployee() {
-  let emp = {
-    fname: fname.value,
-    mname: mname.value,
-    lname: lname.value,
-    age: age.value,
-    bank: bank.value,
-    empid: empid.value,
-    sss: sss.value
-  };
+  let emp = getFormData();
 
-  if(emp.fname === "" || emp.lname === "" || emp.empid === "") {
-    alert("Please fill required fields!");
+  if(emp.fname === "" || emp.empid === "") {
+    alert("Required fields!");
     return;
   }
 
   employees.push(emp);
-  localStorage.setItem("employees", JSON.stringify(employees));
-
+  save();
   display();
   clearForm();
 }
 
+/* EDIT */
+function editEmployee(i) {
+  let e = employees[i];
+
+  fname.value = e.fname;
+  mname.value = e.mname;
+  lname.value = e.lname;
+  age.value = e.age;
+  address.value = e.address;
+  birthdate.value = e.birthdate;
+  bank.value = e.bank;
+  bankacc.value = e.bankacc;
+  empid.value = e.empid;
+  passport.value = e.passport;
+  philhealth.value = e.philhealth;
+  pagibig.value = e.pagibig;
+  sss.value = e.sss;
+  healthcard.value = e.healthcard;
+
+  editIndex = i;
+
+  updateBtn.style.display = "inline-block";
+  cancelBtn.style.display = "inline-block";
+}
+
+/* UPDATE */
+function updateEmployee() {
+  if(editIndex === -1) return;
+
+  employees[editIndex] = getFormData();
+
+  save();
+  display();
+  cancelEdit();
+}
+
+/* CANCEL */
+function cancelEdit() {
+  editIndex = -1;
+  clearForm();
+
+  updateBtn.style.display = "none";
+  cancelBtn.style.display = "none";
+}
+
+/* DELETE */
+function del(i) {
+  if(confirm("Delete?")) {
+    employees.splice(i,1);
+    save();
+    display();
+  }
+}
+
 /* DISPLAY */
 function display() {
-  let table = document.getElementById("table");
   table.innerHTML = "";
 
-  employees.forEach((e, i) => {
-
-    let fullName = e.fname + " " + (e.mname ? e.mname + " " : "") + e.lname;
-
+  employees.forEach((e,i) => {
     table.innerHTML += `
       <tr>
-        <td>${fullName}</td>
+        <td>${e.fname}</td>
+        <td>${e.mname}</td>
+        <td>${e.lname}</td>
         <td>${e.age}</td>
         <td>${e.bank}</td>
         <td>${e.empid}</td>
         <td>${e.sss}</td>
-        <td><button class="delete" onclick="del(${i})">Delete</button></td>
+        <td>
+          <button onclick="editEmployee(${i})">Edit</button>
+          <button class="delete" onclick="del(${i})">Delete</button>
+        </td>
       </tr>
     `;
   });
 }
 
-/* DELETE */
-function del(i) {
-  if(confirm("Delete this employee?")) {
-    employees.splice(i, 1);
-    localStorage.setItem("employees", JSON.stringify(employees));
-    display();
-  }
+/* HELPERS */
+function getFormData() {
+  return {
+    fname: fname.value,
+    mname: mname.value,
+    lname: lname.value,
+    age: age.value,
+    address: address.value,
+    birthdate: birthdate.value,
+    bank: bank.value,
+    bankacc: bankacc.value,
+    empid: empid.value,
+    passport: passport.value,
+    philhealth: philhealth.value,
+    pagibig: pagibig.value,
+    sss: sss.value,
+    healthcard: healthcard.value
+  };
 }
 
-/* CLEAR FORM */
+function save() {
+  localStorage.setItem("employees", JSON.stringify(employees));
+}
+
 function clearForm() {
   document.querySelectorAll("input").forEach(i => i.value = "");
-  document.getElementById("bank").value = "";
+  bank.value = "";
 }
 
-/* LOAD DATA */
+/* LOAD */
 display();
 </script>
 
