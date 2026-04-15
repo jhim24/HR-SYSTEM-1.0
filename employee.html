@@ -32,24 +32,29 @@ h2 {
 /* GRID */
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
 }
 
 /* INPUT */
 input, select {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   border-radius: 8px;
   border: none;
-  outline: none;
 }
 
 /* BUTTONS */
+.btn-row {
+  text-align: center;
+  margin-top: 10px;
+}
+
 button {
-  padding: 10px;
+  padding: 6px 12px;
+  font-size: 12px;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
@@ -78,9 +83,10 @@ th {
 }
 
 th, td {
-  padding: 8px;
+  padding: 6px;
   text-align: center;
-  font-size: 12px;
+  font-size: 11px;
+  word-break: break-word;
 }
 </style>
 
@@ -122,13 +128,15 @@ if(localStorage.getItem("loggedIn") !== "true") {
     <input id="pagibig" placeholder="Pag-IBIG Number">
 
     <input id="sss" placeholder="SSS Number">
-    <input id="healthcard" placeholder="Health Card">
+    <input id="healthcard" placeholder="Health Card Number">
 
-    <!-- BUTTONS -->
+  </div>
+
+  <!-- BUTTONS SA BABA -->
+  <div class="btn-row">
     <button class="save" onclick="addEmployee()">Save</button>
     <button class="update" onclick="updateEmployee()" id="updateBtn" style="display:none;">Update</button>
     <button class="cancel" onclick="cancelEdit()" id="cancelBtn" style="display:none;">Cancel</button>
-
   </div>
 </div>
 
@@ -140,9 +148,15 @@ if(localStorage.getItem("loggedIn") !== "true") {
         <th>Middle</th>
         <th>Last</th>
         <th>Age</th>
+        <th>Address</th>
         <th>Bank</th>
+        <th>Bank Acc</th>
         <th>Emp ID</th>
+        <th>Passport</th>
+        <th>PhilHealth</th>
+        <th>Pag-IBIG</th>
         <th>SSS</th>
+        <th>Health Card</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -172,6 +186,26 @@ function computeAge() {
   age.value = ageVal;
 }
 
+/* GET DATA */
+function getFormData() {
+  return {
+    fname: fname.value,
+    mname: mname.value,
+    lname: lname.value,
+    age: age.value,
+    address: address.value,
+    birthdate: birthdate.value,
+    bank: bank.value,
+    bankacc: bankacc.value,
+    empid: empid.value,
+    passport: passport.value,
+    philhealth: philhealth.value,
+    pagibig: pagibig.value,
+    sss: sss.value,
+    healthcard: healthcard.value
+  };
+}
+
 /* SAVE */
 function addEmployee() {
   let emp = getFormData();
@@ -191,23 +225,13 @@ function addEmployee() {
 function editEmployee(i) {
   let e = employees[i];
 
-  fname.value = e.fname;
-  mname.value = e.mname;
-  lname.value = e.lname;
-  age.value = e.age;
-  address.value = e.address;
-  birthdate.value = e.birthdate;
-  bank.value = e.bank;
-  bankacc.value = e.bankacc;
-  empid.value = e.empid;
-  passport.value = e.passport;
-  philhealth.value = e.philhealth;
-  pagibig.value = e.pagibig;
-  sss.value = e.sss;
-  healthcard.value = e.healthcard;
+  Object.keys(e).forEach(k => {
+    if(document.getElementById(k)) {
+      document.getElementById(k).value = e[k];
+    }
+  });
 
   editIndex = i;
-
   updateBtn.style.display = "inline-block";
   cancelBtn.style.display = "inline-block";
 }
@@ -217,7 +241,6 @@ function updateEmployee() {
   if(editIndex === -1) return;
 
   employees[editIndex] = getFormData();
-
   save();
   display();
   cancelEdit();
@@ -227,7 +250,6 @@ function updateEmployee() {
 function cancelEdit() {
   editIndex = -1;
   clearForm();
-
   updateBtn.style.display = "none";
   cancelBtn.style.display = "none";
 }
@@ -252,9 +274,15 @@ function display() {
         <td>${e.mname}</td>
         <td>${e.lname}</td>
         <td>${e.age}</td>
+        <td>${e.address}</td>
         <td>${e.bank}</td>
+        <td>${e.bankacc}</td>
         <td>${e.empid}</td>
+        <td>${e.passport}</td>
+        <td>${e.philhealth}</td>
+        <td>${e.pagibig}</td>
         <td>${e.sss}</td>
+        <td>${e.healthcard}</td>
         <td>
           <button onclick="editEmployee(${i})">Edit</button>
           <button class="delete" onclick="del(${i})">Delete</button>
@@ -265,25 +293,6 @@ function display() {
 }
 
 /* HELPERS */
-function getFormData() {
-  return {
-    fname: fname.value,
-    mname: mname.value,
-    lname: lname.value,
-    age: age.value,
-    address: address.value,
-    birthdate: birthdate.value,
-    bank: bank.value,
-    bankacc: bankacc.value,
-    empid: empid.value,
-    passport: passport.value,
-    philhealth: philhealth.value,
-    pagibig: pagibig.value,
-    sss: sss.value,
-    healthcard: healthcard.value
-  };
-}
-
 function save() {
   localStorage.setItem("employees", JSON.stringify(employees));
 }
