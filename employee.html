@@ -1,1 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Employee System</title>
 
+<style>
+* {
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #0f2027, #2c5364, #00c9ff);
+  padding: 20px;
+  color: white;
+}
+
+/* TITLE */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* GLASS CARD */
+.card {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+/* GRID FORM */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+/* INPUT STYLE */
+input, select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+/* READONLY */
+input[readonly] {
+  background: #ddd;
+}
+
+/* BUTTON */
+button {
+  grid-column: span 3;
+  padding: 14px;
+  background: #2ecc71;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #27ae60;
+  transform: scale(1.03);
+}
+
+/* TABLE */
+.table-box {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  color: black;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #2ecc71;
+  color: white;
+}
+
+th, td {
+  padding: 8px;
+  text-align: center;
+  font-size: 12px;
+}
+
+/* DELETE BUTTON */
+.delete {
+  background: #e74c3c;
+  border: none;
+  padding: 5px 10px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete:hover {
+  background: #c0392b;
+}
+</style>
+
+<script>
+if(localStorage.getItem("loggedIn") !== "true") {
+  window.location.href = "login.html";
+}
+</script>
+
+</head>
+<body>
+
+<h2>EMPLOYEE REGISTRATION</h2>
+
+<div class="card">
+  <div class="form-grid">
+
+    <input type="text" id="fname" placeholder="First Name">
+    <input type="text" id="mname" placeholder="Middle Name">
+    <input type="text" id="lname" placeholder="Last Name">
+
+    <input type="number" id="age" placeholder="Age" readonly>
+    <input type="text" id="address" placeholder="Address">
+    <input type="date" id="birthdate" onchange="computeAge()">
+
+    <select id="bank">
+      <option value="">Select Bank</option>
+      <option>BPI</option>
+      <option>BDO</option>
+      <option>Metrobank</option>
+      <option>Landbank</option>
+      <option>PNB</option>
+    </select>
+
+    <input type="text" id="bankacc" placeholder="Bank Account Number">
+    <input type="text" id="empid" placeholder="Employee ID">
+
+    <input type="text" id="passport" placeholder="Passport Number">
+    <input type="text" id="philhealth" placeholder="PhilHealth Number">
+    <input type="text" id="pagibig" placeholder="Pag-IBIG Number">
+
+    <input type="text" id="sss" placeholder="SSS Number">
+    <input type="text" id="healthcard" placeholder="Health Card">
+
+    <button onclick="addEmployee()">Save Employee</button>
+
+  </div>
+</div>
+
+<div class="table-box">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Bank</th>
+        <th>Emp ID</th>
+        <th>SSS</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="table"></tbody>
+  </table>
+</div>
+
+<script>
+let employees = JSON.parse(localStorage.getItem("employees")) || [];
+
+/* AUTO AGE */
+function computeAge() {
+  let birthdate = document.getElementById("birthdate").value;
+  let today = new Date();
+  let birth = new Date(birthdate);
+
+  let age = today.getFullYear() - birth.getFullYear();
+  let m = today.getMonth() - birth.getMonth();
+
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+
+  document.getElementById("age").value = age;
+}
+
+/* SAVE */
+function addEmployee() {
+  let emp = {
+    fname: fname.value,
+    mname: mname.value,
+    lname: lname.value,
+    age: age.value,
+    address: address.value,
+    birthdate: birthdate.value,
+    bank: bank.value,
+    bankacc: bankacc.value,
+    empid: empid.value,
+    passport: passport.value,
+    philhealth: philhealth.value,
+    pagibig: pagibig.value,
+    sss: sss.value,
+    healthcard: healthcard.value
+  };
+
+  if(emp.fname === "" || emp.empid === "") {
+    alert("Fill required fields!");
+    return;
+  }
+
+  employees.push(emp);
+  localStorage.setItem("employees", JSON.stringify(employees));
+
+  display();
+  clearForm();
+}
+
+/* DISPLAY */
+function display() {
+  let table = document.getElementById("table");
+  table.innerHTML = "";
+
+  employees.forEach((e, i) => {
+    table.innerHTML += `
+      <tr>
+        <td>${e.fname} ${e.lname}</td>
+        <td>${e.age}</td>
+        <td>${e.bank}</td>
+        <td>${e.empid}</td>
+        <td>${e.sss}</td>
+        <td><button class="delete" onclick="del(${i})">Delete</button></td>
+      </tr>
+    `;
+  });
+}
+
+/* DELETE */
+function del(i) {
+  if(confirm("Delete employee?")) {
+    employees.splice(i,1);
+    localStorage.setItem("employees", JSON.stringify(employees));
+    display();
+  }
+}
+
+/* CLEAR FORM */
+function clearForm() {
+  document.querySelectorAll("input").forEach(i => i.value = "");
+  document.getElementById("bank").value = "";
+}
+
+/* LOAD */
+display();
+</script>
+
+</body>
+</html>
