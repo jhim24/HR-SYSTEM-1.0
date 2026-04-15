@@ -12,9 +12,7 @@ body {
 }
 
 /* TOP BAR */
-.top-bar {
-  margin-bottom:10px;
-}
+.top-bar { margin-bottom:10px; }
 
 .back-btn {
   background:#34495e;
@@ -25,9 +23,7 @@ body {
   cursor:pointer;
 }
 
-.back-btn:hover {
-  background:#2c3e50;
-}
+.back-btn:hover { background:#2c3e50; }
 
 /* CARD */
 .card {
@@ -39,8 +35,13 @@ body {
 }
 
 /* TABLE */
+.table-box {
+  overflow-x:auto;
+}
+
 table {
   width:100%;
+  min-width:1400px;
   border-collapse:collapse;
   background:white;
   color:black;
@@ -52,6 +53,7 @@ th, td {
   padding:8px;
   border:1px solid #ccc;
   text-align:center;
+  white-space:nowrap;
 }
 
 th {
@@ -83,7 +85,7 @@ button {
 <h2>Payroll History</h2>
 
 <!-- MAIN TABLE -->
-<div class="card">
+<div class="card table-box">
 <table>
 <thead>
 <tr>
@@ -98,28 +100,48 @@ button {
 </table>
 </div>
 
-<!-- DETAILS -->
-<div class="card" id="details" style="display:none;">
-<h3>Payroll Details</h3>
+<!-- FULL DETAILS -->
+<div class="card table-box" id="details" style="display:none;">
+<h3>Payroll Full Details</h3>
 
 <table>
 <thead>
 <tr>
+<th>Rate</th>
+<th>Days</th>
+<th>OT</th>
+<th>Holiday</th>
+<th>Sick</th>
+<th>Birthday</th>
+<th>Vacation</th>
+<th>Gross</th>
 <th>SSS</th>
 <th>Pag-IBIG</th>
 <th>PhilHealth</th>
+<th>Health Card</th>
 <th>Other</th>
 <th>Total Deduction</th>
+<th>Net Pay</th>
 </tr>
 </thead>
 
 <tbody>
 <tr>
+<td id="d_rate"></td>
+<td id="d_days"></td>
+<td id="d_ot"></td>
+<td id="d_holiday"></td>
+<td id="d_sick"></td>
+<td id="d_birthday"></td>
+<td id="d_vacation"></td>
+<td id="d_gross"></td>
 <td id="d_sss"></td>
 <td id="d_pagibig"></td>
 <td id="d_philhealth"></td>
+<td id="d_healthcard"></td>
 <td id="d_other"></td>
 <td id="d_total"></td>
+<td id="d_net"></td>
 </tr>
 </tbody>
 </table>
@@ -155,17 +177,30 @@ function load(){
   });
 }
 
-/* VIEW DETAILS */
+/* VIEW FULL DETAILS */
 function viewDetails(i){
   let p = data[i];
 
   document.getElementById("details").style.display = "block";
 
+  document.getElementById("d_rate").innerText = p.rate || 0;
+  document.getElementById("d_days").innerText = p.days || 0;
+  document.getElementById("d_ot").innerText = p.ot || 0;
+  document.getElementById("d_holiday").innerText = p.holiday || 0;
+  document.getElementById("d_sick").innerText = p.sick || 0;
+  document.getElementById("d_birthday").innerText = p.birthday || 0;
+  document.getElementById("d_vacation").innerText = p.vacation || 0;
+
+  document.getElementById("d_gross").innerText = p.salary || 0;
+
   document.getElementById("d_sss").innerText = p.sss || 0;
   document.getElementById("d_pagibig").innerText = p.pagibig || 0;
   document.getElementById("d_philhealth").innerText = p.philhealth || 0;
+  document.getElementById("d_healthcard").innerText = p.healthcard || 0;
   document.getElementById("d_other").innerText = p.other || 0;
+
   document.getElementById("d_total").innerText = p.totalDeduction || 0;
+  document.getElementById("d_net").innerText = p.net || 0;
 }
 
 /* BACK */
