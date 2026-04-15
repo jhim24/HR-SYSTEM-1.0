@@ -1,29 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>HR Dashboard</title>
+  <title>HR System Dashboard</title>
 
 <style>
-body {
+* {
+  box-sizing: border-box;
   font-family: Arial;
+}
+
+body {
+  margin: 0;
   background: linear-gradient(135deg, #1abc9c, #3498db);
   padding: 20px;
   color: white;
 }
 
-/* TITLE */
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* CARD MENU */
+h2 {
+  margin: 0;
+}
+
+/* LOGOUT */
+.logout {
+  background: #e74c3c;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* GRID */
 .container {
+  margin-top: 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
   gap: 15px;
 }
 
+/* CARD */
 .card {
   background: rgba(255,255,255,0.15);
   backdrop-filter: blur(10px);
@@ -39,28 +59,16 @@ h2 {
   background: rgba(255,255,255,0.25);
 }
 
-a {
+/* LINK */
+.card a {
   text-decoration: none;
   color: white;
   font-size: 18px;
 }
-
-/* LOGOUT */
-.logout {
-  margin-top: 20px;
-  display: block;
-  width: 150px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 10px;
-  background: #e74c3c;
-  text-align: center;
-  border-radius: 8px;
-  cursor: pointer;
-}
 </style>
 
 <script>
+// LOGIN PROTECTION
 if(localStorage.getItem("loggedIn") !== "true") {
   window.location.href = "login.html";
 }
@@ -69,16 +77,30 @@ if(localStorage.getItem("loggedIn") !== "true") {
 </head>
 <body>
 
-<h2>HR SYSTEM DASHBOARD</h2>
-
-<div class="container">
-  <div class="card"><a href="employee.html">Employee</a></div>
-  <div class="card"><a href="attendance.html">Attendance</a></div>
-  <div class="card"><a href="payroll.html">Payroll</a></div>
-  <div class="card"><a href="history.html">History</a></div>
+<div class="header">
+  <h2>HR SYSTEM DASHBOARD</h2>
+  <div class="logout" onclick="logout()">Logout</div>
 </div>
 
-<div class="logout" onclick="logout()">Logout</div>
+<div class="container">
+
+  <div class="card">
+    <a href="employee.html" target="_blank">👨‍💼 Employee</a>
+  </div>
+
+  <div class="card">
+    <a href="attendance.html" target="_blank">🕒 Attendance</a>
+  </div>
+
+  <div class="card">
+    <a href="payroll.html" target="_blank">💰 Payroll</a>
+  </div>
+
+  <div class="card">
+    <a href="payslip.html" target="_blank">🧾 Payslip</a>
+  </div>
+
+</div>
 
 <script>
 function logout() {
