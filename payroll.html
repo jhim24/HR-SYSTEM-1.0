@@ -1,1 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Payroll System</title>
 
+<style>
+body {
+  font-family: Arial;
+  background: linear-gradient(135deg, #1f4037, #99f2c8);
+  padding: 20px;
+  color: white;
+}
+
+h2 { text-align:center; }
+
+.top-bar { margin-bottom:10px; }
+
+.back-btn {
+  background:#34495e;
+  color:white;
+  padding:8px;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+.card {
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.form {
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+  gap:10px;
+}
+
+input, select {
+  padding:10px;
+  border:none;
+  border-radius:6px;
+}
+
+button {
+  padding:8px;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+.save { background:#2ecc71; }
+.update { background:#f39c12; }
+.cancel { background:#7f8c8d; }
+.delete { background:#e74c3c; }
+
+/* TABLE */
+.table-box {
+  background:white;
+  color:black;
+  border-radius:10px;
+  padding:10px;
+  overflow-x:auto;
+}
+
+table {
+  border-collapse: collapse;
+  min-width:1000px;
+}
+
+th, td {
+  border:1px solid #ccc;
+  padding:6px;
+  text-align:center;
+  font-size:11px;
+}
+
+th {
+  background:#2ecc71;
+  color:white;
+}
+</style>
+
+<script>
+if(localStorage.getItem("loggedIn") !== "true"){
+  window.location.href="login.html";
+}
+</script>
+
+</head>
+<body>
+
+<div class="top-bar">
+  <button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
+
+<h2>PAYROLL SYSTEM</h2>
+
+<div class="card">
+  <div class="form">
+
+    <select id="employee"></select>
+
+    <input type="number" id="rate" placeholder="Rate per Hour">
+    <input type="number" id="otrate" placeholder="OT Rate per Hour">
+    <input type="number" id="deduction" placeholder="Deduction">
+
+    <button class="save" onclick="savePayroll()">Save</button>
+    <button class="update" onclick="updatePayroll()" id="updateBtn" style="display:none;">Update</button>
+    <button class="cancel" onclick="cancelEdit()" id="cancelBtn" style="display:none;">Cancel</button>
+
+  </div>
+</div>
+
+<div class="table-box">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Total Hours</th>
+        <th>OT Hours</th>
+        <th>Rate</th>
+        <th>OT Rate</th>
+        <th>Gross</th>
+        <th>OT Pay</th>
+        <th>Deduction</th>
+        <th>Net Pay</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="table"></tbody>
+  </table>
+</div>
+
+<script>
+let employees = JSON.parse(localStorage.getItem("employees")) || [];
+let attendance = JSON.parse(localStorage.getItem("attendance")) || [];
+let payroll = JSON.parse(localStorage.getItem("payroll")) || [];
+
+let editIndex = -1;
+
+/* BACK */
+function goBack(){
+  window.location.href="index.html";
+}
+
+/* LOAD EMPLOYEE */
+function loadEmployees(){
+  employee.innerHTML = "<option value=''>Select Employee</option>";
+
+  employees.forEach((e,i)=>{
+    employee.innerHTML += `<option value="${i}">${e.fname} ${e.lname}</option>`;
+  });
+}
+
+/* GET HOURS */
+function getHours(name){
+  let total = 0;
+  let ot = 0;
+
+  attendance.forEach(a=>{
+    if(a.name === name){
+      total += parseFloat(a.total || 0);
+      ot += parseFloat(a.ot || 0);
+    }
+  });
+
+  return {total, ot};
+}
+
+/* SAVE */
+function savePayroll(){
+  let i = employee.value;
+  if(i==="") return alert("Select employee");
+
+  let name = employees[i].fname + " " + employees[i].lname;
+
+  let {total, ot} = getHours(name);
+
+  let r = parseFloat(rate.value || 0);
+  let otr = parseFloat(otrate.value || 0);
+  let ded = parseFloat(deduction.value || 0);
+
+  let gross = total * r;
+  let otpay = ot * otr;
+  let net = gross + otpay - ded;
+
+  payroll.push({
+    name, total, ot, r, otr, ded,
+    gross: gross.toFixed(2),
+    otpay: otpay.toFixed(2),
+    net: net.toFixed(2)
+  });
+
+  save(); display(); clearForm();
+}
+
+/* EDIT */
+function editPayroll(i){
+  let p = payroll[i];
+
+  rate.value = p.r;
+  otrate.value = p.otr;
+  deduction.value = p.ded;
+
+  editIndex = i;
+
+  updateBtn.style.display="inline-block";
+  cancelBtn.style.display="inline-block";
+}
+
+/* UPDATE */
+function updatePayroll(){
+  if(editIndex === -1) return;
+
+  let p = payroll[editIndex];
+  let {total, ot} = getHours(p.name);
+
+  let r = parseFloat(rate.value || 0);
+  let otr = parseFloat(otrate.value || 0);
+  let ded = parseFloat(deduction.value || 0);
+
+  let gross = total * r;
+  let otpay = ot * otr;
+  let net = gross + otpay - ded;
+
+  payroll[editIndex] = {
+    ...p,
+    r, otr, ded,
+    total, ot,
+    gross: gross.toFixed(2),
+    otpay: otpay.toFixed(2),
+    net: net.toFixed(2)
+  };
+
+  save(); display(); cancelEdit();
+}
+
+/* CANCEL */
+function cancelEdit(){
+  editIndex = -1;
+  clearForm();
+  updateBtn.style.display="none";
+  cancelBtn.style.display="none";
+}
+
+/* DELETE */
+function del(i){
+  if(confirm("Delete?")){
+    payroll.splice(i,1);
+    save(); display();
+  }
+}
+
+/* DISPLAY */
+function display(){
+  table.innerHTML="";
+
+  payroll.forEach((p,i)=>{
+    table.innerHTML += `
+      <tr>
+        <td>${p.name}</td>
+        <td>${p.total}</td>
+        <td>${p.ot}</td>
+        <td>${p.r}</td>
+        <td>${p.otr}</td>
+        <td>${p.gross}</td>
+        <td>${p.otpay}</td>
+        <td>${p.ded}</td>
+        <td>${p.net}</td>
+        <td>
+          <button onclick="editPayroll(${i})">Edit</button>
+          <button class="delete" onclick="del(${i})">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+/* HELPERS */
+function save(){
+  localStorage.setItem("payroll", JSON.stringify(payroll));
+}
+
+function clearForm(){
+  document.querySelectorAll("input").forEach(i=>i.value="");
+}
+
+/* INIT */
+loadEmployees();
+display();
+</script>
+
+</body>
+</html>
