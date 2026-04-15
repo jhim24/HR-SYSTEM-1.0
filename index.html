@@ -1,1 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HR Dashboard</title>
 
+<style>
+body {
+  font-family: Arial;
+  background: linear-gradient(135deg, #1abc9c, #3498db);
+  padding: 20px;
+  color: white;
+}
+
+/* TITLE */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* CARD MENU */
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.card {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  background: rgba(255,255,255,0.25);
+}
+
+a {
+  text-decoration: none;
+  color: white;
+  font-size: 18px;
+}
+
+/* LOGOUT */
+.logout {
+  margin-top: 20px;
+  display: block;
+  width: 150px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+  background: #e74c3c;
+  text-align: center;
+  border-radius: 8px;
+  cursor: pointer;
+}
+</style>
+
+<script>
+if(localStorage.getItem("loggedIn") !== "true") {
+  window.location.href = "login.html";
+}
+</script>
+
+</head>
+<body>
+
+<h2>HR SYSTEM DASHBOARD</h2>
+
+<div class="container">
+  <div class="card"><a href="employee.html">Employee</a></div>
+  <div class="card"><a href="attendance.html">Attendance</a></div>
+  <div class="card"><a href="payroll.html">Payroll</a></div>
+  <div class="card"><a href="history.html">History</a></div>
+</div>
+
+<div class="logout" onclick="logout()">Logout</div>
+
+<script>
+function logout() {
+  localStorage.removeItem("loggedIn");
+  window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
