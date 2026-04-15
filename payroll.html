@@ -4,81 +4,125 @@
   <title>Payroll System</title>
 
 <style>
-body {
+* {
+  box-sizing: border-box;
   font-family: Arial;
-  background: linear-gradient(135deg, #1f4037, #99f2c8);
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #0f2027, #2c5364, #00c9ff);
   padding: 20px;
   color: white;
 }
 
-h2 { text-align:center; }
-
-.top-bar { margin-bottom:10px; }
-
-.back-btn {
-  background:#34495e;
-  color:white;
-  padding:8px;
-  border:none;
-  border-radius:5px;
-  cursor:pointer;
+h2 {
+  text-align: center;
+  margin-bottom: 15px;
 }
 
+/* TOP BAR */
+.top-bar {
+  margin-bottom: 10px;
+}
+
+.back-btn {
+  background: #34495e;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background: #2c3e50;
+}
+
+/* CARD */
 .card {
   background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
   padding: 20px;
   border-radius: 15px;
   margin-bottom: 20px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
 }
 
+/* FORM GRID */
 .form {
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
-  gap:10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px,1fr));
+  gap: 12px;
 }
 
+/* INPUT STYLE */
 input, select {
-  padding:10px;
-  border:none;
-  border-radius:6px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  background: rgba(255,255,255,0.9);
+  transition: 0.3s;
 }
 
+/* FOCUS EFFECT */
+input:focus, select:focus {
+  box-shadow: 0 0 8px #00c9ff;
+  transform: scale(1.02);
+}
+
+/* BUTTON BASE */
 button {
-  padding:8px;
-  border:none;
-  border-radius:5px;
-  cursor:pointer;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.save { background:#2ecc71; }
-.update { background:#f39c12; }
-.cancel { background:#7f8c8d; }
-.delete { background:#e74c3c; }
+/* BUTTON COLORS */
+.save { background: #2ecc71; color: white; }
+.update { background: #f39c12; color: white; }
+.cancel { background: #7f8c8d; color: white; }
+.delete { background: #e74c3c; color: white; }
+
+/* BUTTON HOVER */
+button:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
 
 /* TABLE */
 .table-box {
-  background:white;
-  color:black;
-  border-radius:10px;
-  padding:10px;
-  overflow-x:auto;
+  background: white;
+  border-radius: 12px;
+  padding: 10px;
+  color: black;
+  overflow-x: auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
 table {
   border-collapse: collapse;
-  min-width:1500px;
+  min-width: 1500px;
 }
 
 th, td {
-  border:1px solid #ccc;
-  padding:6px;
-  text-align:center;
-  font-size:11px;
+  border: 1px solid #ccc;
+  padding: 7px;
+  text-align: center;
+  font-size: 12px;
 }
 
 th {
-  background:#2ecc71;
-  color:white;
+  background: #2ecc71;
+  color: white;
+  position: sticky;
+  top: 0;
 }
 </style>
 
@@ -92,10 +136,10 @@ if(localStorage.getItem("loggedIn") !== "true"){
 <body>
 
 <div class="top-bar">
-  <button class="back-btn" onclick="goBack()">⬅ Back</button>
+  <button class="back-btn" onclick="goBack()">⬅ Back to Dashboard</button>
 </div>
 
-<h2>PAYROLL SYSTEM (ULTIMATE)</h2>
+<h2>PAYROLL SYSTEM (PRO VERSION)</h2>
 
 <div class="card">
   <div class="form">
@@ -156,7 +200,6 @@ if(localStorage.getItem("loggedIn") !== "true"){
 <script>
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
 let payroll = JSON.parse(localStorage.getItem("payroll")) || [];
-
 let editIndex = -1;
 
 /* BACK */
@@ -203,7 +246,6 @@ function savePayroll(){
   if(i==="") return alert("Select employee");
 
   let name = employees[i].fname + " " + employees[i].lname;
-
   let c = compute();
 
   payroll.push({
