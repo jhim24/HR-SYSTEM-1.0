@@ -6,29 +6,51 @@
 <style>
 body {
   font-family: Arial;
-  background:#eef3ff;
+  background: linear-gradient(135deg,#0f2027,#2c5364,#00c9ff);
   padding:20px;
+  color:white;
 }
 
-h2 {
-  text-align:center;
+/* TOP BAR */
+.top-bar {
+  margin-bottom:10px;
 }
 
+.back-btn {
+  background:#34495e;
+  color:white;
+  padding:8px 15px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.back-btn:hover {
+  background:#2c3e50;
+}
+
+/* CARD */
 .card {
-  background:white;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
   padding:15px;
-  border-radius:10px;
+  border-radius:12px;
   margin-bottom:20px;
 }
 
+/* TABLE */
 table {
   width:100%;
   border-collapse:collapse;
+  background:white;
+  color:black;
+  border-radius:10px;
+  overflow:hidden;
 }
 
 th, td {
-  border:1px solid #ccc;
   padding:8px;
+  border:1px solid #ccc;
   text-align:center;
 }
 
@@ -37,70 +59,94 @@ th {
   color:white;
 }
 
+/* BUTTON */
 button {
   padding:5px 10px;
   cursor:pointer;
+  border:none;
+  border-radius:5px;
 }
+
+.view {
+  background:#3498db;
+  color:white;
+}
+
 </style>
 
 </head>
 <body>
 
-<h2>Payroll History</h2>
-
-<div class="card">
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Employee ID</th>
-        <th>Salary</th>
-        <th>Net Pay</th>
-        <th>View</th>
-      </tr>
-    </thead>
-    <tbody id="historyTable"></tbody>
-  </table>
+<div class="top-bar">
+  <button class="back-btn" onclick="goBack()">⬅ Back to Dashboard</button>
 </div>
 
+<h2>Payroll History</h2>
+
+<!-- MAIN TABLE -->
+<div class="card">
+<table>
+<tr>
+<th>Name</th>
+<th>Emp ID</th>
+<th>Salary</th>
+<th>Net Pay</th>
+<th>Action</th>
+</tr>
+<tbody id="history"></tbody>
+</table>
+</div>
+
+<!-- DETAILS TABLE -->
 <div class="card" id="details" style="display:none;">
-  <h3>Payroll Details</h3>
-  <p><b>Name:</b> <span id="d_name"></span></p>
-  <p><b>SSS:</b> <span id="d_sss"></span></p>
-  <p><b>Pag-IBIG:</b> <span id="d_pagibig"></span></p>
-  <p><b>PhilHealth:</b> <span id="d_philhealth"></span></p>
-  <p><b>Other Deduction:</b> <span id="d_other"></span></p>
-  <p><b>Total Deduction:</b> <span id="d_total"></span></p>
+<h3>Payroll Details</h3>
+
+<table>
+<tr>
+<th>SSS</th>
+<th>Pag-IBIG</th>
+<th>PhilHealth</th>
+<th>Other</th>
+<th>Total Deduction</th>
+</tr>
+
+<tr>
+<td id="d_sss"></td>
+<td id="d_pagibig"></td>
+<td id="d_philhealth"></td>
+<td id="d_other"></td>
+<td id="d_total"></td>
+</tr>
+</table>
+
 </div>
 
 <script>
-let payroll = JSON.parse(localStorage.getItem("payrollHistory")) || [];
+let data = JSON.parse(localStorage.getItem("payrollHistory")) || [];
 
-/* DISPLAY */
-function loadHistory() {
-  let table = document.getElementById("historyTable");
-  table.innerHTML = "";
+/* LOAD TABLE */
+function load(){
+  history.innerHTML="";
 
-  payroll.forEach((p,i) => {
-    table.innerHTML += `
+  data.forEach((p,i)=>{
+    history.innerHTML += `
       <tr>
         <td>${p.name}</td>
         <td>${p.empid}</td>
         <td>${p.salary}</td>
         <td>${p.net}</td>
-        <td><button onclick="view(${i})">View</button></td>
+        <td><button class="view" onclick="view(${i})">View</button></td>
       </tr>
     `;
   });
 }
 
 /* VIEW DETAILS */
-function view(i) {
-  let p = payroll[i];
+function view(i){
+  let p = data[i];
 
-  document.getElementById("details").style.display = "block";
+  details.style.display="block";
 
-  d_name.innerText = p.name;
   d_sss.innerText = p.sss;
   d_pagibig.innerText = p.pagibig;
   d_philhealth.innerText = p.philhealth;
@@ -108,8 +154,12 @@ function view(i) {
   d_total.innerText = p.totalDeduction;
 }
 
-/* LOAD */
-loadHistory();
+/* BACK */
+function goBack(){
+  window.location.href="index.html";
+}
+
+load();
 </script>
 
 </body>
