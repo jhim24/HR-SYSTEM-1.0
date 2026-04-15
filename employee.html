@@ -170,6 +170,19 @@ if(localStorage.getItem("loggedIn") !== "true") {
 
     <input id="sss" placeholder="SSS Number">
     <input id="healthcard" placeholder="Health Card Number">
+    <!-- ✅ ADD ONLY -->
+<select id="position">
+  <option value="">Select Position</option>
+  <option>ADMIN</option>
+  <option>GENERAL MANAGER</option>
+  <option>MANAGER</option>
+  <option>SUPERVISOR</option>
+  <option>STAFF</option>
+  <option>CASHIER</option>
+  <option>DINING STAFF</option>
+  <option>WAITER</option>
+  <option>WAITRES</option>
+</select>
 
   </div>
 
@@ -197,6 +210,7 @@ if(localStorage.getItem("loggedIn") !== "true") {
         <th>Pag-IBIG</th>
         <th>SSS</th>
         <th>Health Card</th>
+        <th>Position</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -248,6 +262,7 @@ function getFormData() {
     pagibig: pagibig.value,
     sss: sss.value,
     healthcard: healthcard.value
+    position: healthcard.value
   };
 }
 
@@ -328,7 +343,8 @@ function display() {
         <td>${e.pagibig}</td>
         <td>${e.sss}</td>
         <td>${e.healthcard}</td>
-        <td>
+<td>${e.position || ""}</td> <!-- ✅ ADD -->
+<td>
           <button onclick="editEmployee(${i})">Edit</button>
           <button class="delete" onclick="del(${i})">Delete</button>
         </td>
@@ -345,6 +361,7 @@ function save() {
 function clearForm() {
   document.querySelectorAll("input").forEach(i => i.value = "");
   bank.value = "";
+  position.value = ""; // ✅ ADD
 }
 
 /* LOAD */
