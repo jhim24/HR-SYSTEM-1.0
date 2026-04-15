@@ -24,7 +24,6 @@ h2 { text-align:center; }
   cursor:pointer;
 }
 
-/* CARD */
 .card {
   background: rgba(255,255,255,0.1);
   padding: 20px;
@@ -32,7 +31,6 @@ h2 { text-align:center; }
   margin-bottom: 20px;
 }
 
-/* FORM GRID */
 .form {
   display:grid;
   grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
@@ -45,7 +43,6 @@ input, select {
   border-radius:6px;
 }
 
-/* BUTTON */
 button {
   padding:8px;
   border:none;
@@ -54,6 +51,8 @@ button {
 }
 
 .save { background:#2ecc71; }
+.update { background:#f39c12; }
+.cancel { background:#7f8c8d; }
 .delete { background:#e74c3c; }
 
 /* TABLE */
@@ -102,7 +101,6 @@ if(localStorage.getItem("loggedIn") !== "true"){
   <div class="form">
 
     <select id="employee"></select>
-
     <input type="date" id="date">
 
     <input type="time" id="timein">
@@ -111,6 +109,8 @@ if(localStorage.getItem("loggedIn") !== "true"){
     <input type="time" id="timeout">
 
     <button class="save" onclick="saveAttendance()">Save</button>
+    <button class="update" onclick="updateAttendance()" id="updateBtn" style="display:none;">Update</button>
+    <button class="cancel" onclick="cancelEdit()" id="cancelBtn" style="display:none;">Cancel</button>
 
   </div>
 </div>
@@ -127,7 +127,7 @@ if(localStorage.getItem("loggedIn") !== "true"){
         <th>Time Out</th>
         <th>Late</th>
         <th>OT</th>
-        <th>Total Hours</th>
+        <th>Total</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -138,6 +138,7 @@ if(localStorage.getItem("loggedIn") !== "true"){
 <script>
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
 let attendance = JSON.parse(localStorage.getItem("attendance")) || [];
+let editIndex = -1;
 
 /* BACK */
 function goBack(){
@@ -160,13 +161,8 @@ function toHours(t){
   return parseInt(h) + (parseInt(m)/60);
 }
 
-/* SAVE */
-function saveAttendance(){
-  let i = employee.value;
-  if(i==="") return alert("Select employee");
-
-  let empName = employees[i].fname + " " + employees[i].lname;
-
+/* COMPUTE */
+function computeData(){
   let tin = toHours(timein.value);
   let tout = toHours(timeout.value);
   let bout = toHours(breakout.value);
@@ -178,6 +174,18 @@ function saveAttendance(){
   let late = tin > 8 ? (tin - 8).toFixed(2) : 0;
   let ot = tout > 17 ? (tout - 17).toFixed(2) : 0;
 
+  return {late, ot, total: total.toFixed(2)};
+}
+
+/* SAVE */
+function saveAttendance(){
+  let i = employee.value;
+  if(i==="") return alert("Select employee");
+
+  let empName = employees[i].fname + " " + employees[i].lname;
+
+  let comp = computeData();
+
   attendance.push({
     name: empName,
     date: date.value,
@@ -185,21 +193,60 @@ function saveAttendance(){
     breakout: breakout.value,
     breakin: breakin.value,
     timeout: timeout.value,
-    late,
-    ot,
-    total: total.toFixed(2)
+    ...comp
   });
 
-  save();
-  display();
+  save(); display(); clearForm();
+}
+
+/* EDIT */
+function editAttendance(i){
+  let a = attendance[i];
+
+  date.value = a.date;
+  timein.value = a.timein;
+  breakout.value = a.breakout;
+  breakin.value = a.breakin;
+  timeout.value = a.timeout;
+
+  editIndex = i;
+
+  updateBtn.style.display="inline-block";
+  cancelBtn.style.display="inline-block";
+}
+
+/* UPDATE */
+function updateAttendance(){
+  if(editIndex === -1) return;
+
+  let comp = computeData();
+
+  attendance[editIndex] = {
+    ...attendance[editIndex],
+    date: date.value,
+    timein: timein.value,
+    breakout: breakout.value,
+    breakin: breakin.value,
+    timeout: timeout.value,
+    ...comp
+  };
+
+  save(); display(); cancelEdit();
+}
+
+/* CANCEL */
+function cancelEdit(){
+  editIndex = -1;
+  clearForm();
+  updateBtn.style.display="none";
+  cancelBtn.style.display="none";
 }
 
 /* DELETE */
 function del(i){
   if(confirm("Delete?")){
     attendance.splice(i,1);
-    save();
-    display();
+    save(); display();
   }
 }
 
@@ -219,15 +266,22 @@ function display(){
         <td>${a.late}</td>
         <td>${a.ot}</td>
         <td>${a.total}</td>
-        <td><button class="delete" onclick="del(${i})">Delete</button></td>
+        <td>
+          <button onclick="editAttendance(${i})">Edit</button>
+          <button class="delete" onclick="del(${i})">Delete</button>
+        </td>
       </tr>
     `;
   });
 }
 
-/* SAVE STORAGE */
+/* HELPERS */
 function save(){
   localStorage.setItem("attendance", JSON.stringify(attendance));
+}
+
+function clearForm(){
+  document.querySelectorAll("input").forEach(i=>i.value="");
 }
 
 /* INIT */
