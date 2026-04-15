@@ -240,18 +240,6 @@ function compute(){
   return {gross, totalDed, net};
 }
 
-history.push({
-  name: employeeName,
-  empid: employeeId,
-  salary: basicSalary,
-  net: netSalary,
-  sss: sss,
-  pagibig: pagibig,
-  philhealth: philhealth,
-  other: otherDeduction,
-  totalDeduction: totalDeduction
-});
-
 localStorage.setItem("payrollHistory", JSON.stringify(history));
 }
 
@@ -392,10 +380,11 @@ function display(){
 function save(){
   localStorage.setItem("payroll", JSON.stringify(payroll));
 }
-
 function clearForm(){
   document.querySelectorAll("input").forEach(i=>i.value="");
-  function cancelEdit(){
+}
+
+function cancelEdit(){
   editIndex = -1;
   clearForm();
 
