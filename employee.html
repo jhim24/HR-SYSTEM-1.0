@@ -16,13 +16,11 @@ body {
   color: white;
 }
 
-/* TITLE */
 h2 {
   text-align: center;
-  margin-bottom: 20px;
 }
 
-/* GLASS CARD */
+/* CARD */
 .card {
   background: rgba(255,255,255,0.1);
   backdrop-filter: blur(12px);
@@ -31,31 +29,36 @@ h2 {
   margin-bottom: 20px;
 }
 
-/* GRID FORM */
+/* SECTION */
+.section {
+  grid-column: 1 / -1;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* GRID */
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 15px;
 }
 
-/* INPUT STYLE */
+/* INPUT */
 input, select {
   width: 100%;
   padding: 12px;
   border-radius: 8px;
   border: none;
   outline: none;
-  font-size: 14px;
 }
 
-/* READONLY */
 input[readonly] {
   background: #ddd;
 }
 
 /* BUTTON */
 button {
-  grid-column: span 3;
+  grid-column: 1 / -1;
   padding: 14px;
   background: #2ecc71;
   border: none;
@@ -63,12 +66,10 @@ button {
   font-size: 16px;
   border-radius: 8px;
   cursor: pointer;
-  transition: 0.3s;
 }
 
 button:hover {
   background: #27ae60;
-  transform: scale(1.03);
 }
 
 /* TABLE */
@@ -96,18 +97,13 @@ th, td {
   font-size: 12px;
 }
 
-/* DELETE BUTTON */
 .delete {
   background: #e74c3c;
   border: none;
-  padding: 5px 10px;
   color: white;
+  padding: 6px 10px;
   border-radius: 5px;
   cursor: pointer;
-}
-
-.delete:hover {
-  background: #c0392b;
 }
 </style>
 
@@ -125,13 +121,17 @@ if(localStorage.getItem("loggedIn") !== "true") {
 <div class="card">
   <div class="form-grid">
 
-    <input type="text" id="fname" placeholder="First Name">
-    <input type="text" id="mname" placeholder="Middle Name">
-    <input type="text" id="lname" placeholder="Last Name">
+    <div class="section">Personal Information</div>
 
-    <input type="number" id="age" placeholder="Age" readonly>
-    <input type="text" id="address" placeholder="Address">
+    <input id="fname" placeholder="First Name">
+    <input id="mname" placeholder="Middle Name">
+    <input id="lname" placeholder="Last Name">
+
+    <input id="age" placeholder="Age" readonly>
+    <input id="address" placeholder="Address">
     <input type="date" id="birthdate" onchange="computeAge()">
+
+    <div class="section">Bank Details</div>
 
     <select id="bank">
       <option value="">Select Bank</option>
@@ -142,15 +142,17 @@ if(localStorage.getItem("loggedIn") !== "true") {
       <option>PNB</option>
     </select>
 
-    <input type="text" id="bankacc" placeholder="Bank Account Number">
-    <input type="text" id="empid" placeholder="Employee ID">
+    <input id="bankacc" placeholder="Bank Account Number">
+    <input id="empid" placeholder="Employee ID">
 
-    <input type="text" id="passport" placeholder="Passport Number">
-    <input type="text" id="philhealth" placeholder="PhilHealth Number">
-    <input type="text" id="pagibig" placeholder="Pag-IBIG Number">
+    <div class="section">Government IDs</div>
 
-    <input type="text" id="sss" placeholder="SSS Number">
-    <input type="text" id="healthcard" placeholder="Health Card">
+    <input id="passport" placeholder="Passport Number">
+    <input id="philhealth" placeholder="PhilHealth Number">
+    <input id="pagibig" placeholder="Pag-IBIG Number">
+
+    <input id="sss" placeholder="SSS Number">
+    <input id="healthcard" placeholder="Health Card">
 
     <button onclick="addEmployee()">Save Employee</button>
 
@@ -161,7 +163,7 @@ if(localStorage.getItem("loggedIn") !== "true") {
   <table>
     <thead>
       <tr>
-        <th>Name</th>
+        <th>Full Name</th>
         <th>Age</th>
         <th>Bank</th>
         <th>Emp ID</th>
@@ -179,40 +181,35 @@ let employees = JSON.parse(localStorage.getItem("employees")) || [];
 /* AUTO AGE */
 function computeAge() {
   let birthdate = document.getElementById("birthdate").value;
+  if(!birthdate) return;
+
   let today = new Date();
   let birth = new Date(birthdate);
 
   let age = today.getFullYear() - birth.getFullYear();
   let m = today.getMonth() - birth.getMonth();
 
-  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+  if(m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
     age--;
   }
 
   document.getElementById("age").value = age;
 }
 
-/* SAVE */
+/* SAVE EMPLOYEE */
 function addEmployee() {
   let emp = {
     fname: fname.value,
     mname: mname.value,
     lname: lname.value,
     age: age.value,
-    address: address.value,
-    birthdate: birthdate.value,
     bank: bank.value,
-    bankacc: bankacc.value,
     empid: empid.value,
-    passport: passport.value,
-    philhealth: philhealth.value,
-    pagibig: pagibig.value,
-    sss: sss.value,
-    healthcard: healthcard.value
+    sss: sss.value
   };
 
-  if(emp.fname === "" || emp.empid === "") {
-    alert("Fill required fields!");
+  if(emp.fname === "" || emp.lname === "" || emp.empid === "") {
+    alert("Please fill required fields!");
     return;
   }
 
@@ -229,9 +226,12 @@ function display() {
   table.innerHTML = "";
 
   employees.forEach((e, i) => {
+
+    let fullName = e.fname + " " + (e.mname ? e.mname + " " : "") + e.lname;
+
     table.innerHTML += `
       <tr>
-        <td>${e.fname} ${e.lname}</td>
+        <td>${fullName}</td>
         <td>${e.age}</td>
         <td>${e.bank}</td>
         <td>${e.empid}</td>
@@ -244,8 +244,8 @@ function display() {
 
 /* DELETE */
 function del(i) {
-  if(confirm("Delete employee?")) {
-    employees.splice(i,1);
+  if(confirm("Delete this employee?")) {
+    employees.splice(i, 1);
     localStorage.setItem("employees", JSON.stringify(employees));
     display();
   }
@@ -257,7 +257,7 @@ function clearForm() {
   document.getElementById("bank").value = "";
 }
 
-/* LOAD */
+/* LOAD DATA */
 display();
 </script>
 
