@@ -71,7 +71,6 @@ button {
   background:#3498db;
   color:white;
 }
-
 </style>
 
 </head>
@@ -86,6 +85,7 @@ button {
 <!-- MAIN TABLE -->
 <div class="card">
 <table>
+<thead>
 <tr>
 <th>Name</th>
 <th>Emp ID</th>
@@ -93,15 +93,17 @@ button {
 <th>Net Pay</th>
 <th>Action</th>
 </tr>
+</thead>
 <tbody id="history"></tbody>
 </table>
 </div>
 
-<!-- DETAILS TABLE -->
+<!-- DETAILS -->
 <div class="card" id="details" style="display:none;">
 <h3>Payroll Details</h3>
 
 <table>
+<thead>
 <tr>
 <th>SSS</th>
 <th>Pag-IBIG</th>
@@ -109,7 +111,9 @@ button {
 <th>Other</th>
 <th>Total Deduction</th>
 </tr>
+</thead>
 
+<tbody>
 <tr>
 <td id="d_sss"></td>
 <td id="d_pagibig"></td>
@@ -117,49 +121,61 @@ button {
 <td id="d_other"></td>
 <td id="d_total"></td>
 </tr>
+</tbody>
 </table>
-
 </div>
 
 <script>
+
+/* LOAD DATA */
 let data = JSON.parse(localStorage.getItem("payrollHistory")) || [];
 
 /* LOAD TABLE */
 function load(){
-  history.innerHTML="";
+  let table = document.getElementById("history");
+  table.innerHTML = "";
+
+  if(data.length === 0){
+    table.innerHTML = "<tr><td colspan='5'>No Payroll History</td></tr>";
+    return;
+  }
 
   data.forEach((p,i)=>{
-    history.innerHTML += `
+    table.innerHTML += `
       <tr>
-        <td>${p.name}</td>
-        <td>${p.empid}</td>
-        <td>${p.salary}</td>
-        <td>${p.net}</td>
-        <td><button class="view" onclick="view(${i})">View</button></td>
+        <td>${p.name || ""}</td>
+        <td>${p.empid || ""}</td>
+        <td>${p.salary || ""}</td>
+        <td>${p.net || ""}</td>
+        <td>
+          <button class="view" onclick="viewDetails(${i})">View</button>
+        </td>
       </tr>
     `;
   });
 }
 
 /* VIEW DETAILS */
-function view(i){
+function viewDetails(i){
   let p = data[i];
 
-  details.style.display="block";
+  document.getElementById("details").style.display = "block";
 
-  d_sss.innerText = p.sss;
-  d_pagibig.innerText = p.pagibig;
-  d_philhealth.innerText = p.philhealth;
-  d_other.innerText = p.other;
-  d_total.innerText = p.totalDeduction;
+  document.getElementById("d_sss").innerText = p.sss || 0;
+  document.getElementById("d_pagibig").innerText = p.pagibig || 0;
+  document.getElementById("d_philhealth").innerText = p.philhealth || 0;
+  document.getElementById("d_other").innerText = p.other || 0;
+  document.getElementById("d_total").innerText = p.totalDeduction || 0;
 }
 
 /* BACK */
 function goBack(){
-  window.location.href="index.html";
+  window.location.href = "./index.html";
 }
 
+/* INIT */
 load();
+
 </script>
 
 </body>
