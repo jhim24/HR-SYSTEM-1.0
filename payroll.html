@@ -238,7 +238,6 @@ function compute(){
   let net = gross - totalDed;
 
   return {gross, totalDed, net};
-  let history = JSON.parse(localStorage.getItem("payrollHistory")) || [];
 
 history.push({
   name: employeeName,
@@ -284,6 +283,23 @@ function savePayroll(){
   });
 
   save(); display(); clearForm();
+  // ✅ SAVE TO PAYROLL HISTORY
+let history = JSON.parse(localStorage.getItem("payrollHistory")) || [];
+
+history.push({
+  name: name,
+  empid: employees[i].empid || "",
+  salary: c.gross.toFixed(2),
+  net: c.net.toFixed(2),
+
+  sss: sss.value,
+  pagibig: pagibig.value,
+  philhealth: philhealth.value,
+  other: other.value,
+  totalDeduction: c.totalDed.toFixed(2)
+});
+
+localStorage.setItem("payrollHistory", JSON.stringify(history));
 }
 
 /* EDIT */
