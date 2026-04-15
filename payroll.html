@@ -24,6 +24,7 @@ h2 { text-align:center; }
   cursor:pointer;
 }
 
+/* CARD */
 .card {
   background: rgba(255,255,255,0.1);
   padding: 20px;
@@ -31,9 +32,10 @@ h2 { text-align:center; }
   margin-bottom: 20px;
 }
 
+/* FORM */
 .form {
   display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
   gap:10px;
 }
 
@@ -43,6 +45,7 @@ input, select {
   border-radius:6px;
 }
 
+/* BUTTON */
 button {
   padding:8px;
   border:none;
@@ -66,7 +69,7 @@ button {
 
 table {
   border-collapse: collapse;
-  min-width:1000px;
+  min-width:1300px;
 }
 
 th, td {
@@ -95,16 +98,23 @@ if(localStorage.getItem("loggedIn") !== "true"){
   <button class="back-btn" onclick="goBack()">⬅ Back</button>
 </div>
 
-<h2>PAYROLL SYSTEM</h2>
+<h2>PAYROLL SYSTEM (MANUAL)</h2>
 
 <div class="card">
   <div class="form">
 
     <select id="employee"></select>
 
-    <input type="number" id="rate" placeholder="Rate per Hour">
-    <input type="number" id="otrate" placeholder="OT Rate per Hour">
-    <input type="number" id="deduction" placeholder="Deduction">
+    <input type="number" id="rate" placeholder="Rate per Day">
+    <input type="number" id="days" placeholder="Total Days">
+
+    <input type="number" id="sss" placeholder="SSS">
+    <input type="number" id="pagibig" placeholder="Pag-IBIG">
+    <input type="number" id="philhealth" placeholder="PhilHealth">
+    <input type="number" id="healthcard" placeholder="Health Card">
+
+    <input type="number" id="other" placeholder="Other Deduction">
+    <input type="text" id="othername" placeholder="Other Deduction Name">
 
     <button class="save" onclick="savePayroll()">Save</button>
     <button class="update" onclick="updatePayroll()" id="updateBtn" style="display:none;">Update</button>
@@ -118,13 +128,15 @@ if(localStorage.getItem("loggedIn") !== "true"){
     <thead>
       <tr>
         <th>Name</th>
-        <th>Total Hours</th>
-        <th>OT Hours</th>
         <th>Rate</th>
-        <th>OT Rate</th>
+        <th>Days</th>
         <th>Gross</th>
-        <th>OT Pay</th>
-        <th>Deduction</th>
+        <th>SSS</th>
+        <th>Pag-IBIG</th>
+        <th>PhilHealth</th>
+        <th>Health Card</th>
+        <th>Other</th>
+        <th>Total Deduction</th>
         <th>Net Pay</th>
         <th>Action</th>
       </tr>
@@ -135,7 +147,6 @@ if(localStorage.getItem("loggedIn") !== "true"){
 
 <script>
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
-let attendance = JSON.parse(localStorage.getItem("attendance")) || [];
 let payroll = JSON.parse(localStorage.getItem("payroll")) || [];
 
 let editIndex = -1;
@@ -145,7 +156,7 @@ function goBack(){
   window.location.href="index.html";
 }
 
-/* LOAD EMPLOYEE */
+/* LOAD */
 function loadEmployees(){
   employee.innerHTML = "<option value=''>Select Employee</option>";
 
@@ -154,19 +165,22 @@ function loadEmployees(){
   });
 }
 
-/* GET HOURS */
-function getHours(name){
-  let total = 0;
-  let ot = 0;
+/* COMPUTE */
+function compute(){
+  let r = parseFloat(rate.value || 0);
+  let d = parseFloat(days.value || 0);
 
-  attendance.forEach(a=>{
-    if(a.name === name){
-      total += parseFloat(a.total || 0);
-      ot += parseFloat(a.ot || 0);
-    }
-  });
+  let s = parseFloat(sss.value || 0);
+  let p = parseFloat(pagibig.value || 0);
+  let ph = parseFloat(philhealth.value || 0);
+  let hc = parseFloat(healthcard.value || 0);
+  let o = parseFloat(other.value || 0);
 
-  return {total, ot};
+  let gross = r * d;
+  let totalDed = s + p + ph + hc + o;
+  let net = gross - totalDed;
+
+  return {gross, totalDed, net};
 }
 
 /* SAVE */
@@ -176,21 +190,21 @@ function savePayroll(){
 
   let name = employees[i].fname + " " + employees[i].lname;
 
-  let {total, ot} = getHours(name);
-
-  let r = parseFloat(rate.value || 0);
-  let otr = parseFloat(otrate.value || 0);
-  let ded = parseFloat(deduction.value || 0);
-
-  let gross = total * r;
-  let otpay = ot * otr;
-  let net = gross + otpay - ded;
+  let c = compute();
 
   payroll.push({
-    name, total, ot, r, otr, ded,
-    gross: gross.toFixed(2),
-    otpay: otpay.toFixed(2),
-    net: net.toFixed(2)
+    name,
+    rate: rate.value,
+    days: days.value,
+    sss: sss.value,
+    pagibig: pagibig.value,
+    philhealth: philhealth.value,
+    healthcard: healthcard.value,
+    other: other.value,
+    othername: othername.value,
+    gross: c.gross.toFixed(2),
+    totalDed: c.totalDed.toFixed(2),
+    net: c.net.toFixed(2)
   });
 
   save(); display(); clearForm();
@@ -200,9 +214,14 @@ function savePayroll(){
 function editPayroll(i){
   let p = payroll[i];
 
-  rate.value = p.r;
-  otrate.value = p.otr;
-  deduction.value = p.ded;
+  rate.value = p.rate;
+  days.value = p.days;
+  sss.value = p.sss;
+  pagibig.value = p.pagibig;
+  philhealth.value = p.philhealth;
+  healthcard.value = p.healthcard;
+  other.value = p.other;
+  othername.value = p.othername;
 
   editIndex = i;
 
@@ -215,34 +234,24 @@ function updatePayroll(){
   if(editIndex === -1) return;
 
   let p = payroll[editIndex];
-  let {total, ot} = getHours(p.name);
-
-  let r = parseFloat(rate.value || 0);
-  let otr = parseFloat(otrate.value || 0);
-  let ded = parseFloat(deduction.value || 0);
-
-  let gross = total * r;
-  let otpay = ot * otr;
-  let net = gross + otpay - ded;
+  let c = compute();
 
   payroll[editIndex] = {
     ...p,
-    r, otr, ded,
-    total, ot,
-    gross: gross.toFixed(2),
-    otpay: otpay.toFixed(2),
-    net: net.toFixed(2)
+    rate: rate.value,
+    days: days.value,
+    sss: sss.value,
+    pagibig: pagibig.value,
+    philhealth: philhealth.value,
+    healthcard: healthcard.value,
+    other: other.value,
+    othername: othername.value,
+    gross: c.gross.toFixed(2),
+    totalDed: c.totalDed.toFixed(2),
+    net: c.net.toFixed(2)
   };
 
   save(); display(); cancelEdit();
-}
-
-/* CANCEL */
-function cancelEdit(){
-  editIndex = -1;
-  clearForm();
-  updateBtn.style.display="none";
-  cancelBtn.style.display="none";
 }
 
 /* DELETE */
@@ -261,13 +270,15 @@ function display(){
     table.innerHTML += `
       <tr>
         <td>${p.name}</td>
-        <td>${p.total}</td>
-        <td>${p.ot}</td>
-        <td>${p.r}</td>
-        <td>${p.otr}</td>
+        <td>${p.rate}</td>
+        <td>${p.days}</td>
         <td>${p.gross}</td>
-        <td>${p.otpay}</td>
-        <td>${p.ded}</td>
+        <td>${p.sss}</td>
+        <td>${p.pagibig}</td>
+        <td>${p.philhealth}</td>
+        <td>${p.healthcard}</td>
+        <td>${p.othername} (${p.other})</td>
+        <td>${p.totalDed}</td>
         <td>${p.net}</td>
         <td>
           <button onclick="editPayroll(${i})">Edit</button>
