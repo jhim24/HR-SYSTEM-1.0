@@ -68,13 +68,15 @@ button {
 
 table {
   border-collapse: collapse;
-  min-width: 1200px;
+  min-width: 1600px; /* ✅ FIX */
 }
 
 th, td {
-  border:1px solid #ccc;
-  padding:7px;
-  text-align:center;
+  border: 1px solid #ccc;
+  padding: 7px;
+  text-align: center;
+  font-size: 12px;
+  white-space: nowrap; /* ✅ FIX */
 }
 
 th {
@@ -157,6 +159,15 @@ if(localStorage.getItem("loggedIn") !== "true"){
 
 <script>
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
+  let employees = JSON.parse(localStorage.getItem("employees")) || [];
+
+/* ✅ ADD THIS */
+if(employees.length === 0){
+  employees = [
+    {fname:"Sample", lname:"Employee", empid:"EMP-001"}
+  ];
+  localStorage.setItem("employees", JSON.stringify(employees));
+}
 let payroll = JSON.parse(localStorage.getItem("payroll")) || [];
 let editIndex = -1;
 
@@ -168,13 +179,15 @@ function goBack(){
 /* LOAD EMPLOYEES */
 function loadEmployees(){
   let emp = document.getElementById("employee");
+
   emp.innerHTML = "<option value=''>Select Employee</option>";
 
-  employees.forEach((e,i)=>{
+  let data = JSON.parse(localStorage.getItem("employees")) || [];
+
+  data.forEach((e,i)=>{
     emp.innerHTML += `<option value="${i}">${e.fname} ${e.lname}</option>`;
   });
 }
-
 /* COMPUTE */
 function compute(){
   let r = +rate.value || 0;
