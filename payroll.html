@@ -4,10 +4,7 @@
   <title>Payroll System</title>
 
 <style>
-* {
-  box-sizing: border-box;
-  font-family: Arial;
-}
+* { box-sizing: border-box; font-family: Arial; }
 
 body {
   margin: 0;
@@ -16,15 +13,9 @@ body {
   color: white;
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 15px;
-}
+h2 { text-align: center; }
 
-/* TOP BAR */
-.top-bar {
-  margin-bottom: 10px;
-}
+.top-bar { margin-bottom: 10px; }
 
 .back-btn {
   background: #34495e;
@@ -33,96 +24,62 @@ h2 {
   border-radius: 6px;
   border: none;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-.back-btn:hover {
-  background: #2c3e50;
-}
-
-/* CARD */
 .card {
   background: rgba(255,255,255,0.1);
   backdrop-filter: blur(12px);
   padding: 20px;
   border-radius: 15px;
   margin-bottom: 20px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.3);
 }
 
-/* FORM GRID */
 .form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(170px,1fr));
   gap: 12px;
 }
 
-/* INPUT STYLE */
 input, select {
   padding: 12px;
   border-radius: 10px;
   border: none;
-  outline: none;
-  font-size: 13px;
-  background: rgba(255,255,255,0.9);
-  transition: 0.3s;
 }
 
-/* FOCUS EFFECT */
-input:focus, select:focus {
-  box-shadow: 0 0 8px #00c9ff;
-  transform: scale(1.02);
-}
-
-/* BUTTON BASE */
 button {
   padding: 10px;
   border-radius: 8px;
   border: none;
-  font-size: 13px;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-/* BUTTON COLORS */
-.save { background: #2ecc71; color: white; }
-.update { background: #f39c12; color: white; }
-.cancel { background: #7f8c8d; color: white; }
-.delete { background: #e74c3c; color: white; }
+.save { background:#2ecc71; color:white; }
+.update { background:#f39c12; color:white; }
+.cancel { background:#7f8c8d; color:white; }
+.delete { background:#e74c3c; color:white; }
 
-/* BUTTON HOVER */
-button:hover {
-  transform: scale(1.05);
-  opacity: 0.9;
-}
-
-/* TABLE */
 .table-box {
-  background: white;
-  border-radius: 12px;
-  padding: 10px;
-  color: black;
-  overflow-x: auto;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  background:white;
+  color:black;
+  padding:10px;
+  border-radius:10px;
+  overflow-x:auto;
 }
 
 table {
   border-collapse: collapse;
-  min-width: 1500px;
+  min-width: 1200px;
 }
 
 th, td {
-  border: 1px solid #ccc;
-  padding: 7px;
-  text-align: center;
-  font-size: 12px;
+  border:1px solid #ccc;
+  padding:7px;
+  text-align:center;
 }
 
 th {
-  background: #2ecc71;
-  color: white;
-  position: sticky;
-  top: 0;
+  background:#2ecc71;
+  color:white;
 }
 </style>
 
@@ -133,6 +90,7 @@ if(localStorage.getItem("loggedIn") !== "true"){
 </script>
 
 </head>
+
 <body>
 
 <div class="top-bar">
@@ -207,12 +165,13 @@ function goBack(){
   window.location.href="index.html";
 }
 
-/* LOAD */
+/* LOAD EMPLOYEES */
 function loadEmployees(){
-  employee.innerHTML = "<option value=''>Select Employee</option>";
+  let emp = document.getElementById("employee");
+  emp.innerHTML = "<option value=''>Select Employee</option>";
 
   employees.forEach((e,i)=>{
-    employee.innerHTML += `<option value="${i}">${e.fname} ${e.lname}</option>`;
+    emp.innerHTML += `<option value="${i}">${e.fname} ${e.lname}</option>`;
   });
 }
 
@@ -228,19 +187,12 @@ function compute(){
 
   let gross = r * (d + otv + hol + sickv + bday + vac);
 
-  let s = +sss.value || 0;
-  let p = +pagibig.value || 0;
-  let ph = +philhealth.value || 0;
-  let hc = +healthcard.value || 0;
-  let o = +other.value || 0;
+  let totalDed =
+    (+sss.value||0)+(+pagibig.value||0)+(+philhealth.value||0)+(+healthcard.value||0)+(+other.value||0);
 
-  let totalDed = s+p+ph+hc+o;
   let net = gross - totalDed;
 
-  return {gross, totalDed, net};
-}
-
-localStorage.setItem("payrollHistory", JSON.stringify(history));
+  return {gross,totalDed,net};
 }
 
 /* SAVE */
@@ -271,24 +223,25 @@ function savePayroll(){
     net: c.net.toFixed(2)
   });
 
-  save(); display(); clearForm();
-  // ✅ SAVE TO PAYROLL HISTORY
-let history = JSON.parse(localStorage.getItem("payrollHistory")) || [];
+  localStorage.setItem("payroll", JSON.stringify(payroll));
 
-history.push({
-  name: name,
-  empid: employees[i].empid || "",
-  salary: c.gross.toFixed(2),
-  net: c.net.toFixed(2),
+  /* SAVE HISTORY */
+  let history = JSON.parse(localStorage.getItem("payrollHistory")) || [];
+  history.push({
+    name,
+    empid: employees[i].empid || "",
+    salary: c.gross.toFixed(2),
+    net: c.net.toFixed(2),
+    sss: sss.value,
+    pagibig: pagibig.value,
+    philhealth: philhealth.value,
+    other: other.value,
+    totalDeduction: c.totalDed.toFixed(2)
+  });
+  localStorage.setItem("payrollHistory", JSON.stringify(history));
 
-  sss: sss.value,
-  pagibig: pagibig.value,
-  philhealth: philhealth.value,
-  other: other.value,
-  totalDeduction: c.totalDed.toFixed(2)
-});
-
-localStorage.setItem("payrollHistory", JSON.stringify(history));
+  display();
+  clearForm();
 }
 
 /* EDIT */
@@ -300,8 +253,10 @@ function editPayroll(i){
       document.getElementById(k).value = p[k];
     }
   });
-employee.value = i;
+
+  employee.value = i;
   editIndex = i;
+
   updateBtn.style.display="inline-block";
   cancelBtn.style.display="inline-block";
 }
@@ -311,10 +266,9 @@ function updatePayroll(){
   if(editIndex===-1) return;
 
   let c = compute();
-  let p = payroll[editIndex];
 
   payroll[editIndex] = {
-    ...p,
+    ...payroll[editIndex],
     rate: rate.value,
     days: days.value,
     ot: ot.value,
@@ -333,14 +287,27 @@ function updatePayroll(){
     net: c.net.toFixed(2)
   };
 
-  save(); display(); cancelEdit();
+  localStorage.setItem("payroll", JSON.stringify(payroll));
+
+  display();
+  cancelEdit();
+}
+
+/* CANCEL */
+function cancelEdit(){
+  editIndex = -1;
+  clearForm();
+
+  updateBtn.style.display="none";
+  cancelBtn.style.display="none";
 }
 
 /* DELETE */
 function del(i){
   if(confirm("Delete?")){
     payroll.splice(i,1);
-    save(); display();
+    localStorage.setItem("payroll", JSON.stringify(payroll));
+    display();
   }
 }
 
@@ -376,20 +343,10 @@ function display(){
   });
 }
 
-/* HELPERS */
-function save(){
-  localStorage.setItem("payroll", JSON.stringify(payroll));
-}
+/* CLEAR */
 function clearForm(){
   document.querySelectorAll("input").forEach(i=>i.value="");
-}
-
-function cancelEdit(){
-  editIndex = -1;
-  clearForm();
-
-  updateBtn.style.display = "none";
-  cancelBtn.style.display = "none";
+  employee.value="";
 }
 
 /* INIT */
