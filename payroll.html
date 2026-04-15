@@ -187,14 +187,17 @@ function compute(){
 
   let gross = r * (d + otv + hol + sickv + bday + vac);
 
-  let totalDed =
-    (+sss.value||0)+(+pagibig.value||0)+(+philhealth.value||0)+(+healthcard.value||0)+(+other.value||0);
+  let s = +sss.value || 0;
+  let p = +pagibig.value || 0;
+  let ph = +philhealth.value || 0;
+  let hc = +healthcard.value || 0;
+  let o = +other.value || 0;
 
+  let totalDed = s+p+ph+hc+o;
   let net = gross - totalDed;
 
-  return {gross,totalDed,net};
+  return {gross, totalDed, net};
 }
-
 /* SAVE */
 function savePayroll(){
   let i = employee.value;
@@ -242,6 +245,21 @@ function savePayroll(){
 
   display();
   clearForm();
+  let history = JSON.parse(localStorage.getItem("payrollHistory")) || [];
+
+history.push({
+  name: name,
+  empid: employees[i].empid || "",
+  salary: c.gross.toFixed(2),
+  net: c.net.toFixed(2),
+  sss: sss.value,
+  pagibig: pagibig.value,
+  philhealth: philhealth.value,
+  other: other.value,
+  totalDeduction: c.totalDed.toFixed(2)
+});
+
+localStorage.setItem("payrollHistory", JSON.stringify(history));
 }
 
 /* EDIT */
@@ -349,6 +367,13 @@ function clearForm(){
   employee.value="";
 }
 
+function cancelEdit(){
+  editIndex = -1;
+  clearForm();
+
+  updateBtn.style.display = "none";
+  cancelBtn.style.display = "none";
+}
 /* INIT */
 loadEmployees();
 display();
