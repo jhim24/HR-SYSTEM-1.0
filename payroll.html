@@ -24,7 +24,6 @@ h2 { text-align:center; }
   cursor:pointer;
 }
 
-/* CARD */
 .card {
   background: rgba(255,255,255,0.1);
   padding: 20px;
@@ -32,10 +31,9 @@ h2 { text-align:center; }
   margin-bottom: 20px;
 }
 
-/* FORM */
 .form {
   display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
   gap:10px;
 }
 
@@ -45,7 +43,6 @@ input, select {
   border-radius:6px;
 }
 
-/* BUTTON */
 button {
   padding:8px;
   border:none;
@@ -69,7 +66,7 @@ button {
 
 table {
   border-collapse: collapse;
-  min-width:1300px;
+  min-width:1500px;
 }
 
 th, td {
@@ -98,7 +95,7 @@ if(localStorage.getItem("loggedIn") !== "true"){
   <button class="back-btn" onclick="goBack()">⬅ Back</button>
 </div>
 
-<h2>PAYROLL SYSTEM (MANUAL)</h2>
+<h2>PAYROLL SYSTEM (ULTIMATE)</h2>
 
 <div class="card">
   <div class="form">
@@ -107,6 +104,12 @@ if(localStorage.getItem("loggedIn") !== "true"){
 
     <input type="number" id="rate" placeholder="Rate per Day">
     <input type="number" id="days" placeholder="Total Days">
+
+    <input type="number" id="ot" placeholder="Overtime Days">
+    <input type="number" id="holiday" placeholder="Holiday Days">
+    <input type="number" id="sick" placeholder="Sick Leave">
+    <input type="number" id="birthday" placeholder="Birthday Leave">
+    <input type="number" id="vacation" placeholder="Vacation Leave">
 
     <input type="number" id="sss" placeholder="SSS">
     <input type="number" id="pagibig" placeholder="Pag-IBIG">
@@ -130,6 +133,11 @@ if(localStorage.getItem("loggedIn") !== "true"){
         <th>Name</th>
         <th>Rate</th>
         <th>Days</th>
+        <th>OT</th>
+        <th>Holiday</th>
+        <th>Sick</th>
+        <th>Birthday</th>
+        <th>Vacation</th>
         <th>Gross</th>
         <th>SSS</th>
         <th>Pag-IBIG</th>
@@ -167,17 +175,23 @@ function loadEmployees(){
 
 /* COMPUTE */
 function compute(){
-  let r = parseFloat(rate.value || 0);
-  let d = parseFloat(days.value || 0);
+  let r = +rate.value || 0;
+  let d = +days.value || 0;
+  let otv = +ot.value || 0;
+  let hol = +holiday.value || 0;
+  let sickv = +sick.value || 0;
+  let bday = +birthday.value || 0;
+  let vac = +vacation.value || 0;
 
-  let s = parseFloat(sss.value || 0);
-  let p = parseFloat(pagibig.value || 0);
-  let ph = parseFloat(philhealth.value || 0);
-  let hc = parseFloat(healthcard.value || 0);
-  let o = parseFloat(other.value || 0);
+  let gross = r * (d + otv + hol + sickv + bday + vac);
 
-  let gross = r * d;
-  let totalDed = s + p + ph + hc + o;
+  let s = +sss.value || 0;
+  let p = +pagibig.value || 0;
+  let ph = +philhealth.value || 0;
+  let hc = +healthcard.value || 0;
+  let o = +other.value || 0;
+
+  let totalDed = s+p+ph+hc+o;
   let net = gross - totalDed;
 
   return {gross, totalDed, net};
@@ -196,6 +210,11 @@ function savePayroll(){
     name,
     rate: rate.value,
     days: days.value,
+    ot: ot.value,
+    holiday: holiday.value,
+    sick: sick.value,
+    birthday: birthday.value,
+    vacation: vacation.value,
     sss: sss.value,
     pagibig: pagibig.value,
     philhealth: philhealth.value,
@@ -214,32 +233,33 @@ function savePayroll(){
 function editPayroll(i){
   let p = payroll[i];
 
-  rate.value = p.rate;
-  days.value = p.days;
-  sss.value = p.sss;
-  pagibig.value = p.pagibig;
-  philhealth.value = p.philhealth;
-  healthcard.value = p.healthcard;
-  other.value = p.other;
-  othername.value = p.othername;
+  Object.keys(p).forEach(k=>{
+    if(document.getElementById(k)){
+      document.getElementById(k).value = p[k];
+    }
+  });
 
   editIndex = i;
-
   updateBtn.style.display="inline-block";
   cancelBtn.style.display="inline-block";
 }
 
 /* UPDATE */
 function updatePayroll(){
-  if(editIndex === -1) return;
+  if(editIndex===-1) return;
 
-  let p = payroll[editIndex];
   let c = compute();
+  let p = payroll[editIndex];
 
   payroll[editIndex] = {
     ...p,
     rate: rate.value,
     days: days.value,
+    ot: ot.value,
+    holiday: holiday.value,
+    sick: sick.value,
+    birthday: birthday.value,
+    vacation: vacation.value,
     sss: sss.value,
     pagibig: pagibig.value,
     philhealth: philhealth.value,
@@ -272,6 +292,11 @@ function display(){
         <td>${p.name}</td>
         <td>${p.rate}</td>
         <td>${p.days}</td>
+        <td>${p.ot}</td>
+        <td>${p.holiday}</td>
+        <td>${p.sick}</td>
+        <td>${p.birthday}</td>
+        <td>${p.vacation}</td>
         <td>${p.gross}</td>
         <td>${p.sss}</td>
         <td>${p.pagibig}</td>
