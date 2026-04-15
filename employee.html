@@ -29,7 +29,7 @@ h2 {
   margin-bottom: 20px;
 }
 
-/* GRID */
+/* GRID FORM */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -63,30 +63,49 @@ button {
 .cancel { background: #7f8c8d; color: white; }
 .delete { background: #e74c3c; color: white; }
 
-/* TABLE */
+/* TABLE BOX WITH SCROLL */
 .table-box {
   background: white;
   border-radius: 10px;
   padding: 10px;
   color: black;
+
   overflow-x: auto;
+  overflow-y: hidden;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
+/* SCROLLBAR */
+.table-box::-webkit-scrollbar {
+  height: 10px;
 }
-
-th {
+.table-box::-webkit-scrollbar-track {
+  background: #ddd;
+}
+.table-box::-webkit-scrollbar-thumb {
   background: #2ecc71;
-  color: white;
+  border-radius: 10px;
+}
+
+/* TABLE */
+table {
+  border-collapse: collapse;
+  min-width: 1600px; /* force scroll */
 }
 
 th, td {
+  border: 1px solid #ccc;
   padding: 6px;
   text-align: center;
   font-size: 11px;
   word-break: break-word;
+}
+
+/* HEADER */
+th {
+  position: sticky;
+  top: 0;
+  background: #2ecc71;
+  color: white;
 }
 </style>
 
@@ -132,7 +151,6 @@ if(localStorage.getItem("loggedIn") !== "true") {
 
   </div>
 
-  <!-- BUTTONS SA BABA -->
   <div class="btn-row">
     <button class="save" onclick="addEmployee()">Save</button>
     <button class="update" onclick="updateEmployee()" id="updateBtn" style="display:none;">Update</button>
