@@ -238,6 +238,21 @@ function compute(){
   let net = gross - totalDed;
 
   return {gross, totalDed, net};
+  let history = JSON.parse(localStorage.getItem("payrollHistory")) || [];
+
+history.push({
+  name: employeeName,
+  empid: employeeId,
+  salary: basicSalary,
+  net: netSalary,
+  sss: sss,
+  pagibig: pagibig,
+  philhealth: philhealth,
+  other: otherDeduction,
+  totalDeduction: totalDeduction
+});
+
+localStorage.setItem("payrollHistory", JSON.stringify(history));
 }
 
 /* SAVE */
