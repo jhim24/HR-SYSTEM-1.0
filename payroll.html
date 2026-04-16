@@ -17,6 +17,7 @@ body {
   margin-bottom:10px;
 }
 
+/* BUTTON */
 button {
   padding:8px;
   border:none;
@@ -44,6 +45,7 @@ button {
   gap:10px;
 }
 
+/* INPUT */
 input, select {
   padding:6px;
   border:1px solid #ccc;
@@ -82,7 +84,9 @@ th {
 
 <div class="form">
 
-<select id="emp"></select>
+<select id="emp">
+<option value="">Select Employee</option>
+</select>
 
 <input id="rate" placeholder="Rate per Day">
 <input id="days" placeholder="Days">
@@ -142,14 +146,15 @@ th {
 
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
 let history = JSON.parse(localStorage.getItem("payrollHistory")) || [];
-
 let editIndex = -1;
 
-/* LOAD EMPLOYEE */
+/* LOAD EMPLOYEES */
 function loadEmployees(){
-emp.innerHTML = "<option>Select Employee</option>";
+let select = document.getElementById("emp");
+select.innerHTML = '<option value="">Select Employee</option>';
+
 employees.forEach((e,i)=>{
-  emp.innerHTML += `<option value="${i}">
+  select.innerHTML += `<option value="${i}">
     ${e.fname} ${e.lname}
   </option>`;
 });
@@ -158,30 +163,33 @@ employees.forEach((e,i)=>{
 /* COMPUTE */
 function compute(){
 
-let i = emp.value;
-if(i === "Select Employee") return alert("Select employee");
+let i = document.getElementById("emp").value;
+
+if(i === ""){
+  alert("Select employee");
+  return;
+}
 
 let e = employees[i];
 
-let rate = +rate.value || 0;
-let days = +days.value || 0;
-let holiday = +holiday.value || 0;
-let ot = +ot.value || 0;
-let sick = +sick.value || 0;
-let vacation = +vacation.value || 0;
+let rate = +document.getElementById("rate").value || 0;
+let days = +document.getElementById("days").value || 0;
+let holiday = +document.getElementById("holiday").value || 0;
+let ot = +document.getElementById("ot").value || 0;
+let sick = +document.getElementById("sick").value || 0;
+let vacation = +document.getElementById("vacation").value || 0;
 
-let sss = +sss.value || 0;
-let pagibig = +pagibig.value || 0;
-let philhealth = +philhealth.value || 0;
-let healthcard = +healthcard.value || 0;
-let other = +other.value || 0;
+let sss = +document.getElementById("sss").value || 0;
+let pagibig = +document.getElementById("pagibig").value || 0;
+let philhealth = +document.getElementById("philhealth").value || 0;
+let healthcard = +document.getElementById("healthcard").value || 0;
+let other = +document.getElementById("other").value || 0;
 
 /* COMPUTE */
 let totalDays = days + holiday + ot + sick + vacation;
 let gross = rate * totalDays;
 
 let totalDed = sss + pagibig + philhealth + healthcard + other;
-
 let net = gross - totalDed;
 
 let record = {
@@ -193,6 +201,7 @@ totalDed,
 net
 };
 
+/* SAVE OR UPDATE */
 if(editIndex === -1){
   history.push(record);
 }else{
@@ -211,39 +220,44 @@ function edit(i){
 let p = history[i];
 editIndex = i;
 
-rate.value = p.rate;
-ot.value = p.ot;
-holiday.value = p.holiday;
-sick.value = p.sick;
-vacation.value = p.vacation;
+document.getElementById("rate").value = p.rate;
+document.getElementById("ot").value = p.ot;
+document.getElementById("holiday").value = p.holiday;
+document.getElementById("sick").value = p.sick;
+document.getElementById("vacation").value = p.vacation;
 
-sss.value = p.sss;
-pagibig.value = p.pagibig;
-philhealth.value = p.philhealth;
-healthcard.value = p.healthcard;
-other.value = p.other;
+document.getElementById("sss").value = p.sss;
+document.getElementById("pagibig").value = p.pagibig;
+document.getElementById("philhealth").value = p.philhealth;
+document.getElementById("healthcard").value = p.healthcard;
+document.getElementById("other").value = p.other;
 }
 
 /* UPDATE BUTTON */
 function update(){
-if(editIndex === -1) return alert("Select record to edit");
+if(editIndex === -1){
+  alert("Click Edit first");
+  return;
+}
 compute();
 }
 
 /* DELETE */
 function del(i){
 if(confirm("Delete?")){
-history.splice(i,1);
-localStorage.setItem("payrollHistory", JSON.stringify(history));
-display();
+  history.splice(i,1);
+  localStorage.setItem("payrollHistory", JSON.stringify(history));
+  display();
 }
 }
 
 /* DISPLAY */
 function display(){
-tbl.innerHTML="";
+let tbl = document.getElementById("tbl");
+tbl.innerHTML = "";
+
 history.forEach((p,i)=>{
-tbl.innerHTML+=`
+tbl.innerHTML += `
 <tr>
 <td>${p.name}</td>
 <td>${p.rate}</td>
