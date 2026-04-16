@@ -8,11 +8,14 @@ body {
   font-family: Arial;
   margin:0;
   padding:20px;
-  background:#0f172a;
-  color:white;
+  background:#f4f6f9;
+  color:#333;
 }
 
-h2 { text-align:center; }
+h2 {
+  text-align:center;
+  margin-bottom:15px;
+}
 
 /* TOP BAR */
 .top {
@@ -27,38 +30,39 @@ h2 { text-align:center; }
   border-radius:6px;
   cursor:pointer;
   color:white;
+  font-size:13px;
 }
 
-.back { background:#334155; }
-.clear { background:#dc2626; }
-.view { background:#2563eb; }
-.edit { background:#f59e0b; }
-.delete { background:#dc2626; }
+.back { background:#6c757d; }
+.clear { background:#dc3545; }
+.view { background:#0d6efd; }
+.edit { background:#ffc107; color:black; }
+.delete { background:#dc3545; }
 
 /* CARD */
 .card {
-  background:#1e293b;
+  background:white;
   padding:15px;
   border-radius:10px;
   margin-bottom:15px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
 }
 
 /* TABLE */
 table {
   width:100%;
   border-collapse:collapse;
-  background:white;
-  color:black;
 }
 
 th, td {
-  border:1px solid #ccc;
+  border:1px solid #ddd;
   padding:8px;
   text-align:center;
+  font-size:13px;
 }
 
 th {
-  background:#22c55e;
+  background:#0d6efd;
   color:white;
 }
 
@@ -79,6 +83,7 @@ th {
 
 <h2>Payroll History</h2>
 
+<!-- MAIN TABLE -->
 <div class="card">
 <table>
 <thead>
@@ -95,13 +100,14 @@ th {
 </table>
 </div>
 
-<!-- DETAILS -->
+<!-- DETAILS TABLE -->
 <div class="card" id="detailsBox">
 <h3>Payroll Details</h3>
 
 <table>
 <thead>
 <tr>
+<th>Full Name</th>
 <th>Rate</th>
 <th>Days</th>
 <th>OT</th>
@@ -115,7 +121,7 @@ th {
 <th>Health Card</th>
 <th>Other</th>
 <th>Total Deduction</th>
-<th>Net</th>
+<th>Net Pay</th>
 </tr>
 </thead>
 
@@ -125,12 +131,12 @@ th {
 
 <script>
 
-/* ALWAYS GET FRESH DATA */
+/* GET DATA */
 function getPayroll(){
   return JSON.parse(localStorage.getItem("payroll")) || [];
 }
 
-/* LOAD DATA */
+/* LOAD HISTORY */
 function loadHistory(){
   let data = getPayroll();
   let table = document.getElementById("historyTable");
@@ -168,6 +174,7 @@ function viewRecord(index){
 
   document.getElementById("detailsTable").innerHTML = `
     <tr>
+      <td>${p.name}</td>
       <td>${p.rate}</td>
       <td>${p.days}</td>
       <td>${p.ot}</td>
