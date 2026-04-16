@@ -18,7 +18,6 @@ body {
 
 h2 {
   text-align: center;
-  margin-bottom: 15px;
 }
 
 /* TOP BAR */
@@ -51,7 +50,6 @@ h2 {
   gap: 12px;
 }
 
-/* INPUT */
 input, select {
   padding: 12px;
   border-radius: 8px;
@@ -107,6 +105,7 @@ if(localStorage.getItem("loggedIn") !== "true"){
 </script>
 
 </head>
+
 <body>
 
 <div class="top-bar">
@@ -181,10 +180,9 @@ function goBack(){
   window.location.href = "index.html";
 }
 
-/* LOAD EMPLOYEES */
+/* LOAD EMPLOYEE */
 function loadEmployees(){
   employee.innerHTML = "<option value=''>Select Employee</option>";
-
   employees.forEach((e,i)=>{
     employee.innerHTML += `<option value="${i}">${e.fname} ${e.lname}</option>`;
   });
@@ -192,19 +190,16 @@ function loadEmployees(){
 
 /* COMPUTE */
 function compute(){
-  let gross = (+rate.value || 0) * (
-    (+days.value || 0) +
-    (+ot.value || 0) +
-    (+holiday.value || 0) +
-    (+sick.value || 0) +
-    (+birthday.value || 0) +
-    (+vacation.value || 0)
+  let gross = (+rate.value||0) * (
+    (+days.value||0)+(+ot.value||0)+(+holiday.value||0)+
+    (+sick.value||0)+(+birthday.value||0)+(+vacation.value||0)
   );
 
   let totalDed =
-    (+sss.value||0)+(+pagibig.value||0)+(+philhealth.value||0)+(+healthcard.value||0)+(+other.value||0);
+    (+sss.value||0)+(+pagibig.value||0)+(+philhealth.value||0)+
+    (+healthcard.value||0)+(+other.value||0);
 
-  return {gross, totalDed, net: gross - totalDed};
+  return {gross, totalDed, net: gross-totalDed};
 }
 
 /* SAVE */
@@ -217,22 +212,22 @@ function savePayroll(){
 
   let record = {
     name,
-    rate: rate.value,
-    days: days.value,
-    ot: ot.value,
-    holiday: holiday.value,
-    sick: sick.value,
-    birthday: birthday.value,
-    vacation: vacation.value,
-    sss: sss.value,
-    pagibig: pagibig.value,
-    philhealth: philhealth.value,
-    healthcard: healthcard.value,
-    other: other.value,
-    othername: othername.value,
-    gross: c.gross.toFixed(2),
-    totalDed: c.totalDed.toFixed(2),
-    net: c.net.toFixed(2)
+    rate:rate.value,
+    days:days.value,
+    ot:ot.value,
+    holiday:holiday.value,
+    sick:sick.value,
+    birthday:birthday.value,
+    vacation:vacation.value,
+    sss:sss.value,
+    pagibig:pagibig.value,
+    philhealth:philhealth.value,
+    healthcard:healthcard.value,
+    other:other.value,
+    othername:othername.value,
+    gross:c.gross.toFixed(2),
+    totalDed:c.totalDed.toFixed(2),
+    net:c.net.toFixed(2)
   };
 
   payroll.push(record);
@@ -240,6 +235,70 @@ function savePayroll(){
 
   display();
   clearForm();
+}
+
+/* EDIT */
+function editPayroll(i){
+  let p = payroll[i];
+
+  Object.keys(p).forEach(k=>{
+    if(document.getElementById(k)){
+      document.getElementById(k).value = p[k];
+    }
+  });
+
+  editIndex = i;
+  updateBtn.style.display="inline-block";
+  cancelBtn.style.display="inline-block";
+}
+
+/* UPDATE */
+function updatePayroll(){
+  if(editIndex===-1) return;
+
+  let c = compute();
+
+  payroll[editIndex] = {
+    ...payroll[editIndex],
+    rate:rate.value,
+    days:days.value,
+    ot:ot.value,
+    holiday:holiday.value,
+    sick:sick.value,
+    birthday:birthday.value,
+    vacation:vacation.value,
+    sss:sss.value,
+    pagibig:pagibig.value,
+    philhealth:philhealth.value,
+    healthcard:healthcard.value,
+    other:other.value,
+    othername:othername.value,
+    gross:c.gross.toFixed(2),
+    totalDed:c.totalDed.toFixed(2),
+    net:c.net.toFixed(2)
+  };
+
+  localStorage.setItem("payroll", JSON.stringify(payroll));
+
+  display();
+  cancelEdit();
+}
+
+/* CANCEL */
+function cancelEdit(){
+  editIndex=-1;
+  clearForm();
+  updateBtn.style.display="none";
+  cancelBtn.style.display="none";
+}
+
+/* DELETE */
+function del(i){
+  if(confirm("Delete?")){
+    payroll.splice(i,1);
+    localStorage.setItem("payroll", JSON.stringify(payroll));
+    display();
+  }
 }
 
 /* DISPLAY */
@@ -267,22 +326,14 @@ function display(){
         <td>${p.totalDed}</td>
         <td>${p.net}</td>
         <td>
-          <button onclick="del(${i})">Delete</button>
+          <button onclick="editPayroll(${i})">Edit</button>
+          <button class="delete" onclick="del(${i})">Delete</button>
         </td>
       </tr>`;
   });
 }
 
-/* DELETE */
-function del(i){
-  if(confirm("Delete?")){
-    payroll.splice(i,1);
-    localStorage.setItem("payroll", JSON.stringify(payroll));
-    display();
-  }
-}
-
-/* CLEAR FORM */
+/* CLEAR */
 function clearForm(){
   document.querySelectorAll("input").forEach(i=>i.value="");
   employee.value="";
