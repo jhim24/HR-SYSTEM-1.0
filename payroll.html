@@ -4,17 +4,9 @@
 <title>Payroll System</title>
 
 <style>
-body {
-  font-family: Arial;
-  background:#eef3ff;
-  padding:20px;
-}
+body { font-family:Arial; padding:20px; background:#eef3ff; }
+h2 { border-bottom:3px solid green; }
 
-h2 {
-  border-bottom:3px solid green;
-}
-
-/* BOX */
 .box {
   border:2px solid green;
   padding:15px;
@@ -23,46 +15,25 @@ h2 {
   margin-bottom:10px;
 }
 
-/* GRID FORM */
-.form {
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap:10px;
-}
-
-/* INPUT */
 input {
   width:100%;
-  padding:6px;
-  font-size:12px;
+  padding:8px;
+  margin:5px 0;
   border-radius:5px;
   border:1px solid #ccc;
-  height:30px;
-  box-sizing:border-box;
 }
 
-/* SECTION TITLE */
-.section {
-  grid-column: span 3;
-  font-weight:bold;
-  color:#2c3e50;
-  margin-top:5px;
-}
-
-/* BUTTON */
 button {
   padding:8px 15px;
   border:none;
   border-radius:5px;
   cursor:pointer;
-  margin-top:10px;
 }
 
 .save { background:green; color:white; }
 .update { background:orange; }
 .delete { background:red; color:white; }
 
-/* TABLE */
 table {
   width:100%;
   border-collapse:collapse;
@@ -80,7 +51,6 @@ th {
   color:white;
 }
 </style>
-
 </head>
 
 <body>
@@ -89,38 +59,34 @@ th {
 
 <div class="box">
 
-<div class="form">
-
-<div class="section">Employee Info</div>
 <input id="name" placeholder="Employee Name">
-<input id="rate" type="number" placeholder="Rate">
+<input id="rate" type="number" placeholder="Rate per Day">
 <input id="days" type="number" placeholder="Days">
 
-<div class="section">Sick Leave</div>
+<!-- SICK -->
 <input id="paidSick" type="number" placeholder="Paid Sick">
 <input id="unpaidSick" type="number" placeholder="Unpaid Sick">
 
-<div class="section">Vacation Leave</div>
+<!-- ADD LANG (SAFE) -->
 <input id="paidVacation" type="number" placeholder="Paid Vacation">
 <input id="unpaidVacation" type="number" placeholder="Unpaid Vacation">
 
-<div class="section">Birthday Leave</div>
 <input id="paidBirthday" type="number" placeholder="Paid Birthday">
 <input id="unpaidBirthday" type="number" placeholder="Unpaid Birthday">
 
-<div class="section">Other Earnings</div>
+<!-- EXISTING -->
 <input id="ot" type="number" placeholder="OT">
 <input id="holiday" type="number" placeholder="Holiday">
 
-<div class="section">Deductions</div>
 <input id="sss" type="number" placeholder="SSS">
 <input id="pagibig" type="number" placeholder="Pag-IBIG">
 <input id="philhealth" type="number" placeholder="PhilHealth">
 <input id="healthcard" type="number" placeholder="Health Card">
-<input id="othername" placeholder="Other Name">
+
+<input id="othername" placeholder="Other Deduction Name">
 <input id="other" type="number" placeholder="Other Amount">
 
-</div>
+<br>
 
 <button class="save" onclick="save()">Save</button>
 <button class="update" onclick="update()">Update</button>
@@ -151,16 +117,15 @@ th {
 let data = JSON.parse(localStorage.getItem("payroll")) || [];
 let editIndex = null;
 
-/* SAVE */
 function save(){
 
-let name = document.getElementById("name").value.trim();
-if(name==="") return alert("Enter employee name");
+let name = document.getElementById("name").value;
+if(name==="") return alert("Enter name");
 
-let rate = +document.getElementById("rate").value || 0;
-let days = +document.getElementById("days").value || 0;
+let rate = +rate.value || 0;
+let days = +days.value || 0;
 
-/* LEAVES */
+/* ORIGINAL + ADD */
 let paidSick = +paidSick.value || 0;
 let unpaidSick = +unpaidSick.value || 0;
 
@@ -170,7 +135,6 @@ let unpaidVacation = +unpaidVacation.value || 0;
 let paidBirthday = +paidBirthday.value || 0;
 let unpaidBirthday = +unpaidBirthday.value || 0;
 
-/* OTHER */
 let ot = +ot.value || 0;
 let holiday = +holiday.value || 0;
 
@@ -180,7 +144,7 @@ let philhealth = +philhealth.value || 0;
 let healthcard = +healthcard.value || 0;
 let other = +other.value || 0;
 
-/* COMPUTATION */
+/* SAFE COMPUTATION */
 let gross = rate * (
   days +
   paidSick +
@@ -199,10 +163,8 @@ let unpaid = rate * (
 let totalDed = sss + pagibig + philhealth + healthcard + other + unpaid;
 let net = gross - totalDed;
 
-/* SAVE OBJECT */
 let rec = {
-name,
-rate, days,
+name, rate, days,
 paidSick, unpaidSick,
 paidVacation, unpaidVacation,
 paidBirthday, unpaidBirthday,
@@ -210,10 +172,8 @@ ot, holiday,
 sss, pagibig, philhealth, healthcard,
 othername: othername.value,
 other,
-gross: gross.toFixed(2),
-totalDed: totalDed.toFixed(2),
-net: net.toFixed(2),
-date: new Date().toLocaleString()
+gross, totalDed, net,
+date:new Date().toLocaleString()
 };
 
 data.push(rec);
@@ -223,7 +183,6 @@ display();
 clearForm();
 }
 
-/* DISPLAY */
 function display(){
 tbl.innerHTML="";
 data.forEach((p,i)=>{
@@ -241,7 +200,6 @@ tbl.innerHTML+=`
 });
 }
 
-/* EDIT */
 function edit(i){
 let p=data[i];
 editIndex=i;
@@ -271,30 +229,25 @@ othername.value=p.othername;
 other.value=p.other;
 }
 
-/* UPDATE */
 function update(){
-if(editIndex===null) return alert("Select record first");
-
+if(editIndex===null) return alert("Select first");
 data.splice(editIndex,1);
 editIndex=null;
 save();
 }
 
-/* DELETE */
 function del(i){
-if(confirm("Delete record?")){
+if(confirm("Delete?")){
 data.splice(i,1);
 localStorage.setItem("payroll", JSON.stringify(data));
 display();
 }
 }
 
-/* CLEAR */
 function clearForm(){
 document.querySelectorAll("input").forEach(i=>i.value="");
 }
 
-/* INIT */
 display();
 
 </script>
