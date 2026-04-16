@@ -1,106 +1,153 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Payroll System</title>
+<title>Payroll System Pro</title>
 
 <style>
-body { font-family:Arial; padding:20px; background:#eef3ff; }
-h2 { border-bottom:3px solid green; }
-
-.box {
-  border:2px solid green;
-  padding:15px;
-  border-radius:10px;
-  background:white;
-  margin-bottom:10px;
+body {
+  font-family: Arial;
+  background: linear-gradient(135deg,#dfe9f3,#ffffff);
+  padding:20px;
 }
 
+/* HEADER */
+h2 {
+  text-align:center;
+  color:#2c3e50;
+}
+
+/* CARD */
+.card {
+  background:white;
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:15px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* GRID */
+.form {
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:10px;
+}
+
+/* LABEL */
+.label {
+  grid-column: span 3;
+  font-weight:bold;
+  color:#34495e;
+  margin-top:5px;
+}
+
+/* INPUT */
 input {
-  width:100%;
   padding:8px;
-  margin:5px 0;
-  border-radius:5px;
+  border-radius:6px;
   border:1px solid #ccc;
+  font-size:13px;
+  width:100%;
+}
+
+/* BUTTON */
+.buttons {
+  margin-top:10px;
 }
 
 button {
   padding:8px 15px;
   border:none;
-  border-radius:5px;
+  border-radius:6px;
   cursor:pointer;
+  margin-right:5px;
+  font-size:13px;
 }
 
-.save { background:green; color:white; }
-.update { background:orange; }
-.delete { background:red; color:white; }
+.save { background:#27ae60; color:white; }
+.update { background:#f39c12; }
+.delete { background:#e74c3c; color:white; }
 
+/* TABLE */
 table {
   width:100%;
   border-collapse:collapse;
-  background:white;
 }
 
 th, td {
-  border:1px solid #ccc;
+  border:1px solid #ddd;
   padding:8px;
   text-align:center;
+  font-size:13px;
 }
 
 th {
-  background:green;
+  background:#3498db;
   color:white;
 }
+
+tr:hover {
+  background:#f2f2f2;
+}
 </style>
+
 </head>
 
 <body>
 
 <h2>Payroll System</h2>
 
-<div class="box">
+<div class="card">
 
+<div class="form">
+
+<div class="label">Employee Info</div>
 <input id="name" placeholder="Employee Name">
-<input id="rate" type="number" placeholder="Rate per Day">
-<input id="days" type="number" placeholder="Days">
+<input id="rate" type="number" placeholder="Rate / Day">
+<input id="days" type="number" placeholder="Total Days">
 
-<!-- SICK -->
+<div class="label">Sick Leave</div>
 <input id="paidSick" type="number" placeholder="Paid Sick">
 <input id="unpaidSick" type="number" placeholder="Unpaid Sick">
 
-<!-- ADD LANG (SAFE) -->
+<div class="label">Vacation Leave</div>
 <input id="paidVacation" type="number" placeholder="Paid Vacation">
 <input id="unpaidVacation" type="number" placeholder="Unpaid Vacation">
 
+<div class="label">Birthday Leave</div>
 <input id="paidBirthday" type="number" placeholder="Paid Birthday">
 <input id="unpaidBirthday" type="number" placeholder="Unpaid Birthday">
 
-<!-- EXISTING -->
-<input id="ot" type="number" placeholder="OT">
+<div class="label">Other Earnings</div>
+<input id="ot" type="number" placeholder="Overtime">
 <input id="holiday" type="number" placeholder="Holiday">
 
+<div class="label">Deductions</div>
 <input id="sss" type="number" placeholder="SSS">
 <input id="pagibig" type="number" placeholder="Pag-IBIG">
 <input id="philhealth" type="number" placeholder="PhilHealth">
 <input id="healthcard" type="number" placeholder="Health Card">
-
 <input id="othername" placeholder="Other Deduction Name">
 <input id="other" type="number" placeholder="Other Amount">
 
-<br>
+</div>
 
+<div class="buttons">
 <button class="save" onclick="save()">Save</button>
 <button class="update" onclick="update()">Update</button>
+</div>
 
 </div>
 
-<div class="box">
+<div class="card">
 
 <table>
 <thead>
 <tr>
 <th>Name</th>
+<th>Rate</th>
+<th>Days</th>
 <th>Gross</th>
-<th>Total Deduction</th>
+<th>Deduction</th>
 <th>Net</th>
 <th>Action</th>
 </tr>
@@ -117,15 +164,15 @@ th {
 let data = JSON.parse(localStorage.getItem("payroll")) || [];
 let editIndex = null;
 
+/* SAVE */
 function save(){
 
-let name = document.getElementById("name").value;
+let name = nameInput();
 if(name==="") return alert("Enter name");
 
-let rate = +rate.value || 0;
-let days = +days.value || 0;
+let rate = +rateInput();
+let days = +daysInput();
 
-/* ORIGINAL + ADD */
 let paidSick = +paidSick.value || 0;
 let unpaidSick = +unpaidSick.value || 0;
 
@@ -144,20 +191,13 @@ let philhealth = +philhealth.value || 0;
 let healthcard = +healthcard.value || 0;
 let other = +other.value || 0;
 
-/* SAFE COMPUTATION */
+/* COMPUTE */
 let gross = rate * (
-  days +
-  paidSick +
-  paidVacation +
-  paidBirthday +
-  ot +
-  holiday
+days + paidSick + paidVacation + paidBirthday + ot + holiday
 );
 
 let unpaid = rate * (
-  unpaidSick +
-  unpaidVacation +
-  unpaidBirthday
+unpaidSick + unpaidVacation + unpaidBirthday
 );
 
 let totalDed = sss + pagibig + philhealth + healthcard + other + unpaid;
@@ -172,8 +212,7 @@ ot, holiday,
 sss, pagibig, philhealth, healthcard,
 othername: othername.value,
 other,
-gross, totalDed, net,
-date:new Date().toLocaleString()
+gross, totalDed, net
 };
 
 data.push(rec);
@@ -183,12 +222,15 @@ display();
 clearForm();
 }
 
+/* DISPLAY */
 function display(){
 tbl.innerHTML="";
 data.forEach((p,i)=>{
 tbl.innerHTML+=`
 <tr>
 <td>${p.name}</td>
+<td>${p.rate}</td>
+<td>${p.days}</td>
 <td>${p.gross}</td>
 <td>${p.totalDed}</td>
 <td>${p.net}</td>
@@ -200,6 +242,7 @@ tbl.innerHTML+=`
 });
 }
 
+/* EDIT */
 function edit(i){
 let p=data[i];
 editIndex=i;
@@ -229,6 +272,7 @@ othername.value=p.othername;
 other.value=p.other;
 }
 
+/* UPDATE */
 function update(){
 if(editIndex===null) return alert("Select first");
 data.splice(editIndex,1);
@@ -236,6 +280,7 @@ editIndex=null;
 save();
 }
 
+/* DELETE */
 function del(i){
 if(confirm("Delete?")){
 data.splice(i,1);
@@ -244,10 +289,17 @@ display();
 }
 }
 
+/* CLEAR */
 function clearForm(){
 document.querySelectorAll("input").forEach(i=>i.value="");
 }
 
+/* HELPERS */
+function nameInput(){ return document.getElementById("name").value; }
+function rateInput(){ return document.getElementById("rate").value; }
+function daysInput(){ return document.getElementById("days").value; }
+
+/* INIT */
 display();
 
 </script>
