@@ -31,35 +31,96 @@ button {padding:6px;}
 <script>
 
 function load(){
-  let data = JSON.parse(localStorage.getItem("payroll")) || [];
+  <script>
 
-  table.innerHTML = "";
+function getData(){
+  return JSON.parse(localStorage.getItem("payroll")) || [];
+}
+
+/* LOAD */
+function load(){
+  let data = getData();
+
+  history.innerHTML = "";
 
   if(data.length === 0){
-    table.innerHTML = "<tr><td colspan='4'>NO DATA FOUND ❌</td></tr>";
+    history.innerHTML = "<tr><td colspan='4'>NO DATA</td></tr>";
     return;
   }
 
-  data.forEach(p=>{
-    table.innerHTML += `
+  data.forEach((p,i)=>{
+    history.innerHTML += `
       <tr>
         <td>${p.name}</td>
-        <td>${p.date}</td>
+        <td>${p.date || "-"}</td>
         <td>${p.gross}</td>
         <td>${p.net}</td>
+        <td>
+          <button onclick="view(${i})">View</button>
+          <button onclick="del(${i})">Delete</button>
+        </td>
       </tr>
     `;
   });
 }
 
-/* DEBUG */
-function debug(){
-  alert(localStorage.getItem("payroll"));
+/* VIEW */
+function view(i){
+  let data = getData();
+  let p = data[i];
+
+  details.style.display="block";
+
+  detailsBody.innerHTML = `
+    <tr>
+      <td>${p.rate}</td>
+      <td>${p.days}</td>
+      <td>${p.ot}</td>
+      <td>${p.holiday}</td>
+      <td>${p.sick}</td>
+      <td>${p.birthday}</td>
+      <td>${p.vacation}</td>
+      <td>${p.gross}</td>
+      <td>${p.sss}</td>
+      <td>${p.pagibig}</td>
+      <td>${p.philhealth}</td>
+      <td>${p.healthcard}</td>
+      <td>${p.othername} (${p.other})</td>
+      <td>${p.totalDed}</td>
+      <td>${p.net}</td>
+    </tr>
+  `;
 }
 
+/* DELETE */
+function del(i){
+  let data = getData();
+
+  if(confirm("Delete?")){
+    data.splice(i,1);
+    localStorage.setItem("payroll", JSON.stringify(data));
+    load();
+    details.style.display="none";
+  }
+}
+
+/* CLEAR */
+function clearAll(){
+  if(confirm("Clear all?")){
+    localStorage.removeItem("payroll");
+    load();
+    details.style.display="none";
+  }
+}
+
+/* BACK */
+function goBack(){
+  window.location.href = "index.html";
+}
+
+/* INIT */
 load();
 
 </script>
-
 </body>
 </html>
