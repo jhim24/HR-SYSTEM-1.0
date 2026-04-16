@@ -1,27 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Payroll History</title>
+<title>Payroll History</title>
 
 <style>
 body {
   font-family: Arial;
-  margin:0;
-  padding:20px;
   background:#f4f6f9;
-  color:#333;
+  padding:20px;
 }
 
-h2 {
-  text-align:center;
-  margin-bottom:15px;
-}
+h2 { text-align:center; }
 
-/* TOP BAR */
+/* TOP */
 .top {
   display:flex;
   justify-content:space-between;
-  margin-bottom:15px;
+  margin-bottom:10px;
 }
 
 .btn {
@@ -30,22 +25,31 @@ h2 {
   border-radius:6px;
   cursor:pointer;
   color:white;
-  font-size:13px;
 }
 
 .back { background:#6c757d; }
 .clear { background:#dc3545; }
-.view { background:#0d6efd; }
-.edit { background:#ffc107; color:black; }
-.delete { background:#dc3545; }
+
+/* FILTER */
+.filters {
+  display:flex;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+input {
+  padding:8px;
+  border-radius:5px;
+  border:1px solid #ccc;
+}
 
 /* CARD */
 .card {
   background:white;
   padding:15px;
   border-radius:10px;
-  margin-bottom:15px;
   box-shadow:0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom:15px;
 }
 
 /* TABLE */
@@ -58,7 +62,6 @@ th, td {
   border:1px solid #ddd;
   padding:8px;
   text-align:center;
-  font-size:13px;
 }
 
 th {
@@ -66,10 +69,14 @@ th {
   color:white;
 }
 
+/* ACTION */
+.view { background:#0d6efd; color:white; }
+.edit { background:#ffc107; }
+.delete { background:#dc3545; color:white; }
+.print { background:#198754; color:white; }
+
 /* DETAILS */
-#detailsBox {
-  display:none;
-}
+#detailsBox { display:none; }
 </style>
 
 </head>
@@ -83,7 +90,13 @@ th {
 
 <h2>Payroll History</h2>
 
-<!-- MAIN TABLE -->
+<!-- FILTER -->
+<div class="filters">
+  <input type="text" id="search" placeholder="Search Name..." onkeyup="loadHistory()">
+  <input type="date" id="dateFilter" onchange="loadHistory()">
+</div>
+
+<!-- TABLE -->
 <div class="card">
 <table>
 <thead>
@@ -100,9 +113,11 @@ th {
 </table>
 </div>
 
-<!-- DETAILS TABLE -->
+<!-- DETAILS -->
 <div class="card" id="detailsBox">
 <h3>Payroll Details</h3>
+
+<button class="btn print" onclick="printDetails()">🖨 Print</button>
 
 <table>
 <thead>
@@ -121,7 +136,7 @@ th {
 <th>Health Card</th>
 <th>Other</th>
 <th>Total Deduction</th>
-<th>Net Pay</th>
+<th>Net</th>
 </tr>
 </thead>
 
@@ -131,48 +146,54 @@ th {
 
 <script>
 
-/* GET DATA */
 function getPayroll(){
   return JSON.parse(localStorage.getItem("payroll")) || [];
 }
 
-/* LOAD HISTORY */
+/* LOAD WITH SEARCH + FILTER */
 function loadHistory(){
   let data = getPayroll();
-  let table = document.getElementById("historyTable");
+  let search = document.getElementById("search").value.toLowerCase();
+  let date = document.getElementById("dateFilter").value;
 
+  let table = document.getElementById("historyTable");
   table.innerHTML = "";
 
-  if(data.length === 0){
-    table.innerHTML = "<tr><td colspan='5'>No Payroll Data</td></tr>";
-    return;
-  }
-
   data.forEach((p,i)=>{
-    table.innerHTML += `
-      <tr>
-        <td>${p.name}</td>
-        <td>${p.date || "-"}</td>
-        <td>${p.gross}</td>
-        <td>${p.net}</td>
-        <td>
-          <button class="btn view" onclick="viewRecord(${i})">View</button>
-          <button class="btn edit" onclick="editRecord(${i})">Edit</button>
-          <button class="btn delete" onclick="deleteRecord(${i})">Delete</button>
-        </td>
-      </tr>
-    `;
+
+    let matchName = p.name.toLowerCase().includes(search);
+    let matchDate = !date || (p.date && p.date.includes(date));
+
+    if(matchName && matchDate){
+      table.innerHTML += `
+        <tr>
+          <td>${p.name}</td>
+          <td>${p.date || "-"}</td>
+          <td>${p.gross}</td>
+          <td>${p.net}</td>
+          <td>
+            <button class="view" onclick="viewRecord(${i})">View</button>
+            <button class="edit" onclick="editRecord(${i})">Edit</button>
+            <button class="delete" onclick="deleteRecord(${i})">Delete</button>
+          </td>
+        </tr>
+      `;
+    }
+
   });
 }
 
-/* VIEW DETAILS */
-function viewRecord(index){
+/* VIEW */
+let currentData = null;
+
+function viewRecord(i){
   let data = getPayroll();
-  let p = data[index];
+  let p = data[i];
+  currentData = p;
 
-  document.getElementById("detailsBox").style.display = "block";
+  document.getElementById("detailsBox").style.display="block";
 
-  document.getElementById("detailsTable").innerHTML = `
+  detailsTable.innerHTML = `
     <tr>
       <td>${p.name}</td>
       <td>${p.rate}</td>
@@ -193,36 +214,41 @@ function viewRecord(index){
   `;
 }
 
-/* DELETE */
-function deleteRecord(index){
-  let data = getPayroll();
+/* PRINT */
+function printDetails(){
+  let content = document.getElementById("detailsBox").innerHTML;
+  let w = window.open();
+  w.document.write(content);
+  w.print();
+}
 
-  if(confirm("Delete this record?")){
-    data.splice(index,1);
+/* DELETE */
+function deleteRecord(i){
+  let data = getPayroll();
+  if(confirm("Delete?")){
+    data.splice(i,1);
     localStorage.setItem("payroll", JSON.stringify(data));
     loadHistory();
-    document.getElementById("detailsBox").style.display = "none";
   }
 }
 
-/* CLEAR ALL */
+/* CLEAR */
 function clearAll(){
-  if(confirm("Delete all payroll records?")){
+  if(confirm("Clear all?")){
     localStorage.removeItem("payroll");
     loadHistory();
-    document.getElementById("detailsBox").style.display = "none";
   }
 }
 
 /* EDIT */
-function editRecord(index){
-  localStorage.setItem("editIndex", index);
-  window.location.href = "payroll.html";
+function editRecord(i){
+  localStorage.setItem("editIndex", i);
+  window.location.href="payroll.html";
 }
 
 /* BACK */
 function goBack(){
-  window.location.href = "index.html";
+  window.location.href="index.html";
 }
 
 /* INIT */
