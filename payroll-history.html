@@ -1,21 +1,85 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Payroll History</title>
+  <title>Payroll History</title>
+
 <style>
-body {font-family:Arial; background:#111; color:white; padding:20px;}
-table {width:100%; background:white; color:black; border-collapse:collapse;}
-th,td {border:1px solid #ccc; padding:8px; text-align:center;}
-button {padding:6px;}
+body {
+  font-family: Arial;
+  margin:0;
+  padding:20px;
+  background:#0f172a;
+  color:white;
+}
+
+h2 { text-align:center; }
+
+/* TOP BAR */
+.top {
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:15px;
+}
+
+.btn {
+  padding:8px 12px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  color:white;
+}
+
+.back { background:#334155; }
+.clear { background:#dc2626; }
+.view { background:#2563eb; }
+.edit { background:#f59e0b; }
+.delete { background:#dc2626; }
+
+/* CARD */
+.card {
+  background:#1e293b;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:15px;
+}
+
+/* TABLE */
+table {
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+  color:black;
+}
+
+th, td {
+  border:1px solid #ccc;
+  padding:8px;
+  text-align:center;
+}
+
+th {
+  background:#22c55e;
+  color:white;
+}
+
+/* DETAILS */
+#detailsBox {
+  display:none;
+}
 </style>
+
 </head>
 
 <body>
 
+<div class="top">
+  <button class="btn back" onclick="goBack()">⬅ Back</button>
+  <button class="btn clear" onclick="clearAll()">🗑 Clear All</button>
+</div>
+
 <h2>Payroll History</h2>
 
-<button onclick="debug()">🔍 Check Data</button>
-
+<div class="card">
 <table>
 <thead>
 <tr>
@@ -23,55 +87,86 @@ button {padding:6px;}
 <th>Date</th>
 <th>Gross</th>
 <th>Net</th>
+<th>Action</th>
 </tr>
 </thead>
-<tbody id="table"></tbody>
+
+<tbody id="historyTable"></tbody>
 </table>
+</div>
+
+<!-- DETAILS -->
+<div class="card" id="detailsBox">
+<h3>Payroll Details</h3>
+
+<table>
+<thead>
+<tr>
+<th>Rate</th>
+<th>Days</th>
+<th>OT</th>
+<th>Holiday</th>
+<th>Sick</th>
+<th>Birthday</th>
+<th>Vacation</th>
+<th>SSS</th>
+<th>Pag-IBIG</th>
+<th>PhilHealth</th>
+<th>Health Card</th>
+<th>Other</th>
+<th>Total Deduction</th>
+<th>Net</th>
+</tr>
+</thead>
+
+<tbody id="detailsTable"></tbody>
+</table>
+</div>
 
 <script>
 
-function load(){
-  <script>
-
-function getData(){
+/* ALWAYS GET FRESH DATA */
+function getPayroll(){
   return JSON.parse(localStorage.getItem("payroll")) || [];
 }
 
-/* LOAD */
-function load(){
-  let data = getData();
+/* LOAD DATA */
+function loadHistory(){
+  let data = getPayroll();
+  let table = document.getElementById("historyTable");
 
-  history.innerHTML = "";
+  table.innerHTML = "";
 
   if(data.length === 0){
-    history.innerHTML = "<tr><td colspan='4'>NO DATA</td></tr>";
+    table.innerHTML = "<tr><td colspan='5'>No Payroll Data</td></tr>";
     return;
   }
 
   data.forEach((p,i)=>{
-    history.innerHTML += `
+    table.innerHTML += `
       <tr>
         <td>${p.name}</td>
         <td>${p.date || "-"}</td>
         <td>${p.gross}</td>
         <td>${p.net}</td>
         <td>
-          <button onclick="view(${i})">View</button>
-          <button onclick="del(${i})">Delete</button>
+          <button class="btn view" onclick="viewRecord(${i})">View</button>
+          <button class="btn edit" onclick="editRecord(${i})">Edit</button>
+          <button class="btn delete" onclick="deleteRecord(${i})">Delete</button>
         </td>
       </tr>
     `;
   });
 }
 
-/* VIEW */
-function view(i){
-  let data = getData();
-  let p = data[i];
+/* VIEW DETAILS */
+function viewRecord(index){
+  let data = getPayroll();
+  let p = data[index];
 
-  details.style.display="block";
+  document.getElementById("detailsBox").style.display = "block";
 
-  detailsBody.innerHTML = `
+  document.getElementById("detailsTable").innerHTML = `
     <tr>
       <td>${p.rate}</td>
       <td>${p.days}</td>
@@ -80,7 +175,6 @@ function view(i){
       <td>${p.sick}</td>
       <td>${p.birthday}</td>
       <td>${p.vacation}</td>
-      <td>${p.gross}</td>
       <td>${p.sss}</td>
       <td>${p.pagibig}</td>
       <td>${p.philhealth}</td>
@@ -93,24 +187,30 @@ function view(i){
 }
 
 /* DELETE */
-function del(i){
-  let data = getData();
+function deleteRecord(index){
+  let data = getPayroll();
 
-  if(confirm("Delete?")){
-    data.splice(i,1);
+  if(confirm("Delete this record?")){
+    data.splice(index,1);
     localStorage.setItem("payroll", JSON.stringify(data));
-    load();
-    details.style.display="none";
+    loadHistory();
+    document.getElementById("detailsBox").style.display = "none";
   }
 }
 
-/* CLEAR */
+/* CLEAR ALL */
 function clearAll(){
-  if(confirm("Clear all?")){
+  if(confirm("Delete all payroll records?")){
     localStorage.removeItem("payroll");
-    load();
-    details.style.display="none";
+    loadHistory();
+    document.getElementById("detailsBox").style.display = "none";
   }
+}
+
+/* EDIT */
+function editRecord(index){
+  localStorage.setItem("editIndex", index);
+  window.location.href = "payroll.html";
 }
 
 /* BACK */
@@ -119,8 +219,9 @@ function goBack(){
 }
 
 /* INIT */
-load();
+loadHistory();
 
 </script>
+
 </body>
 </html>
