@@ -216,9 +216,162 @@ function viewRecord(i){
 
 /* PRINT */
 function printDetails(){
-  let content = document.getElementById("detailsBox").innerHTML;
-  let w = window.open();
+
+  let p = currentData;
+
+  let content = `
+  <html>
+  <head>
+  <title>Payslip</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding:20px;
+      background:#f4f6f9;
+    }
+
+    .card {
+      max-width:800px;
+      margin:auto;
+      background:white;
+      padding:20px;
+      border-radius:10px;
+      box-shadow:0 0 10px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      text-align:center;
+      color:#0d6efd;
+      margin-bottom:10px;
+    }
+
+    .info {
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:15px;
+      font-size:14px;
+    }
+
+    table {
+      width:100%;
+      border-collapse:collapse;
+      margin-top:10px;
+    }
+
+    th, td {
+      border:1px solid #ddd;
+      padding:8px;
+      text-align:center;
+      font-size:13px;
+    }
+
+    th {
+      background:#0d6efd;
+      color:white;
+    }
+
+    .total {
+      font-weight:bold;
+      background:#f1f1f1;
+    }
+
+    .footer {
+      margin-top:20px;
+      display:flex;
+      justify-content:space-between;
+    }
+
+    .sign {
+      text-align:center;
+      margin-top:30px;
+    }
+
+    @media print {
+      body { background:white; }
+    }
+  </style>
+  </head>
+
+  <body>
+
+  <div class="card">
+
+    <h2>PAYROLL PAYSLIP</h2>
+
+    <div class="info">
+      <div><b>Name:</b> ${p.name}</div>
+      <div><b>Date:</b> ${p.date || "-"}</div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Rate</th>
+          <th>Days</th>
+          <th>OT</th>
+          <th>Holiday</th>
+          <th>Sick</th>
+          <th>Birthday</th>
+          <th>Vacation</th>
+        </tr>
+      </thead>
+
+      <tr>
+        <td>${p.rate}</td>
+        <td>${p.days}</td>
+        <td>${p.ot}</td>
+        <td>${p.holiday}</td>
+        <td>${p.sick}</td>
+        <td>${p.birthday}</td>
+        <td>${p.vacation}</td>
+      </tr>
+    </table>
+
+    <table>
+      <thead>
+        <tr>
+          <th>SSS</th>
+          <th>Pag-IBIG</th>
+          <th>PhilHealth</th>
+          <th>Health Card</th>
+          <th>Other</th>
+          <th>Total Deduction</th>
+          <th>Net Pay</th>
+        </tr>
+      </thead>
+
+      <tr>
+        <td>${p.sss}</td>
+        <td>${p.pagibig}</td>
+        <td>${p.philhealth}</td>
+        <td>${p.healthcard}</td>
+        <td>${p.othername} (${p.other})</td>
+        <td class="total">${p.totalDed}</td>
+        <td class="total">${p.net}</td>
+      </tr>
+    </table>
+
+    <div class="footer">
+      <div class="sign">
+        ___________________<br>
+        Employee Signature
+      </div>
+
+      <div class="sign">
+        ___________________<br>
+        HR Signature
+      </div>
+    </div>
+
+  </div>
+
+  </body>
+  </html>
+  `;
+
+  let w = window.open("", "_blank");
   w.document.write(content);
+  w.document.close();
   w.print();
 }
 
