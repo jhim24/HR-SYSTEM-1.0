@@ -268,14 +268,19 @@ function getFormData() {
 }
 
 /* SAVE */
-function addEmployee() {
-  let emp = getFormData();
+function loadEmployees(){
 
-  if(emp.fname === "" || emp.empid === "") {
-    alert("Required fields!");
-    return;
-  }
+let employees = JSON.parse(localStorage.getItem("employees")) || [];
 
+emp.innerHTML = "<option>Select Employee</option>";
+
+employees.forEach((e,i)=>{
+  emp.innerHTML += `<option value="${i}">
+    ${e.fname || ""} ${e.lname || ""}
+  </option>`;
+});
+
+}
   employees.push(emp);
   save();
   display();
