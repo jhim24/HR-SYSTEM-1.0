@@ -6,8 +6,9 @@
 <style>
 body {
   font-family: Arial;
-  background: linear-gradient(135deg,#e3f2fd,#ffffff);
+  background: linear-gradient(135deg,#0f2027,#2c5364,#00c9ff);
   padding:20px;
+  color:white;
 }
 
 /* HEADER */
@@ -15,87 +16,80 @@ body {
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:10px;
 }
 
-h2 { margin:0; color:#2c3e50; }
-
 .back {
-  padding:6px 12px;
+  background:#34495e;
   border:none;
-  border-radius:5px;
-  background:#2c3e50;
+  padding:8px 12px;
+  border-radius:6px;
   color:white;
   cursor:pointer;
 }
 
 /* CARD */
 .card {
-  background:white;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
   padding:15px;
-  border-radius:10px;
-  margin-bottom:15px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  border-radius:12px;
+  margin-top:15px;
 }
 
 /* GRID */
 .form {
   display:grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap:6px;
+  grid-template-columns: repeat(5, 1fr);
+  gap:10px;
 }
 
-/* LABEL */
-.label {
-  grid-column: span 4;
-  font-weight:bold;
+/* INPUT STYLE */
+input, select {
+  background:#e0e0e0;
+  border:none;
+  border-radius:10px;
+  padding:10px;
   font-size:13px;
-  color:#34495e;
-  margin-top:5px;
-}
-
-/* INPUT */
-input {
-  padding:4px;
-  font-size:11px;
-  border-radius:5px;
-  border:1px solid #ccc;
-  height:26px;
+  outline:none;
+  width:100%;
 }
 
 /* BUTTON */
 button {
-  padding:6px 12px;
+  padding:8px 15px;
   border:none;
-  border-radius:5px;
+  border-radius:6px;
   cursor:pointer;
-  font-size:12px;
+  margin-top:10px;
 }
 
-.save { background:#27ae60; color:white; }
-.update { background:#f39c12; }
+.save { background:#2ecc71; color:white; }
+.update { background:#f39c12; color:black; }
 .delete { background:#e74c3c; color:white; }
 
 /* TABLE */
+.table-box {
+  overflow-x:auto;
+}
+
 table {
   width:100%;
+  min-width:1200px;
   border-collapse:collapse;
-  font-size:11px;
+  background:white;
+  color:black;
+  margin-top:10px;
 }
 
 th, td {
-  border:1px solid #ddd;
-  padding:6px;
+  padding:10px;
+  border:1px solid #ccc;
   text-align:center;
 }
 
 th {
-  background:#3498db;
+  background:#2ecc71;
   color:white;
-}
-
-tr:hover {
-  background:#f2f2f2;
 }
 </style>
 
@@ -112,40 +106,38 @@ tr:hover {
 
 <div class="form">
 
-<div class="label">Employee</div>
-<input id="name" placeholder="Name">
+<input id="name" placeholder="Employee Name">
 <input id="rate" type="number" placeholder="Rate">
 <input id="days" type="number" placeholder="Days">
 
-<div class="label">Leaves</div>
 <input id="paidSick" type="number" placeholder="Paid Sick">
 <input id="unpaidSick" type="number" placeholder="Unpaid Sick">
-<input id="paidVacation" type="number" placeholder="Paid Vac">
-<input id="unpaidVacation" type="number" placeholder="Unpaid Vac">
-<input id="paidBirthday" type="number" placeholder="Paid Bday">
-<input id="unpaidBirthday" type="number" placeholder="Unpaid Bday">
 
-<div class="label">Extra</div>
+<input id="paidVacation" type="number" placeholder="Paid Vacation">
+<input id="unpaidVacation" type="number" placeholder="Unpaid Vacation">
+
+<input id="paidBirthday" type="number" placeholder="Paid Birthday">
+<input id="unpaidBirthday" type="number" placeholder="Unpaid Birthday">
+
 <input id="ot" type="number" placeholder="OT">
 <input id="holiday" type="number" placeholder="Holiday">
 
-<div class="label">Deductions</div>
 <input id="sss" type="number" placeholder="SSS">
 <input id="pagibig" type="number" placeholder="Pag-IBIG">
 <input id="philhealth" type="number" placeholder="PhilHealth">
 <input id="healthcard" type="number" placeholder="Health Card">
-<input id="othername" placeholder="Other Name">
-<input id="other" type="number" placeholder="Amount">
+
+<input id="othername" placeholder="Other Deduction Name">
+<input id="other" type="number" placeholder="Other Amount">
 
 </div>
 
-<br>
 <button class="save" onclick="save()">Save</button>
 <button class="update" onclick="update()">Update</button>
 
 </div>
 
-<div class="card">
+<div class="card table-box">
 
 <table>
 <thead>
@@ -178,7 +170,7 @@ let editIndex = null;
 /* SAVE */
 function save(){
 
-let name = name.value;
+let name = document.getElementById("name").value;
 if(name==="") return alert("Enter name");
 
 let rate = +rate.value || 0;
@@ -214,7 +206,8 @@ let net = gross - totalDed;
 let rec = {
 name, rate, days,
 sss, pagibig, philhealth, healthcard, other,
-gross, net
+gross: gross.toFixed(2),
+net: net.toFixed(2)
 };
 
 data.push(rec);
