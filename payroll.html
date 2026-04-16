@@ -10,7 +10,6 @@ body {
   padding:20px;
 }
 
-/* BOX */
 .box {
   background:white;
   padding:15px;
@@ -18,22 +17,19 @@ body {
   margin-bottom:15px;
 }
 
-/* GRID */
 .form {
   display:grid;
   grid-template-columns: repeat(3, 1fr);
   gap:10px;
 }
 
-/* INPUT */
 input, select {
   padding:6px;
-  font-size:12px;
   border:1px solid #ccc;
   border-radius:5px;
+  font-size:12px;
 }
 
-/* BUTTON */
 button {
   padding:8px;
   border:none;
@@ -44,7 +40,6 @@ button {
 .save { background:green; color:white; }
 .delete { background:red; color:white; }
 
-/* TABLE */
 table {
   width:100%;
   border-collapse:collapse;
@@ -129,22 +124,28 @@ th {
 
 <script>
 
+/* LOAD DATA */
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
 let history = JSON.parse(localStorage.getItem("payrollHistory")) || [];
 
-/* LOAD EMP */
+/* LOAD EMPLOYEE DROPDOWN */
 function loadEmployees(){
-emp.innerHTML="<option>Select Employee</option>";
+
+emp.innerHTML = "<option>Select Employee</option>";
+
 employees.forEach((e,i)=>{
-emp.innerHTML += `<option value="${i}">${e.firstname} ${e.lastname}</option>`;
+  emp.innerHTML += `<option value="${i}">
+    ${e.fname} ${e.lname}
+  </option>`;
 });
+
 }
 
-/* SAVE */
+/* SAVE PAYROLL */
 function save(){
 
 let i = emp.value;
-if(i==="Select Employee") return alert("Select employee");
+if(i === "Select Employee") return alert("Select employee");
 
 let e = employees[i];
 
@@ -171,7 +172,7 @@ let net = gross - totalDed;
 
 /* SAVE */
 history.push({
-name: e.firstname + " " + e.lastname,
+name: e.fname + " " + e.lname,
 rate,
 ot,
 holiday,
@@ -227,6 +228,7 @@ localStorage.setItem("payrollHistory", JSON.stringify(history));
 display();
 }
 
+/* INIT */
 loadEmployees();
 display();
 
