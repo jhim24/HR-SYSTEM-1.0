@@ -31,7 +31,7 @@ body {
 .card {
   background: rgba(255,255,255,0.1);
   backdrop-filter: blur(10px);
-  padding:15px;
+  padding:20px;
   border-radius:12px;
   margin-top:15px;
 }
@@ -40,10 +40,10 @@ body {
 .form {
   display:grid;
   grid-template-columns: repeat(5, 1fr);
-  gap:10px;
+  gap:15px; /* FIXED spacing */
 }
 
-/* INPUT STYLE */
+/* INPUT */
 input, select {
   background:#e0e0e0;
   border:none;
@@ -110,6 +110,14 @@ th {
 <input id="rate" type="number" placeholder="Rate">
 <input id="days" type="number" placeholder="Days">
 
+<select id="bank">
+<option>Select Bank</option>
+<option>BPI</option>
+<option>BDO</option>
+<option>Metrobank</option>
+<option>Landbank</option>
+</select>
+
 <input id="paidSick" type="number" placeholder="Paid Sick">
 <input id="unpaidSick" type="number" placeholder="Unpaid Sick">
 
@@ -143,6 +151,7 @@ th {
 <thead>
 <tr>
 <th>Name</th>
+<th>Bank</th>
 <th>Rate</th>
 <th>Days</th>
 <th>SSS</th>
@@ -175,6 +184,7 @@ if(name==="") return alert("Enter name");
 
 let rate = +rate.value || 0;
 let days = +days.value || 0;
+let bank = bank.value;
 
 let paidSick = +paidSick.value || 0;
 let unpaidSick = +unpaidSick.value || 0;
@@ -204,7 +214,7 @@ let totalDed = sss + pagibig + philhealth + healthcard + other + unpaid;
 let net = gross - totalDed;
 
 let rec = {
-name, rate, days,
+name, bank, rate, days,
 sss, pagibig, philhealth, healthcard, other,
 gross: gross.toFixed(2),
 net: net.toFixed(2)
@@ -224,6 +234,7 @@ data.forEach((p,i)=>{
 tbl.innerHTML+=`
 <tr>
 <td>${p.name}</td>
+<td>${p.bank}</td>
 <td>${p.rate}</td>
 <td>${p.days}</td>
 <td>${p.sss}</td>
@@ -249,6 +260,7 @@ editIndex=i;
 name.value=p.name;
 rate.value=p.rate;
 days.value=p.days;
+bank.value=p.bank;
 
 sss.value=p.sss;
 pagibig.value=p.pagibig;
