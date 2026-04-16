@@ -152,29 +152,30 @@ let data = JSON.parse(localStorage.getItem("payrollHistory")) || [];
 
 /* LOAD HISTORY */
 function load(){
+
+  let data = JSON.parse(localStorage.getItem("payroll")) || [];
+
   history.innerHTML = "";
 
   if(data.length === 0){
-    history.innerHTML = "<tr><td colspan='5'>No Payroll History</td></tr>";
+    history.innerHTML = "<tr><td colspan='4'>No Payroll Found</td></tr>";
     return;
   }
 
   data.forEach((p,i)=>{
     history.innerHTML += `
       <tr>
-        <td>${p.name || ""}</td>
-        <td>${p.empid || ""}</td>
-        <td>${p.salary || 0}</td>
-        <td>${p.net || 0}</td>
+        <td>${p.name}</td>
+        <td>${p.gross}</td>
+        <td>${p.net}</td>
         <td>
-          <button class="view" onclick="viewDetails(${i})">View</button>
-          <button class="delete" onclick="deleteItem(${i})">Delete</button>
+          <button onclick="viewDetails(${i})">View</button>
+          <button onclick="deleteItem(${i})">Delete</button>
         </td>
       </tr>
     `;
   });
 }
-
 /* VIEW DETAILS (TABLE STYLE) */
 function viewDetails(i){
   let p = data[i];
