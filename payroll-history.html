@@ -4,46 +4,58 @@
   <title>Payroll History</title>
 
 <style>
-body {
+* {
+  box-sizing: border-box;
   font-family: Arial;
-  background: linear-gradient(135deg,#0f2027,#2c5364,#00c9ff);
+}
+
+body {
+  margin:0;
   padding:20px;
+  background: linear-gradient(135deg,#1e3c72,#2a5298);
   color:white;
 }
 
+h2 {
+  text-align:center;
+  margin-bottom:15px;
+}
+
+/* TOP BAR */
 .top-bar {
   display:flex;
   justify-content:space-between;
-  margin-bottom:10px;
+  margin-bottom:15px;
 }
 
-.back-btn, .clear-btn {
-  padding:8px 15px;
+button {
+  padding:8px 12px;
   border:none;
   border-radius:6px;
   cursor:pointer;
-  color:white;
 }
 
-.back-btn { background:#34495e; }
-.clear-btn { background:#e74c3c; }
+.back { background:#34495e; color:white; }
+.clear { background:#e74c3c; color:white; }
 
+/* CARD */
 .card {
   background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(10px);
   padding:15px;
   border-radius:12px;
-  margin-bottom:20px;
+  margin-bottom:15px;
+  backdrop-filter: blur(10px);
 }
 
+/* TABLE */
 .table-box {
   overflow-x:auto;
 }
 
 table {
   width:100%;
-  min-width:1400px;
-  border-collapse:collapse;
+  min-width:1200px;
+  border-collapse: collapse;
   background:white;
   color:black;
 }
@@ -59,33 +71,34 @@ th {
   color:white;
 }
 
-button {
-  padding:5px 10px;
-  border:none;
-  border-radius:5px;
-  cursor:pointer;
-}
-
+/* ACTION BUTTONS */
 .view { background:#3498db; color:white; }
 .delete { background:#e74c3c; color:white; }
+
+/* DETAILS */
+#details {
+  display:none;
+}
 </style>
 
 </head>
+
 <body>
 
 <div class="top-bar">
-  <button class="back-btn" onclick="goBack()">⬅ Back</button>
-  <button class="clear-btn" onclick="clearAll()">🗑 Clear All</button>
+  <button class="back" onclick="goBack()">⬅ Back</button>
+  <button class="clear" onclick="clearAll()">🗑 Clear All</button>
 </div>
 
-<h2>Payroll History</h2>
+<h2>PAYROLL HISTORY</h2>
 
-<!-- MAIN TABLE -->
+<!-- HISTORY TABLE -->
 <div class="card table-box">
 <table>
 <thead>
 <tr>
 <th>Name</th>
+<th>Date</th>
 <th>Gross</th>
 <th>Net Pay</th>
 <th>Action</th>
@@ -96,8 +109,8 @@ button {
 </div>
 
 <!-- DETAILS -->
-<div class="card table-box" id="details" style="display:none;">
-<h3>Payroll Details</h3>
+<div class="card table-box" id="details">
+<h3>Details</h3>
 
 <table>
 <thead>
@@ -109,7 +122,6 @@ button {
 <th>Sick</th>
 <th>Birthday</th>
 <th>Vacation</th>
-<th>Gross</th>
 <th>SSS</th>
 <th>Pag-IBIG</th>
 <th>PhilHealth</th>
@@ -126,17 +138,19 @@ button {
 
 <script>
 
-/* ✅ USE SAME STORAGE */
-let data = JSON.parse(localStorage.getItem("payroll")) || [];
+/* 🔥 CONNECT SA PAYROLL */
+function getData(){
+  return JSON.parse(localStorage.getItem("payroll")) || [];
+}
 
 /* LOAD */
 function load(){
-  data = JSON.parse(localStorage.getItem("payroll")) || [];
+  let data = getData();
 
   history.innerHTML = "";
 
   if(data.length === 0){
-    history.innerHTML = "<tr><td colspan='4'>No Payroll Found</td></tr>";
+    history.innerHTML = "<tr><td colspan='5'>No Payroll Data</td></tr>";
     return;
   }
 
@@ -144,11 +158,12 @@ function load(){
     history.innerHTML += `
       <tr>
         <td>${p.name}</td>
+        <td>${p.date || "-"}</td>
         <td>${p.gross}</td>
         <td>${p.net}</td>
         <td>
-          <button class="view" onclick="viewDetails(${i})">View</button>
-          <button class="delete" onclick="deleteItem(${i})">Delete</button>
+          <button class="view" onclick="view(${i})">View</button>
+          <button class="delete" onclick="del(${i})">Delete</button>
         </td>
       </tr>
     `;
@@ -156,7 +171,8 @@ function load(){
 }
 
 /* VIEW DETAILS */
-function viewDetails(i){
+function view(i){
+  let data = getData();
   let p = data[i];
 
   details.style.display = "block";
@@ -171,8 +187,6 @@ function viewDetails(i){
       <td>${p.birthday}</td>
       <td>${p.vacation}</td>
 
-      <td>${p.gross}</td>
-
       <td>${p.sss}</td>
       <td>${p.pagibig}</td>
       <td>${p.philhealth}</td>
@@ -186,8 +200,10 @@ function viewDetails(i){
 }
 
 /* DELETE */
-function deleteItem(i){
-  if(confirm("Delete this record?")){
+function del(i){
+  let data = getData();
+
+  if(confirm("Delete record?")){
     data.splice(i,1);
     localStorage.setItem("payroll", JSON.stringify(data));
     load();
@@ -197,9 +213,8 @@ function deleteItem(i){
 
 /* CLEAR ALL */
 function clearAll(){
-  if(confirm("Delete ALL history?")){
+  if(confirm("Delete ALL payroll history?")){
     localStorage.removeItem("payroll");
-    data = [];
     load();
     details.style.display="none";
   }
