@@ -1,92 +1,97 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Payroll System Pro</title>
+<title>Payroll System</title>
 
 <style>
 body {
   font-family: Arial;
-  background: linear-gradient(135deg,#dfe9f3,#ffffff);
+  background:#eef3ff;
   padding:20px;
 }
 
 /* HEADER */
+.top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
 h2 {
-  text-align:center;
-  color:#2c3e50;
+  margin:0;
+}
+
+.back {
+  padding:6px 12px;
+  border:none;
+  border-radius:5px;
+  background:#34495e;
+  color:white;
+  cursor:pointer;
 }
 
 /* CARD */
 .card {
   background:white;
   padding:15px;
-  border-radius:12px;
+  border-radius:10px;
   margin-bottom:15px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
 }
 
 /* GRID */
 .form {
   display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap:10px;
+  grid-template-columns: repeat(4, 1fr);
+  gap:8px;
 }
 
 /* LABEL */
 .label {
-  grid-column: span 3;
+  grid-column: span 4;
   font-weight:bold;
-  color:#34495e;
   margin-top:5px;
 }
 
 /* INPUT */
 input {
-  padding:8px;
-  border-radius:6px;
+  padding:5px;
+  font-size:12px;
+  border-radius:5px;
   border:1px solid #ccc;
-  font-size:13px;
-  width:100%;
+  height:28px;
 }
 
 /* BUTTON */
-.buttons {
-  margin-top:10px;
-}
-
 button {
-  padding:8px 15px;
+  padding:6px 12px;
   border:none;
-  border-radius:6px;
+  border-radius:5px;
   cursor:pointer;
-  margin-right:5px;
-  font-size:13px;
+  font-size:12px;
 }
 
-.save { background:#27ae60; color:white; }
-.update { background:#f39c12; }
-.delete { background:#e74c3c; color:white; }
+.save { background:green; color:white; }
+.update { background:orange; }
+.delete { background:red; color:white; }
 
 /* TABLE */
 table {
   width:100%;
   border-collapse:collapse;
+  font-size:12px;
 }
 
 th, td {
-  border:1px solid #ddd;
-  padding:8px;
+  border:1px solid #ccc;
+  padding:6px;
   text-align:center;
-  font-size:13px;
 }
 
 th {
-  background:#3498db;
+  background:green;
   color:white;
-}
-
-tr:hover {
-  background:#f2f2f2;
 }
 </style>
 
@@ -94,31 +99,34 @@ tr:hover {
 
 <body>
 
-<h2>Payroll System</h2>
+<div class="top">
+  <h2>Payroll System</h2>
+  <button class="back" onclick="goBack()">⬅ Back</button>
+</div>
 
 <div class="card">
 
 <div class="form">
 
-<div class="label">Employee Info</div>
-<input id="name" placeholder="Employee Name">
-<input id="rate" type="number" placeholder="Rate / Day">
-<input id="days" type="number" placeholder="Total Days">
+<div class="label">Employee</div>
+<input id="name" placeholder="Name">
+<input id="rate" type="number" placeholder="Rate">
+<input id="days" type="number" placeholder="Days">
 
-<div class="label">Sick Leave</div>
-<input id="paidSick" type="number" placeholder="Paid Sick">
-<input id="unpaidSick" type="number" placeholder="Unpaid Sick">
+<div class="label">Sick</div>
+<input id="paidSick" type="number" placeholder="Paid">
+<input id="unpaidSick" type="number" placeholder="Unpaid">
 
-<div class="label">Vacation Leave</div>
-<input id="paidVacation" type="number" placeholder="Paid Vacation">
-<input id="unpaidVacation" type="number" placeholder="Unpaid Vacation">
+<div class="label">Vacation</div>
+<input id="paidVacation" type="number" placeholder="Paid">
+<input id="unpaidVacation" type="number" placeholder="Unpaid">
 
-<div class="label">Birthday Leave</div>
-<input id="paidBirthday" type="number" placeholder="Paid Birthday">
-<input id="unpaidBirthday" type="number" placeholder="Unpaid Birthday">
+<div class="label">Birthday</div>
+<input id="paidBirthday" type="number" placeholder="Paid">
+<input id="unpaidBirthday" type="number" placeholder="Unpaid">
 
-<div class="label">Other Earnings</div>
-<input id="ot" type="number" placeholder="Overtime">
+<div class="label">Other</div>
+<input id="ot" type="number" placeholder="OT">
 <input id="holiday" type="number" placeholder="Holiday">
 
 <div class="label">Deductions</div>
@@ -126,15 +134,14 @@ tr:hover {
 <input id="pagibig" type="number" placeholder="Pag-IBIG">
 <input id="philhealth" type="number" placeholder="PhilHealth">
 <input id="healthcard" type="number" placeholder="Health Card">
-<input id="othername" placeholder="Other Deduction Name">
-<input id="other" type="number" placeholder="Other Amount">
+<input id="othername" placeholder="Other Name">
+<input id="other" type="number" placeholder="Amount">
 
 </div>
 
-<div class="buttons">
+<br>
 <button class="save" onclick="save()">Save</button>
 <button class="update" onclick="update()">Update</button>
-</div>
 
 </div>
 
@@ -146,6 +153,9 @@ tr:hover {
 <th>Name</th>
 <th>Rate</th>
 <th>Days</th>
+<th>Paid Sick</th>
+<th>Vacation</th>
+<th>Birthday</th>
 <th>Gross</th>
 <th>Deduction</th>
 <th>Net</th>
@@ -167,11 +177,11 @@ let editIndex = null;
 /* SAVE */
 function save(){
 
-let name = nameInput();
+let name = name.value;
 if(name==="") return alert("Enter name");
 
-let rate = +rateInput();
-let days = +daysInput();
+let rate = +rate.value || 0;
+let days = +days.value || 0;
 
 let paidSick = +paidSick.value || 0;
 let unpaidSick = +unpaidSick.value || 0;
@@ -192,13 +202,9 @@ let healthcard = +healthcard.value || 0;
 let other = +other.value || 0;
 
 /* COMPUTE */
-let gross = rate * (
-days + paidSick + paidVacation + paidBirthday + ot + holiday
-);
+let gross = rate * (days + paidSick + paidVacation + paidBirthday + ot + holiday);
 
-let unpaid = rate * (
-unpaidSick + unpaidVacation + unpaidBirthday
-);
+let unpaid = rate * (unpaidSick + unpaidVacation + unpaidBirthday);
 
 let totalDed = sss + pagibig + philhealth + healthcard + other + unpaid;
 let net = gross - totalDed;
@@ -208,10 +214,6 @@ name, rate, days,
 paidSick, unpaidSick,
 paidVacation, unpaidVacation,
 paidBirthday, unpaidBirthday,
-ot, holiday,
-sss, pagibig, philhealth, healthcard,
-othername: othername.value,
-other,
 gross, totalDed, net
 };
 
@@ -231,6 +233,9 @@ tbl.innerHTML+=`
 <td>${p.name}</td>
 <td>${p.rate}</td>
 <td>${p.days}</td>
+<td>${p.paidSick}</td>
+<td>${p.paidVacation}</td>
+<td>${p.paidBirthday}</td>
 <td>${p.gross}</td>
 <td>${p.totalDed}</td>
 <td>${p.net}</td>
@@ -259,17 +264,6 @@ unpaidVacation.value=p.unpaidVacation;
 
 paidBirthday.value=p.paidBirthday;
 unpaidBirthday.value=p.unpaidBirthday;
-
-ot.value=p.ot;
-holiday.value=p.holiday;
-
-sss.value=p.sss;
-pagibig.value=p.pagibig;
-philhealth.value=p.philhealth;
-healthcard.value=p.healthcard;
-
-othername.value=p.othername;
-other.value=p.other;
 }
 
 /* UPDATE */
@@ -294,12 +288,11 @@ function clearForm(){
 document.querySelectorAll("input").forEach(i=>i.value="");
 }
 
-/* HELPERS */
-function nameInput(){ return document.getElementById("name").value; }
-function rateInput(){ return document.getElementById("rate").value; }
-function daysInput(){ return document.getElementById("days").value; }
+/* BACK */
+function goBack(){
+window.location.href="index.html";
+}
 
-/* INIT */
 display();
 
 </script>
