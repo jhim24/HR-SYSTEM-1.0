@@ -215,6 +215,12 @@ function viewRecord(i){
 }
 
 /* PRINT */
+function formatPeso(num){
+  return "₱" + Number(num).toLocaleString("en-PH", {
+    minimumFractionDigits:2
+  });
+}
+
 function printDetails(){
 
   let p = currentData;
@@ -223,33 +229,56 @@ function printDetails(){
   <html>
   <head>
   <title>Payslip</title>
+
   <style>
     body {
       font-family: Arial;
       padding:20px;
-      background:#f4f6f9;
+      background:#f5f6fa;
     }
 
-    .card {
-      max-width:800px;
+    .container {
+      max-width:900px;
       margin:auto;
       background:white;
-      padding:20px;
-      border-radius:10px;
-      box-shadow:0 0 10px rgba(0,0,0,0.2);
+      padding:25px;
+      border-radius:8px;
+      border-top:6px solid #4f46e5;
     }
 
-    h2 {
-      text-align:center;
-      color:#0d6efd;
-      margin-bottom:10px;
+    .header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:2px solid #ddd;
+      padding-bottom:10px;
+      margin-bottom:15px;
     }
 
-    .info {
+    .company {
+      font-size:22px;
+      font-weight:bold;
+    }
+
+    .title {
+      font-weight:bold;
+      margin-bottom:15px;
+    }
+
+    .summary {
       display:flex;
       justify-content:space-between;
       margin-bottom:15px;
-      font-size:14px;
+    }
+
+    .box {
+      width:48%;
+    }
+
+    .net {
+      text-align:right;
+      font-size:28px;
+      font-weight:bold;
     }
 
     table {
@@ -259,108 +288,117 @@ function printDetails(){
     }
 
     th, td {
-      border:1px solid #ddd;
       padding:8px;
-      text-align:center;
-      font-size:13px;
+      border-bottom:1px solid #ddd;
+      text-align:left;
     }
 
     th {
-      background:#0d6efd;
-      color:white;
+      color:#4f46e5;
     }
 
-    .total {
+    .right { text-align:right; }
+
+    .highlight {
+      background:#eef2ff;
       font-weight:bold;
-      background:#f1f1f1;
     }
 
     .footer {
       margin-top:20px;
-      display:flex;
-      justify-content:space-between;
-    }
-
-    .sign {
       text-align:center;
-      margin-top:30px;
-    }
-
-    @media print {
-      body { background:white; }
+      font-size:12px;
+      color:#666;
     }
   </style>
+
   </head>
 
   <body>
 
-  <div class="card">
+  <div class="container">
 
-    <h2>PAYROLL PAYSLIP</h2>
-
-    <div class="info">
-      <div><b>Name:</b> ${p.name}</div>
-      <div><b>Date:</b> ${p.date || "-"}</div>
+    <div class="header">
+      <div>
+        <div class="company">YOUR COMPANY NAME</div>
+        <div>Philippines</div>
+      </div>
+      <div><b>PAYSLIP</b></div>
     </div>
 
+    <div class="title">
+      Payslip for ${p.date || ""}
+    </div>
+
+    <div class="summary">
+      <div class="box">
+        <div><b>Employee Name:</b> ${p.name}</div>
+        <div><b>Pay Date:</b> ${p.date || "-"}</div>
+      </div>
+
+      <div class="box net">
+        Net Pay<br>
+        ${formatPeso(p.net)}
+      </div>
+    </div>
+
+    <!-- EARNINGS -->
     <table>
-      <thead>
-        <tr>
-          <th>Rate</th>
-          <th>Days</th>
-          <th>OT</th>
-          <th>Holiday</th>
-          <th>Sick</th>
-          <th>Birthday</th>
-          <th>Vacation</th>
-        </tr>
-      </thead>
+      <tr>
+        <th>EARNINGS</th>
+        <th class="right">AMOUNT</th>
+      </tr>
 
       <tr>
-        <td>${p.rate}</td>
-        <td>${p.days}</td>
-        <td>${p.ot}</td>
-        <td>${p.holiday}</td>
-        <td>${p.sick}</td>
-        <td>${p.birthday}</td>
-        <td>${p.vacation}</td>
+        <td>Basic Pay</td>
+        <td class="right">${formatPeso(p.rate * p.days)}</td>
+      </tr>
+
+      <tr>
+        <td>Overtime</td>
+        <td class="right">${formatPeso(p.rate * p.ot)}</td>
+      </tr>
+
+      <tr>
+        <td>Holiday</td>
+        <td class="right">${formatPeso(p.rate * p.holiday)}</td>
+      </tr>
+
+      <tr class="highlight">
+        <td>Gross Earnings</td>
+        <td class="right">${formatPeso(p.gross)}</td>
       </tr>
     </table>
 
+    <!-- DEDUCTIONS -->
     <table>
-      <thead>
-        <tr>
-          <th>SSS</th>
-          <th>Pag-IBIG</th>
-          <th>PhilHealth</th>
-          <th>Health Card</th>
-          <th>Other</th>
-          <th>Total Deduction</th>
-          <th>Net Pay</th>
-        </tr>
-      </thead>
-
       <tr>
-        <td>${p.sss}</td>
-        <td>${p.pagibig}</td>
-        <td>${p.philhealth}</td>
-        <td>${p.healthcard}</td>
-        <td>${p.othername} (${p.other})</td>
-        <td class="total">${p.totalDed}</td>
-        <td class="total">${p.net}</td>
+        <th>DEDUCTIONS</th>
+        <th class="right">AMOUNT</th>
+      </tr>
+
+      <tr><td>SSS</td><td class="right">${formatPeso(p.sss)}</td></tr>
+      <tr><td>Pag-IBIG</td><td class="right">${formatPeso(p.pagibig)}</td></tr>
+      <tr><td>PhilHealth</td><td class="right">${formatPeso(p.philhealth)}</td></tr>
+      <tr><td>Health Card</td><td class="right">${formatPeso(p.healthcard)}</td></tr>
+      <tr><td>${p.othername}</td><td class="right">${formatPeso(p.other)}</td></tr>
+
+      <tr class="highlight">
+        <td>Total Deductions</td>
+        <td class="right">${formatPeso(p.totalDed)}</td>
+      </tr>
+    </table>
+
+    <!-- NET -->
+    <table>
+      <tr class="highlight">
+        <td>NET PAY</td>
+        <td class="right">${formatPeso(p.net)}</td>
       </tr>
     </table>
 
     <div class="footer">
-      <div class="sign">
-        ___________________<br>
-        Employee Signature
-      </div>
-
-      <div class="sign">
-        ___________________<br>
-        HR Signature
-      </div>
+      This document is system generated. No signature required.
     </div>
 
   </div>
@@ -374,7 +412,6 @@ function printDetails(){
   w.document.close();
   w.print();
 }
-
 /* DELETE */
 function deleteRecord(i){
   let data = getPayroll();
