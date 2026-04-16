@@ -11,35 +11,43 @@ body {
   color:white;
 }
 
+/* HEADER */
 .top {
   display:flex;
   justify-content:space-between;
 }
 
+/* CARD */
 .card {
   background: rgba(255,255,255,0.1);
-  padding:15px;
-  border-radius:10px;
+  padding:20px;
+  border-radius:12px;
   margin-top:15px;
 }
 
+/* GRID (FIXED ALIGNMENT) */
 .form {
   display:grid;
-  grid-template-columns: repeat(4,1fr);
-  gap:10px;
+  grid-template-columns: repeat(4, 1fr);
+  gap:12px;
 }
 
+/* INPUT SAME SIZE */
 input, select {
-  padding:8px;
-  border-radius:8px;
-  border:none;
   background:#e0e0e0;
+  border:none;
+  border-radius:10px;
+  padding:10px;
+  font-size:13px;
+  width:100%;
+  height:40px;
 }
 
+/* BUTTON */
 button {
-  padding:8px;
+  padding:8px 15px;
   border:none;
-  border-radius:5px;
+  border-radius:6px;
   cursor:pointer;
   margin-top:10px;
 }
@@ -49,19 +57,22 @@ button {
 /* TABLE */
 table {
   width:100%;
+  border-collapse:collapse;
   background:white;
   color:black;
-  border-collapse:collapse;
   margin-top:10px;
 }
 
 th, td {
+  padding:10px;
   border:1px solid #ccc;
-  padding:8px;
   text-align:center;
 }
 
-th { background:#2ecc71; color:white; }
+th {
+  background:#2ecc71;
+  color:white;
+}
 </style>
 
 </head>
@@ -69,7 +80,7 @@ th { background:#2ecc71; color:white; }
 <body>
 
 <div class="top">
-<h2>Payroll (Connected)</h2>
+<h2>Payroll System</h2>
 <button onclick="goBack()">⬅ Back</button>
 </div>
 
@@ -77,23 +88,30 @@ th { background:#2ecc71; color:white; }
 
 <div class="form">
 
-<!-- EMPLOYEE DROPDOWN -->
-<select id="empSelect" onchange="loadEmployee()">
+<select id="emp">
 <option>Select Employee</option>
 </select>
 
-<input id="rate" type="number" placeholder="Rate">
-<input id="days" type="number" placeholder="Days">
+<input id="rate" type="number" placeholder="Rate per Day">
+<input id="days" type="number" placeholder="Total Days">
+<input id="holiday" type="number" placeholder="Holidays">
+
+<input id="ot" type="number" placeholder="Overtime">
+<input id="sick" type="number" placeholder="Sick Leave">
+<input id="vacation" type="number" placeholder="Vacation Leave">
+<input id="birthday" type="number" placeholder="Birthday Leave">
 
 <input id="sss" type="number" placeholder="SSS">
 <input id="pagibig" type="number" placeholder="Pag-IBIG">
 <input id="philhealth" type="number" placeholder="PhilHealth">
 <input id="healthcard" type="number" placeholder="Health Card">
-<input id="other" type="number" placeholder="Other">
+
+<input id="other" type="number" placeholder="Other Deduction">
+<input id="loan" type="number" placeholder="Loan">
 
 </div>
 
-<button class="save" onclick="savePayroll()">Generate Payroll</button>
+<button class="save" onclick="save()">Generate Payroll</button>
 
 </div>
 
@@ -106,104 +124,91 @@ th { background:#2ecc71; color:white; }
 <th>Rate</th>
 <th>Days</th>
 <th>Gross</th>
+<th>SSS</th>
+<th>Pag-IBIG</th>
+<th>PhilHealth</th>
+<th>Loan</th>
 <th>Net</th>
 </tr>
 </thead>
+
 <tbody id="tbl"></tbody>
+
 </table>
 
 </div>
 
 <script>
 
-/* LOAD EMPLOYEES */
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
-let attendance = JSON.parse(localStorage.getItem("attendance")) || [];
-let payrollHistory = JSON.parse(localStorage.getItem("payrollHistory")) || [];
+let history = JSON.parse(localStorage.getItem("payrollHistory")) || [];
 
 function loadEmployees(){
-empSelect.innerHTML = "<option>Select Employee</option>";
-
+emp.innerHTML="<option>Select Employee</option>";
 employees.forEach((e,i)=>{
-empSelect.innerHTML += `<option value="${i}">${e.firstname} ${e.lastname}</option>`;
+emp.innerHTML += `<option value="${i}">${e.firstname} ${e.lastname}</option>`;
 });
 }
 
-/* LOAD ATTENDANCE */
-function loadEmployee(){
-let i = empSelect.value;
-let emp = employees[i];
+function save(){
 
-rate.value = emp.rate || 0;
-
-/* OPTIONAL: AUTO DAYS FROM ATTENDANCE */
-let record = attendance.find(a => a.empid == emp.empid);
-if(record){
-days.value = record.days || 0;
-}
-}
-
-/* SAVE PAYROLL */
-function savePayroll(){
-
-let i = empSelect.value;
+let i = emp.value;
 if(i==="Select Employee") return alert("Select employee");
 
-let emp = employees[i];
+let e = employees[i];
 
 let rate = +rate.value || 0;
 let days = +days.value || 0;
+let holiday = +holiday.value || 0;
+let ot = +ot.value || 0;
+let sick = +sick.value || 0;
+let vacation = +vacation.value || 0;
+let birthday = +birthday.value || 0;
 
 let sss = +sss.value || 0;
 let pagibig = +pagibig.value || 0;
 let philhealth = +philhealth.value || 0;
 let healthcard = +healthcard.value || 0;
 let other = +other.value || 0;
+let loan = +loan.value || 0;
 
-/* COMPUTE */
-let gross = rate * days;
-let totalDed = sss + pagibig + philhealth + healthcard + other;
+let gross = rate * (days + holiday + ot + sick + vacation + birthday);
+let totalDed = sss + pagibig + philhealth + healthcard + other + loan;
 let net = gross - totalDed;
 
-let rec = {
-name: emp.firstname + " " + emp.lastname,
-empid: emp.empid,
-rate, days,
-gross, net,
-sss, pagibig, philhealth, healthcard, other,
-date: new Date().toLocaleString()
-};
+history.push({
+name: e.firstname + " " + e.lastname,
+rate, days, gross,
+sss, pagibig, philhealth, loan,
+net
+});
 
-/* SAVE HISTORY */
-payrollHistory.push(rec);
-localStorage.setItem("payrollHistory", JSON.stringify(payrollHistory));
-
+localStorage.setItem("payrollHistory", JSON.stringify(history));
 display();
 }
 
-/* DISPLAY */
 function display(){
 tbl.innerHTML="";
-
-payrollHistory.forEach(p=>{
-tbl.innerHTML += `
+history.forEach(p=>{
+tbl.innerHTML+=`
 <tr>
 <td>${p.name}</td>
 <td>${p.rate}</td>
 <td>${p.days}</td>
 <td>${p.gross}</td>
-<td>${p.net}</td>
-</tr>
-`;
+<td>${p.sss}</td>
+<td>${p.pagibig}</td>
+<td>${p.philhealth}</td>
+<td>${p.loan}</td>
+<td style="color:green;font-weight:bold">${p.net}</td>
+</tr>`;
 });
 }
 
-/* BACK */
 function goBack(){
 window.location.href="index.html";
 }
 
-/* INIT */
 loadEmployees();
 display();
 
