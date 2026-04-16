@@ -208,33 +208,45 @@ function savePayroll(){
   if(i==="") return alert("Select employee");
 
   let name = employees[i].fname + " " + employees[i].lname;
-  let c = compute();
+
+  let gross = (+rate.value||0) * (
+    (+days.value||0)+(+ot.value||0)+(+holiday.value||0)+
+    (+sick.value||0)+(+birthday.value||0)+(+vacation.value||0)
+  );
+
+  let totalDed =
+    (+sss.value||0)+(+pagibig.value||0)+(+philhealth.value||0)+
+    (+healthcard.value||0)+(+other.value||0);
 
   let record = {
-    name,
-    rate:rate.value,
-    days:days.value,
-    ot:ot.value,
-    holiday:holiday.value,
-    sick:sick.value,
-    birthday:birthday.value,
-    vacation:vacation.value,
-    sss:sss.value,
-    pagibig:pagibig.value,
-    philhealth:philhealth.value,
-    healthcard:healthcard.value,
-    other:other.value,
-    othername:othername.value,
-    gross:c.gross.toFixed(2),
-    totalDed:c.totalDed.toFixed(2),
-    net:c.net.toFixed(2)
+    name: name,
+    rate: rate.value,
+    days: days.value,
+    ot: ot.value,
+    holiday: holiday.value,
+    sick: sick.value,
+    birthday: birthday.value,
+    vacation: vacation.value,
+    sss: sss.value,
+    pagibig: pagibig.value,
+    philhealth: philhealth.value,
+    healthcard: healthcard.value,
+    other: other.value,
+    othername: othername.value,
+    gross: gross.toFixed(2),
+    totalDed: totalDed.toFixed(2),
+    net: (gross-totalDed).toFixed(2),
+    date: new Date().toLocaleString()
   };
 
-  payroll.push(record);
-  localStorage.setItem("payroll", JSON.stringify(payroll));
+  let data = JSON.parse(localStorage.getItem("payroll")) || [];
+  data.push(record);
 
-  display();
-  clearForm();
+  localStorage.setItem("payroll", JSON.stringify(data));
+
+  alert("Saved ✅");
+
+  display(); // refresh table
 }
 
 /* EDIT */
