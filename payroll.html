@@ -10,6 +10,26 @@ body {
   padding:20px;
 }
 
+/* HEADER */
+.top {
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+
+button {
+  padding:8px;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+.back { background:#34495e; color:white; }
+.save { background:green; color:white; }
+.update { background:orange; color:white; }
+.delete { background:red; color:white; }
+
+/* BOX */
 .box {
   background:white;
   padding:15px;
@@ -17,6 +37,7 @@ body {
   margin-bottom:15px;
 }
 
+/* GRID */
 .form {
   display:grid;
   grid-template-columns: repeat(3, 1fr);
@@ -30,16 +51,7 @@ input, select {
   font-size:12px;
 }
 
-button {
-  padding:8px;
-  border:none;
-  border-radius:5px;
-  cursor:pointer;
-}
-
-.save { background:green; color:white; }
-.delete { background:red; color:white; }
-
+/* TABLE */
 table {
   width:100%;
   border-collapse:collapse;
@@ -61,7 +73,10 @@ th {
 
 <body>
 
+<div class="top">
 <h2>Payroll System</h2>
+<button class="back" onclick="goBack()">⬅ Back</button>
+</div>
 
 <div class="box">
 
@@ -87,7 +102,8 @@ th {
 </div>
 
 <br>
-<button class="save" onclick="save()">Generate Payroll</button>
+<button class="save" onclick="compute()">Compute Salary</button>
+<button class="update" onclick="update()">Update</button>
 
 </div>
 
@@ -124,25 +140,23 @@ th {
 
 <script>
 
-/* LOAD DATA */
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
 let history = JSON.parse(localStorage.getItem("payrollHistory")) || [];
 
-/* LOAD EMPLOYEE DROPDOWN */
+let editIndex = -1;
+
+/* LOAD EMPLOYEE */
 function loadEmployees(){
-
 emp.innerHTML = "<option>Select Employee</option>";
-
 employees.forEach((e,i)=>{
   emp.innerHTML += `<option value="${i}">
     ${e.fname} ${e.lname}
   </option>`;
 });
-
 }
 
-/* SAVE PAYROLL */
-function save(){
+/* COMPUTE */
+function compute(){
 
 let i = emp.value;
 if(i === "Select Employee") return alert("Select employee");
@@ -170,27 +184,59 @@ let totalDed = sss + pagibig + philhealth + healthcard + other;
 
 let net = gross - totalDed;
 
-/* SAVE */
-history.push({
+let record = {
 name: e.fname + " " + e.lname,
-rate,
-ot,
-holiday,
-sick,
-vacation,
+rate, ot, holiday, sick, vacation,
 gross,
-sss,
-pagibig,
-philhealth,
-healthcard,
-other,
+sss, pagibig, philhealth, healthcard, other,
 totalDed,
 net
-});
+};
+
+if(editIndex === -1){
+  history.push(record);
+}else{
+  history[editIndex] = record;
+  editIndex = -1;
+}
 
 localStorage.setItem("payrollHistory", JSON.stringify(history));
 
 display();
+clearForm();
+}
+
+/* EDIT */
+function edit(i){
+let p = history[i];
+editIndex = i;
+
+rate.value = p.rate;
+ot.value = p.ot;
+holiday.value = p.holiday;
+sick.value = p.sick;
+vacation.value = p.vacation;
+
+sss.value = p.sss;
+pagibig.value = p.pagibig;
+philhealth.value = p.philhealth;
+healthcard.value = p.healthcard;
+other.value = p.other;
+}
+
+/* UPDATE BUTTON */
+function update(){
+if(editIndex === -1) return alert("Select record to edit");
+compute();
+}
+
+/* DELETE */
+function del(i){
+if(confirm("Delete?")){
+history.splice(i,1);
+localStorage.setItem("payrollHistory", JSON.stringify(history));
+display();
+}
 }
 
 /* DISPLAY */
@@ -216,16 +262,22 @@ tbl.innerHTML+=`
 <td>${p.totalDed}</td>
 <td style="color:green;font-weight:bold">${p.net}</td>
 
-<td><button class="delete" onclick="del(${i})">Delete</button></td>
+<td>
+<button onclick="edit(${i})">Edit</button>
+<button class="delete" onclick="del(${i})">Delete</button>
+</td>
 </tr>`;
 });
 }
 
-/* DELETE */
-function del(i){
-history.splice(i,1);
-localStorage.setItem("payrollHistory", JSON.stringify(history));
-display();
+/* CLEAR */
+function clearForm(){
+document.querySelectorAll("input").forEach(i=>i.value="");
+}
+
+/* BACK */
+function goBack(){
+window.location.href="index.html";
 }
 
 /* INIT */
