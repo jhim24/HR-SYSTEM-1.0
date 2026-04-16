@@ -4,7 +4,10 @@
   <title>Payroll System</title>
 
 <style>
-* { box-sizing: border-box; font-family: Arial; }
+* {
+  box-sizing: border-box;
+  font-family: Arial;
+}
 
 body {
   margin: 0;
@@ -13,9 +16,15 @@ body {
   color: white;
 }
 
-h2 { text-align: center; }
+h2 {
+  text-align: center;
+  margin-bottom: 15px;
+}
 
-.top-bar { margin-bottom: 10px; }
+/* TOP BAR */
+.top-bar {
+  margin-bottom: 15px;
+}
 
 .back-btn {
   background: #34495e;
@@ -26,6 +35,7 @@ h2 { text-align: center; }
   cursor: pointer;
 }
 
+/* CARD */
 .card {
   background: rgba(255,255,255,0.1);
   backdrop-filter: blur(12px);
@@ -34,18 +44,23 @@ h2 { text-align: center; }
   margin-bottom: 20px;
 }
 
+/* FORM */
 .form {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
   gap: 12px;
 }
 
+/* INPUT */
 input, select {
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 8px;
   border: none;
+  outline: none;
+  background: rgba(255,255,255,0.9);
 }
 
+/* BUTTONS */
 button {
   padding: 10px;
   border-radius: 8px;
@@ -58,30 +73,30 @@ button {
 .cancel { background:#7f8c8d; color:white; }
 .delete { background:#e74c3c; color:white; }
 
+/* TABLE */
 .table-box {
-  background:white;
-  color:black;
-  padding:10px;
-  border-radius:10px;
-  overflow-x:auto;
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  color: black;
+  overflow-x: auto;
 }
 
 table {
   border-collapse: collapse;
-  min-width: 1600px;
+  min-width: 1400px;
 }
 
 th, td {
   border: 1px solid #ccc;
-  padding: 7px;
+  padding: 8px;
   text-align: center;
   font-size: 12px;
-  white-space: nowrap;
 }
 
 th {
-  background:#2ecc71;
-  color:white;
+  background: #2ecc71;
+  color: white;
 }
 </style>
 
@@ -92,14 +107,13 @@ if(localStorage.getItem("loggedIn") !== "true"){
 </script>
 
 </head>
-
 <body>
 
 <div class="top-bar">
-  <button class="back-btn" onclick="goBack()">⬅ Back to Dashboard</button>
+  <button class="back-btn" onclick="goBack()">⬅ Back</button>
 </div>
 
-<h2>PAYROLL SYSTEM (PRO VERSION)</h2>
+<h2>PAYROLL SYSTEM</h2>
 
 <div class="card">
   <div class="form">
@@ -109,8 +123,8 @@ if(localStorage.getItem("loggedIn") !== "true"){
     <input type="number" id="rate" placeholder="Rate per Day">
     <input type="number" id="days" placeholder="Total Days">
 
-    <input type="number" id="ot" placeholder="Overtime Days">
-    <input type="number" id="holiday" placeholder="Holiday Days">
+    <input type="number" id="ot" placeholder="Overtime">
+    <input type="number" id="holiday" placeholder="Holiday">
     <input type="number" id="sick" placeholder="Sick Leave">
     <input type="number" id="birthday" placeholder="Birthday Leave">
     <input type="number" id="vacation" placeholder="Vacation Leave">
@@ -121,7 +135,7 @@ if(localStorage.getItem("loggedIn") !== "true"){
     <input type="number" id="healthcard" placeholder="Health Card">
 
     <input type="number" id="other" placeholder="Other Deduction">
-    <input type="text" id="othername" placeholder="Other Deduction Name">
+    <input type="text" id="othername" placeholder="Other Name">
 
     <button class="save" onclick="savePayroll()">Save</button>
     <button class="update" onclick="updatePayroll()" id="updateBtn" style="display:none;">Update</button>
@@ -131,56 +145,48 @@ if(localStorage.getItem("loggedIn") !== "true"){
 </div>
 
 <div class="table-box">
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Rate</th>
-        <th>Days</th>
-        <th>OT</th>
-        <th>Holiday</th>
-        <th>Sick</th>
-        <th>Birthday</th>
-        <th>Vacation</th>
-        <th>Gross</th>
-        <th>SSS</th>
-        <th>Pag-IBIG</th>
-        <th>PhilHealth</th>
-        <th>Health Card</th>
-        <th>Other</th>
-        <th>Total Deduction</th>
-        <th>Net Pay</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="table"></tbody>
-  </table>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Rate</th>
+<th>Days</th>
+<th>OT</th>
+<th>Holiday</th>
+<th>Sick</th>
+<th>Birthday</th>
+<th>Vacation</th>
+<th>Gross</th>
+<th>SSS</th>
+<th>Pag-IBIG</th>
+<th>PhilHealth</th>
+<th>Health Card</th>
+<th>Other</th>
+<th>Total Deduction</th>
+<th>Net Pay</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="table"></tbody>
+</table>
 </div>
 
 <script>
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
-
-/* AUTO FIX EMPLOYEE */
-if(employees.length === 0){
-  employees = [{fname:"Sample", lname:"Employee", empid:"EMP-001"}];
-  localStorage.setItem("employees", JSON.stringify(employees));
-}
-
 let payroll = JSON.parse(localStorage.getItem("payroll")) || [];
 let editIndex = -1;
 
 /* BACK */
 function goBack(){
-  window.location.href = "./index.html";
+  window.location.href = "index.html";
 }
 
 /* LOAD EMPLOYEES */
 function loadEmployees(){
-  let emp = document.getElementById("employee");
-  emp.innerHTML = "<option value=''>Select Employee</option>";
+  employee.innerHTML = "<option value=''>Select Employee</option>";
 
   employees.forEach((e,i)=>{
-    emp.innerHTML += `<option value="${i}">${e.fname} ${e.lname}</option>`;
+    employee.innerHTML += `<option value="${i}">${e.fname} ${e.lname}</option>`;
   });
 }
 
@@ -203,121 +209,44 @@ function compute(){
 
 /* SAVE */
 function savePayroll(){
-
   let i = employee.value;
   if(i==="") return alert("Select employee");
 
-  let employees = JSON.parse(localStorage.getItem("employees")) || [];
-  let payroll = JSON.parse(localStorage.getItem("payroll")) || [];
-
   let name = employees[i].fname + " " + employees[i].lname;
-
-  let r = +rate.value || 0;
-  let d = +days.value || 0;
-  let otv = +ot.value || 0;
-  let hol = +holiday.value || 0;
-  let sickv = +sick.value || 0;
-  let bday = +birthday.value || 0;
-  let vac = +vacation.value || 0;
-
-  let gross = r * (d + otv + hol + sickv + bday + vac);
-
-  let s = +sss.value || 0;
-  let p = +pagibig.value || 0;
-  let ph = +philhealth.value || 0;
-  let hc = +healthcard.value || 0;
-  let o = +other.value || 0;
-
-  let totalDed = s+p+ph+hc+o;
-  let net = gross - totalDed;
+  let c = compute();
 
   let record = {
     name,
-    rate:r,
-    days:d,
-    ot:otv,
-    holiday:hol,
-    sick:sickv,
-    birthday:bday,
-    vacation:vac,
-    sss:s,
-    pagibig:p,
-    philhealth:ph,
-    healthcard:hc,
-    other:o,
-    othername:othername.value,
-    gross: gross.toFixed(2),
-    totalDed: totalDed.toFixed(2),
-    net: net.toFixed(2),
-    date: new Date().toLocaleString() // 🔥 ADD THIS
-  };
-
-  payroll.push(record);
-
-  localStorage.setItem("payroll", JSON.stringify(payroll));
-
-  alert("Payroll Saved ✅");
-
-  clearForm();
-}
-/* EDIT */
-function editPayroll(i){
-  let p = payroll[i];
-
-  Object.keys(p).forEach(k=>{
-    if(document.getElementById(k)){
-      document.getElementById(k).value = p[k];
-    }
-  });
-
-  employee.value = i;
-  editIndex = i;
-
-  updateBtn.style.display="inline-block";
-  cancelBtn.style.display="inline-block";
-}
-
-/* UPDATE */
-function updatePayroll(){
-  if(editIndex===-1) return;
-
-  let c = compute();
-
-  payroll[editIndex] = {
-    ...payroll[editIndex],
     rate: rate.value,
     days: days.value,
+    ot: ot.value,
+    holiday: holiday.value,
+    sick: sick.value,
+    birthday: birthday.value,
+    vacation: vacation.value,
+    sss: sss.value,
+    pagibig: pagibig.value,
+    philhealth: philhealth.value,
+    healthcard: healthcard.value,
+    other: other.value,
+    othername: othername.value,
     gross: c.gross.toFixed(2),
     totalDed: c.totalDed.toFixed(2),
     net: c.net.toFixed(2)
   };
 
+  payroll.push(record);
   localStorage.setItem("payroll", JSON.stringify(payroll));
 
   display();
-  cancelEdit();
-}
-
-/* CANCEL */
-function cancelEdit(){
-  editIndex = -1;
   clearForm();
-  updateBtn.style.display="none";
-  cancelBtn.style.display="none";
-}
-
-/* DELETE */
-function del(i){
-  if(confirm("Delete?")){
-    payroll.splice(i,1);
-    localStorage.setItem("payroll", JSON.stringify(payroll));
-    display();
-  }
 }
 
 /* DISPLAY */
 function display(){
+  payroll = JSON.parse(localStorage.getItem("payroll")) || [];
   table.innerHTML="";
+
   payroll.forEach((p,i)=>{
     table.innerHTML += `
       <tr>
@@ -338,14 +267,22 @@ function display(){
         <td>${p.totalDed}</td>
         <td>${p.net}</td>
         <td>
-          <button onclick="editPayroll(${i})">Edit</button>
-          <button class="delete" onclick="del(${i})">Delete</button>
+          <button onclick="del(${i})">Delete</button>
         </td>
       </tr>`;
   });
 }
 
-/* CLEAR */
+/* DELETE */
+function del(i){
+  if(confirm("Delete?")){
+    payroll.splice(i,1);
+    localStorage.setItem("payroll", JSON.stringify(payroll));
+    display();
+  }
+}
+
+/* CLEAR FORM */
 function clearForm(){
   document.querySelectorAll("input").forEach(i=>i.value="");
   employee.value="";
