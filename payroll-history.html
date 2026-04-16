@@ -1,231 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Payroll History</title>
-
+<title>Payroll History</title>
 <style>
-* {
-  box-sizing: border-box;
-  font-family: Arial;
-}
-
-body {
-  margin:0;
-  padding:20px;
-  background: linear-gradient(135deg,#1e3c72,#2a5298);
-  color:white;
-}
-
-h2 {
-  text-align:center;
-  margin-bottom:15px;
-}
-
-/* TOP BAR */
-.top-bar {
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:15px;
-}
-
-button {
-  padding:8px 12px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-.back { background:#34495e; color:white; }
-.clear { background:#e74c3c; color:white; }
-
-/* CARD */
-.card {
-  background: rgba(255,255,255,0.1);
-  padding:15px;
-  border-radius:12px;
-  margin-bottom:15px;
-  backdrop-filter: blur(10px);
-}
-
-/* TABLE */
-.table-box {
-  overflow-x:auto;
-}
-
-table {
-  width:100%;
-  min-width:1200px;
-  border-collapse: collapse;
-  background:white;
-  color:black;
-}
-
-th, td {
-  padding:8px;
-  border:1px solid #ccc;
-  text-align:center;
-}
-
-th {
-  background:#2ecc71;
-  color:white;
-}
-
-/* ACTION BUTTONS */
-.view { background:#3498db; color:white; }
-.delete { background:#e74c3c; color:white; }
-
-/* DETAILS */
-#details {
-  display:none;
-}
+body {font-family:Arial; background:#111; color:white; padding:20px;}
+table {width:100%; background:white; color:black; border-collapse:collapse;}
+th,td {border:1px solid #ccc; padding:8px; text-align:center;}
+button {padding:6px;}
 </style>
-
 </head>
 
 <body>
 
-<div class="top-bar">
-  <button class="back" onclick="goBack()">⬅ Back</button>
-  <button class="clear" onclick="clearAll()">🗑 Clear All</button>
-</div>
+<h2>Payroll History</h2>
 
-<h2>PAYROLL HISTORY</h2>
+<button onclick="debug()">🔍 Check Data</button>
 
-<!-- HISTORY TABLE -->
-<div class="card table-box">
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Date</th>
 <th>Gross</th>
-<th>Net Pay</th>
-<th>Action</th>
+<th>Net</th>
 </tr>
 </thead>
-<tbody id="history"></tbody>
+<tbody id="table"></tbody>
 </table>
-</div>
-
-<!-- DETAILS -->
-<div class="card table-box" id="details">
-<h3>Details</h3>
-
-<table>
-<thead>
-<tr>
-<th>Rate</th>
-<th>Days</th>
-<th>OT</th>
-<th>Holiday</th>
-<th>Sick</th>
-<th>Birthday</th>
-<th>Vacation</th>
-<th>SSS</th>
-<th>Pag-IBIG</th>
-<th>PhilHealth</th>
-<th>Health Card</th>
-<th>Other</th>
-<th>Total Deduction</th>
-<th>Net Pay</th>
-</tr>
-</thead>
-
-<tbody id="detailsBody"></tbody>
-</table>
-</div>
 
 <script>
 
-/* 🔥 CONNECT SA PAYROLL */
-function getData(){
-  return JSON.parse(localStorage.getItem("payroll")) || [];
-}
-
-/* LOAD */
 function load(){
-  let data = getData();
+  let data = JSON.parse(localStorage.getItem("payroll")) || [];
 
-  history.innerHTML = "";
+  table.innerHTML = "";
 
   if(data.length === 0){
-    history.innerHTML = "<tr><td colspan='5'>No Payroll Data</td></tr>";
+    table.innerHTML = "<tr><td colspan='4'>NO DATA FOUND ❌</td></tr>";
     return;
   }
 
-  data.forEach((p,i)=>{
-    history.innerHTML += `
+  data.forEach(p=>{
+    table.innerHTML += `
       <tr>
         <td>${p.name}</td>
-        <td>${p.date || "-"}</td>
+        <td>${p.date}</td>
         <td>${p.gross}</td>
         <td>${p.net}</td>
-        <td>
-          <button class="view" onclick="view(${i})">View</button>
-          <button class="delete" onclick="del(${i})">Delete</button>
-        </td>
       </tr>
     `;
   });
 }
 
-/* VIEW DETAILS */
-function view(i){
-  let data = getData();
-  let p = data[i];
-
-  details.style.display = "block";
-
-  detailsBody.innerHTML = `
-    <tr>
-      <td>${p.rate}</td>
-      <td>${p.days}</td>
-      <td>${p.ot}</td>
-      <td>${p.holiday}</td>
-      <td>${p.sick}</td>
-      <td>${p.birthday}</td>
-      <td>${p.vacation}</td>
-
-      <td>${p.sss}</td>
-      <td>${p.pagibig}</td>
-      <td>${p.philhealth}</td>
-      <td>${p.healthcard}</td>
-      <td>${p.othername} (${p.other})</td>
-
-      <td>${p.totalDed}</td>
-      <td>${p.net}</td>
-    </tr>
-  `;
+/* DEBUG */
+function debug(){
+  alert(localStorage.getItem("payroll"));
 }
 
-/* DELETE */
-function del(i){
-  let data = getData();
-
-  if(confirm("Delete record?")){
-    data.splice(i,1);
-    localStorage.setItem("payroll", JSON.stringify(data));
-    load();
-    details.style.display="none";
-  }
-}
-
-/* CLEAR ALL */
-function clearAll(){
-  if(confirm("Delete ALL payroll history?")){
-    localStorage.removeItem("payroll");
-    load();
-    details.style.display="none";
-  }
-}
-
-/* BACK */
-function goBack(){
-  window.location.href = "index.html";
-}
-
-/* INIT */
 load();
 
 </script>
