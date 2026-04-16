@@ -203,49 +203,63 @@ function compute(){
 
 /* SAVE */
 function savePayroll(){
+
   let i = employee.value;
   if(i==="") return alert("Select employee");
 
-  let name = employees[i].fname + " " + employees[i].lname;
-  let c = compute();
+  let employees = JSON.parse(localStorage.getItem("employees")) || [];
+  let payroll = JSON.parse(localStorage.getItem("payroll")) || [];
 
-  payroll.push({
+  let name = employees[i].fname + " " + employees[i].lname;
+
+  let r = +rate.value || 0;
+  let d = +days.value || 0;
+  let otv = +ot.value || 0;
+  let hol = +holiday.value || 0;
+  let sickv = +sick.value || 0;
+  let bday = +birthday.value || 0;
+  let vac = +vacation.value || 0;
+
+  let gross = r * (d + otv + hol + sickv + bday + vac);
+
+  let s = +sss.value || 0;
+  let p = +pagibig.value || 0;
+  let ph = +philhealth.value || 0;
+  let hc = +healthcard.value || 0;
+  let o = +other.value || 0;
+
+  let totalDed = s+p+ph+hc+o;
+  let net = gross - totalDed;
+
+  let record = {
     name,
-    rate: rate.value,
-    days: days.value,
-    ot: ot.value,
-    holiday: holiday.value,
-    sick: sick.value,
-    birthday: birthday.value,
-    vacation: vacation.value,
-    sss: sss.value,
-    pagibig: pagibig.value,
-    philhealth: philhealth.value,
-    healthcard: healthcard.value,
-    other: other.value,
-    othername: othername.value,
-    gross: c.gross.toFixed(2),
-    totalDed: c.totalDed.toFixed(2),
-    net: c.net.toFixed(2)
-  });
+    rate:r,
+    days:d,
+    ot:otv,
+    holiday:hol,
+    sick:sickv,
+    birthday:bday,
+    vacation:vac,
+    sss:s,
+    pagibig:p,
+    philhealth:ph,
+    healthcard:hc,
+    other:o,
+    othername:othername.value,
+    gross: gross.toFixed(2),
+    totalDed: totalDed.toFixed(2),
+    net: net.toFixed(2),
+    date: new Date().toLocaleString() // 🔥 ADD THIS
+  };
+
+  payroll.push(record);
 
   localStorage.setItem("payroll", JSON.stringify(payroll));
 
-  /* SAVE HISTORY */
-  let history = JSON.parse(localStorage.getItem("payrollHistory")) || [];
-  history.push({
-    name,
-    empid: employees[i].empid || "",
-    salary: c.gross.toFixed(2),
-    net: c.net.toFixed(2),
-    totalDeduction: c.totalDed.toFixed(2)
-  });
-  localStorage.setItem("payrollHistory", JSON.stringify(history));
+  alert("Payroll Saved ✅");
 
-  display();
   clearForm();
 }
-
 /* EDIT */
 function editPayroll(i){
   let p = payroll[i];
