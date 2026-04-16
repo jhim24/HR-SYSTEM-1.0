@@ -18,7 +18,7 @@ body {
   margin-bottom:15px;
 }
 
-/* GRID (simple & safe) */
+/* GRID */
 .form {
   display:grid;
   grid-template-columns: repeat(3, 1fr);
@@ -66,7 +66,7 @@ th {
 
 <body>
 
-<h2>Payroll System (Stable Version)</h2>
+<h2>Payroll System</h2>
 
 <div class="box">
 
@@ -74,21 +74,20 @@ th {
 
 <select id="emp"></select>
 
-<input id="rate" placeholder="Rate">
+<input id="rate" placeholder="Rate per Day">
 <input id="days" placeholder="Days">
-<input id="holiday" placeholder="Holiday">
+<input id="holiday" placeholder="Holidays">
 
-<input id="ot" placeholder="OT">
-<input id="sick" placeholder="Sick">
-<input id="vacation" placeholder="Vacation">
-<input id="birthday" placeholder="Birthday">
+<input id="ot" placeholder="Overtime">
+<input id="sick" placeholder="Sick Leave">
+<input id="vacation" placeholder="Vacation Leave">
 
 <input id="sss" placeholder="SSS">
 <input id="pagibig" placeholder="Pag-IBIG">
 <input id="philhealth" placeholder="PhilHealth">
+
 <input id="healthcard" placeholder="Health Card">
-<input id="other" placeholder="Other">
-<input id="loan" placeholder="Loan">
+<input id="other" placeholder="Other Deduction">
 
 </div>
 
@@ -102,10 +101,22 @@ th {
 <table>
 <thead>
 <tr>
-<th>Name</th>
-<th>Gross</th>
+<th>Full Name</th>
+<th>Rate</th>
+<th>OT</th>
+<th>Holiday</th>
+<th>Sick</th>
+<th>Vacation</th>
+<th>Total Gross</th>
+
+<th>SSS</th>
+<th>Pag-IBIG</th>
+<th>PhilHealth</th>
+<th>Health Card</th>
+<th>Other</th>
+
 <th>Total Deduction</th>
-<th>Net</th>
+<th>Net Pay</th>
 <th>Action</th>
 </tr>
 </thead>
@@ -143,24 +154,37 @@ let holiday = +holiday.value || 0;
 let ot = +ot.value || 0;
 let sick = +sick.value || 0;
 let vacation = +vacation.value || 0;
-let birthday = +birthday.value || 0;
 
 let sss = +sss.value || 0;
 let pagibig = +pagibig.value || 0;
 let philhealth = +philhealth.value || 0;
 let healthcard = +healthcard.value || 0;
 let other = +other.value || 0;
-let loan = +loan.value || 0;
 
 /* COMPUTE */
-let gross = rate * (days + holiday + ot + sick + vacation + birthday);
-let totalDed = sss + pagibig + philhealth + healthcard + other + loan;
+let totalDays = days + holiday + ot + sick + vacation;
+let gross = rate * totalDays;
+
+let totalDed = sss + pagibig + philhealth + healthcard + other;
+
 let net = gross - totalDed;
 
 /* SAVE */
 history.push({
 name: e.firstname + " " + e.lastname,
-gross, totalDed, net
+rate,
+ot,
+holiday,
+sick,
+vacation,
+gross,
+sss,
+pagibig,
+philhealth,
+healthcard,
+other,
+totalDed,
+net
 });
 
 localStorage.setItem("payrollHistory", JSON.stringify(history));
@@ -175,9 +199,22 @@ history.forEach((p,i)=>{
 tbl.innerHTML+=`
 <tr>
 <td>${p.name}</td>
+<td>${p.rate}</td>
+<td>${p.ot}</td>
+<td>${p.holiday}</td>
+<td>${p.sick}</td>
+<td>${p.vacation}</td>
 <td>${p.gross}</td>
+
+<td>${p.sss}</td>
+<td>${p.pagibig}</td>
+<td>${p.philhealth}</td>
+<td>${p.healthcard}</td>
+<td>${p.other}</td>
+
 <td>${p.totalDed}</td>
-<td>${p.net}</td>
+<td style="color:green;font-weight:bold">${p.net}</td>
+
 <td><button class="delete" onclick="del(${i})">Delete</button></td>
 </tr>`;
 });
