@@ -23,13 +23,30 @@ h2 {
   margin-bottom:10px;
 }
 
+/* GRID FORM */
+.form {
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:10px;
+}
+
 /* INPUT */
 input {
   width:100%;
-  padding:8px;
-  margin:5px 0;
+  padding:6px;
+  font-size:12px;
   border-radius:5px;
   border:1px solid #ccc;
+  height:30px;
+  box-sizing:border-box;
+}
+
+/* SECTION TITLE */
+.section {
+  grid-column: span 3;
+  font-weight:bold;
+  color:#2c3e50;
+  margin-top:5px;
 }
 
 /* BUTTON */
@@ -38,6 +55,7 @@ button {
   border:none;
   border-radius:5px;
   cursor:pointer;
+  margin-top:10px;
 }
 
 .save { background:green; color:white; }
@@ -71,36 +89,38 @@ th {
 
 <div class="box">
 
-<input id="name" placeholder="Employee Name">
+<div class="form">
 
-<input id="rate" type="number" placeholder="Rate per Day">
+<div class="section">Employee Info</div>
+<input id="name" placeholder="Employee Name">
+<input id="rate" type="number" placeholder="Rate">
 <input id="days" type="number" placeholder="Days">
 
-<!-- SICK -->
+<div class="section">Sick Leave</div>
 <input id="paidSick" type="number" placeholder="Paid Sick">
 <input id="unpaidSick" type="number" placeholder="Unpaid Sick">
 
-<!-- VACATION -->
+<div class="section">Vacation Leave</div>
 <input id="paidVacation" type="number" placeholder="Paid Vacation">
 <input id="unpaidVacation" type="number" placeholder="Unpaid Vacation">
 
-<!-- BIRTHDAY -->
+<div class="section">Birthday Leave</div>
 <input id="paidBirthday" type="number" placeholder="Paid Birthday">
 <input id="unpaidBirthday" type="number" placeholder="Unpaid Birthday">
 
-<!-- OTHER -->
+<div class="section">Other Earnings</div>
 <input id="ot" type="number" placeholder="OT">
 <input id="holiday" type="number" placeholder="Holiday">
 
+<div class="section">Deductions</div>
 <input id="sss" type="number" placeholder="SSS">
 <input id="pagibig" type="number" placeholder="Pag-IBIG">
 <input id="philhealth" type="number" placeholder="PhilHealth">
 <input id="healthcard" type="number" placeholder="Health Card">
-
-<input id="othername" placeholder="Other Deduction Name">
+<input id="othername" placeholder="Other Name">
 <input id="other" type="number" placeholder="Other Amount">
 
-<br>
+</div>
 
 <button class="save" onclick="save()">Save</button>
 <button class="update" onclick="update()">Update</button>
@@ -140,29 +160,27 @@ if(name==="") return alert("Enter employee name");
 let rate = +document.getElementById("rate").value || 0;
 let days = +document.getElementById("days").value || 0;
 
-/* SICK */
-let paidSick = +document.getElementById("paidSick").value || 0;
-let unpaidSick = +document.getElementById("unpaidSick").value || 0;
+/* LEAVES */
+let paidSick = +paidSick.value || 0;
+let unpaidSick = +unpaidSick.value || 0;
 
-/* VACATION */
-let paidVacation = +document.getElementById("paidVacation").value || 0;
-let unpaidVacation = +document.getElementById("unpaidVacation").value || 0;
+let paidVacation = +paidVacation.value || 0;
+let unpaidVacation = +unpaidVacation.value || 0;
 
-/* BIRTHDAY */
-let paidBirthday = +document.getElementById("paidBirthday").value || 0;
-let unpaidBirthday = +document.getElementById("unpaidBirthday").value || 0;
+let paidBirthday = +paidBirthday.value || 0;
+let unpaidBirthday = +unpaidBirthday.value || 0;
 
 /* OTHER */
-let ot = +document.getElementById("ot").value || 0;
-let holiday = +document.getElementById("holiday").value || 0;
+let ot = +ot.value || 0;
+let holiday = +holiday.value || 0;
 
-let sss = +document.getElementById("sss").value || 0;
-let pagibig = +document.getElementById("pagibig").value || 0;
-let philhealth = +document.getElementById("philhealth").value || 0;
-let healthcard = +document.getElementById("healthcard").value || 0;
-let other = +document.getElementById("other").value || 0;
+let sss = +sss.value || 0;
+let pagibig = +pagibig.value || 0;
+let philhealth = +philhealth.value || 0;
+let healthcard = +healthcard.value || 0;
+let other = +other.value || 0;
 
-/* GROSS */
+/* COMPUTATION */
 let gross = rate * (
   days +
   paidSick +
@@ -172,19 +190,16 @@ let gross = rate * (
   holiday
 );
 
-/* UNPAID DEDUCTION */
 let unpaid = rate * (
   unpaidSick +
   unpaidVacation +
   unpaidBirthday
 );
 
-/* TOTAL DEDUCTION */
 let totalDed = sss + pagibig + philhealth + healthcard + other + unpaid;
-
-/* NET */
 let net = gross - totalDed;
 
+/* SAVE OBJECT */
 let rec = {
 name,
 rate, days,
@@ -193,7 +208,7 @@ paidVacation, unpaidVacation,
 paidBirthday, unpaidBirthday,
 ot, holiday,
 sss, pagibig, philhealth, healthcard,
-othername: document.getElementById("othername").value,
+othername: othername.value,
 other,
 gross: gross.toFixed(2),
 totalDed: totalDed.toFixed(2),
