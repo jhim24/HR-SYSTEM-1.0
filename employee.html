@@ -38,6 +38,10 @@ body::before {
   padding: 20px;
 }
 
+.sidebar h3 {
+  margin-bottom: 20px;
+}
+
 .menu {
   list-style: none;
   padding: 0;
@@ -93,9 +97,9 @@ input, select {
   cursor: pointer;
 }
 
-/* TABLE BOX (DARKER) */
+/* TABLE BOX (LIGHT BLUE) */
 .table-box {
-  background: rgba(0,0,0,0.6);
+  background: #eaf4ff;
   padding: 10px;
   border-radius: 12px;
   overflow: auto;
@@ -107,23 +111,29 @@ table {
   border-collapse: collapse;
   font-size: 12px;
   min-width: 1400px;
+  color: #2c3e50;
 }
 
-/* GRID LINES */
+/* GRID + NO WRAP */
 th, td {
   padding: 6px;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(0,0,0,0.1);
   text-align: left;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* HEADER */
 th {
-  background: rgba(255,255,255,0.2);
+  background: #cfe4ff;
+  color: #1a2a3a;
 }
 
-/* ROW HOVER */
+/* HOVER */
 tr:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.05);
 }
 
 /* BUTTON */
@@ -266,14 +276,12 @@ if(localStorage.getItem("loggedIn") !== "true") {
 <script>
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
 
-// AGE
 function calcAge() {
   let birth = new Date(birthdate.value);
   let today = new Date();
   age.value = today.getFullYear() - birth.getFullYear();
 }
 
-// ADD
 function addEmployee() {
   let emp = {
     fname: fname.value,
@@ -298,14 +306,12 @@ function addEmployee() {
   renderTable();
 }
 
-// DELETE
 function deleteEmp(i) {
   employees.splice(i,1);
   localStorage.setItem("employees", JSON.stringify(employees));
   renderTable();
 }
 
-// RENDER
 function renderTable() {
   let tbody = document.querySelector("#empTable tbody");
   tbody.innerHTML = "";
