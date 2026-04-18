@@ -10,6 +10,19 @@ body{
   padding:20px;
 }
 
+/* TOP CONTROLS */
+.controls{
+  max-width:800px;
+  margin:auto;
+  margin-bottom:15px;
+  display:flex;
+  gap:10px;
+}
+
+select,button{
+  padding:8px;
+}
+
 /* CONTAINER */
 .payslip{
   background:white;
@@ -22,19 +35,10 @@ body{
 /* HEADER */
 .header{
   text-align:center;
-  margin-bottom:10px;
 }
 
-.header h2{
-  margin:0;
-}
+.sub{font-size:12px;color:#555;}
 
-.sub{
-  color:#555;
-  font-size:12px;
-}
-
-/* SECTION TITLE */
 .title{
   background:#3c6fa5;
   color:white;
@@ -43,7 +47,6 @@ body{
   margin-top:10px;
 }
 
-/* GRID */
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -56,7 +59,6 @@ body{
   padding:8px;
 }
 
-/* TABLE */
 table{
   width:100%;
   font-size:12px;
@@ -68,7 +70,6 @@ td{
   border-bottom:1px solid #ddd;
 }
 
-/* NET */
 .net{
   background:#2c3e50;
   color:white;
@@ -78,23 +79,37 @@ td{
   font-weight:bold;
 }
 </style>
-
 </head>
 
 <body>
 
+<!-- CONTROLS -->
+<div class="controls">
+<select id="empSelect"></select>
+
+<select id="cutoff">
+  <option value="Monthly">Monthly</option>
+  <option value="1-15">1–15</option>
+  <option value="16-30">16–30</option>
+</select>
+
+<button onclick="generate()">Generate Payslip</button>
+<button onclick="window.print()">Print</button>
+</div>
+
+<!-- PAYSLIP -->
 <div class="payslip">
 
 <div class="header">
-  <h2>Monthly Payslip</h2>
-  <div class="sub">Your Company Name</div>
+  <h2>Payslip</h2>
+  <div class="sub">HR System</div>
 </div>
 
 <div class="title">Employee & Payroll Details</div>
 
 <div class="grid">
 <div class="box">
-Employee Name: <span id="empName"></span><br>
+Name: <span id="empName"></span><br>
 Employee ID: <span id="empId"></span><br>
 Position: <span id="position"></span>
 </div>
@@ -108,20 +123,16 @@ Bank: <span id="bank"></span>
 
 <div class="grid">
 
-<!-- EARNINGS -->
 <div class="box">
 <b>Earnings</b>
 <table>
-<tr><td>Basic Salary</td><td id="basic"></td></tr>
+<tr><td>Basic</td><td id="basic"></td></tr>
 <tr><td>Overtime</td><td id="ot"></td></tr>
 <tr><td>Holiday</td><td id="holiday"></td></tr>
-<tr><td>Sick Leave</td><td id="sick"></td></tr>
-<tr><td>Vacation Leave</td><td id="vac"></td></tr>
-<tr><td><b>Total</b></td><td id="earnTotal"></td></tr>
+<tr><td>Total</td><td id="earnTotal"></td></tr>
 </table>
 </div>
 
-<!-- DEDUCTIONS -->
 <div class="box">
 <b>Deductions</b>
 <table>
@@ -129,7 +140,7 @@ Bank: <span id="bank"></span>
 <tr><td>Pagibig</td><td id="pagibig"></td></tr>
 <tr><td>Philhealth</td><td id="phil"></td></tr>
 <tr><td>Loan</td><td id="loan"></td></tr>
-<tr><td><b>Total</b></td><td id="dedTotal"></td></tr>
+<tr><td>Total</td><td id="dedTotal"></td></tr>
 </table>
 </div>
 
@@ -143,49 +154,68 @@ NET SALARY: <span id="net"></span>
 
 <script>
 
-/* LOAD SAMPLE (CONNECTED SA PAYROLL) */
+let employees = JSON.parse(localStorage.getItem("employees")) || [];
 let payroll = JSON.parse(localStorage.getItem("payroll")) || [];
-let emp = JSON.parse(localStorage.getItem("employees")) || [];
 
-/* GET LAST RECORD */
-let p = payroll[payroll.length-1];
+/* LOAD EMPLOYEES */
+function loadEmp(){
+  empSelect.innerHTML="";
+  employees.forEach(e=>{
+    empSelect.innerHTML += `<option>${e.fname} ${e.lname}</option>`;
+  });
+}
 
-if(p){
+/* GENERATE PAYSLIP */
+function generate(){
 
-  let e = emp.find(x => (x.fname+" "+x.lname) === p.name) || {};
+  let name = empSelect.value;
+  let cut = cutoff.value;
 
-  empName.innerText = p.name;
+  let p = payroll.find(x => x.name === name);
+
+  if(!p){
+    alert("No payroll data");
+    return;
+  }
+
+  let e = employees.find(x => (x.fname+" "+x.lname) === name) || {};
+
+  empName.innerText = name;
   empId.innerText = e.empId || "-";
   position.innerText = e.position || "-";
   bank.innerText = e.bank || "-";
 
-  period.innerText = "Monthly";
+  period.innerText = cut;
   payDate.innerText = new Date().toLocaleDateString();
 
-  basic.innerText = p.gross;
-  ot.innerText = p.ot;
-  holiday.innerText = p.holiday;
-  sick.innerText = p.sick;
-  vac.innerText = p.vacation;
+  /* CUT OFF LOGIC */
+  let multiplier = (cut === "Monthly") ? 1 : 0.5;
 
-  let earnTotal = 
-    Number(p.gross) +
-    Number(p.ot||0) +
-    Number(p.holiday||0);
+  let basicVal = p.gross * multiplier;
+  let otVal = (p.ot||0) * multiplier;
+  let holidayVal = (p.holiday||0) * multiplier;
 
+  basic.innerText = basicVal;
+  ot.innerText = otVal;
+  holiday.innerText = holidayVal;
+
+  let earnTotal = basicVal + otVal + holidayVal;
   earnTotalEl = document.getElementById("earnTotal");
   earnTotalEl.innerText = earnTotal;
 
   let dedTotal =
-    Number(p.sss||0)+
+    (Number(p.sss||0)+
     Number(p.pagibig||0)+
     Number(p.philhealth||0)+
-    Number(p.loan||0);
+    Number(p.loan||0)) * multiplier;
 
   document.getElementById("dedTotal").innerText = dedTotal;
 
-  net.innerText = p.net;
+  net.innerText = earnTotal - dedTotal;
 }
+
+/* INIT */
+loadEmp();
 
 </script>
 
