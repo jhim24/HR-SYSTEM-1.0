@@ -24,8 +24,21 @@ body{
   backdrop-filter:blur(10px);
 }
 
-h2{color:white;}
+h2{
+  color:white;
+  margin-bottom:10px;
+}
 
+/* SELECT */
+select{
+  width:100%;
+  padding:8px;
+  border-radius:5px;
+  border:none;
+  margin-bottom:5px;
+}
+
+/* INPUT */
 input{
   width:100%;
   padding:10px;
@@ -44,14 +57,7 @@ button{
   background:#2ecc71;
   color:white;
   cursor:pointer;
-}
-
-/* SWITCH */
-.switch{
-  margin-top:10px;
-  font-size:12px;
-  color:white;
-  cursor:pointer;
+  font-weight:bold;
 }
 </style>
 
@@ -63,14 +69,13 @@ button{
 
 <h2>HR SYSTEM</h2>
 
-<!-- MODE -->
 <select id="mode">
   <option value="admin">Admin Login</option>
   <option value="employee">Employee Login</option>
 </select>
 
-<input id="username" placeholder="Username / Full Name">
-<input id="password" placeholder="Password / Employee ID">
+<input id="username" placeholder="Username / Last Name">
+<input id="password" type="password" placeholder="Password">
 
 <button onclick="login()">Login</button>
 
@@ -81,36 +86,38 @@ button{
 function login(){
 
   let mode = document.getElementById("mode").value;
-  let user = document.getElementById("username").value;
+  let user = document.getElementById("username").value.toLowerCase().trim();
   let pass = document.getElementById("password").value;
 
   /* ADMIN LOGIN */
   if(mode === "admin"){
 
-    if(user==="admin" && pass==="1234"){
+    if(user === "admin" && pass === "1234"){
       localStorage.setItem("loggedIn","true");
-      window.location.href="index.html";
+      window.location.href = "index.html";
     }else{
       alert("Invalid admin login");
     }
+
   }
 
   /* EMPLOYEE LOGIN */
   if(mode === "employee"){
 
-    let emp = JSON.parse(localStorage.getItem("employees"))||[];
+    let emp = JSON.parse(localStorage.getItem("employees")) || [];
 
     let found = emp.find(e =>
-      (e.fname+" "+e.lname)===user &&
-      e.empId===pass
+      (e.lname || "").toLowerCase() === user &&
+      pass === "1234"
     );
 
     if(found){
       localStorage.setItem("empSession", JSON.stringify(found));
-      window.location.href="employee-portal.html";
+      window.location.href = "employee-portal.html";
     }else{
       alert("Invalid employee login");
     }
+
   }
 
 }
