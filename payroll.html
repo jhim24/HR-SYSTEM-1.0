@@ -32,7 +32,7 @@ body{
   overflow:auto;
 }
 
-/* 🔥 FORM DESIGN */
+/* FORM DESIGN */
 .form-box{
   background:rgba(255,255,255,0.1);
   padding:15px;
@@ -47,19 +47,28 @@ body{
   gap:8px;
 }
 
-/* INPUT STYLE */
-input,select{
+/* ✅ UPDATED INPUT STYLE (FIXED) */
+input, select{
   padding:8px;
   border-radius:8px;
-  border:none;
+  border:1px solid #ccc;
   font-size:12px;
-  background:rgba(255,255,255,0.2);
-  color:white;
+
+  background:#ffffff;   /* solid white */
+  color:#2c3e50;        /* dark text */
+
   outline:none;
 }
 
+/* placeholder */
 input::placeholder{
-  color:#ddd;
+  color:#888;
+}
+
+/* focus effect */
+input:focus, select:focus{
+  border-color:#3498db;
+  box-shadow:0 0 5px rgba(52,152,219,0.5);
 }
 
 /* BUTTON */
@@ -182,7 +191,6 @@ let empList = JSON.parse(localStorage.getItem("employees")) || [];
 let payroll = JSON.parse(localStorage.getItem("payroll")) || [];
 let editIndex = -1;
 
-/* LOAD EMP */
 function loadEmp(){
   emp.innerHTML="";
   empList.forEach(e=>{
@@ -191,9 +199,7 @@ function loadEmp(){
   });
 }
 
-/* SAVE */
 function save(){
-
   let name = emp.value;
   let daysVal = Number(days.value||0);
   let rateVal = Number(rate.value||0);
@@ -218,17 +224,11 @@ function save(){
   let net = gross + earnings - deduction;
 
   let row = {
-    name,
-    days:daysVal,
-    rate:rateVal,
-    gross,
-    ot:ot.value,
-    holiday:holiday.value,
-    sick:sick.value,
-    bday:bday.value,
+    name, days:daysVal, rate:rateVal, gross,
+    ot:ot.value, holiday:holiday.value,
+    sick:sick.value, bday:bday.value,
     vacation:vacation.value,
-    sss:sss.value,
-    pagibig:pagibig.value,
+    sss:sss.value, pagibig:pagibig.value,
     philhealth:philhealth.value,
     loan:loan.value,
     net
@@ -245,7 +245,6 @@ function save(){
   render();
 }
 
-/* EDIT */
 function editRow(i){
   let r=payroll[i];
 
@@ -265,7 +264,6 @@ function editRow(i){
   editIndex=i;
 }
 
-/* DELETE */
 function deleteRow(i){
   if(confirm("Delete?")){
     payroll.splice(i,1);
@@ -274,7 +272,6 @@ function deleteRow(i){
   }
 }
 
-/* RENDER */
 function render(){
   let tbody=document.querySelector("#tbl tbody");
   tbody.innerHTML="";
