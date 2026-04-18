@@ -38,10 +38,6 @@ body::before {
   padding: 20px;
 }
 
-.sidebar h3 {
-  margin-bottom: 20px;
-}
-
 .menu {
   list-style: none;
   padding: 0;
@@ -97,29 +93,37 @@ input, select {
   cursor: pointer;
 }
 
-/* TABLE */
+/* TABLE BOX (DARKER) */
 .table-box {
-  background: rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.6);
   padding: 10px;
   border-radius: 12px;
   overflow: auto;
 }
 
+/* TABLE */
 table {
   width: 100%;
   border-collapse: collapse;
   font-size: 12px;
-  min-width: 1200px;
+  min-width: 1400px;
 }
 
+/* GRID LINES */
 th, td {
   padding: 6px;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.2);
   text-align: left;
 }
 
+/* HEADER */
 th {
   background: rgba(255,255,255,0.2);
+}
+
+/* ROW HOVER */
+tr:hover {
+  background: rgba(255,255,255,0.1);
 }
 
 /* BUTTON */
@@ -234,7 +238,9 @@ if(localStorage.getItem("loggedIn") !== "true") {
   <table id="empTable">
     <thead>
       <tr>
-        <th>Name</th>
+        <th>First</th>
+        <th>Middle</th>
+        <th>Last</th>
         <th>Birthdate</th>
         <th>Age</th>
         <th>Address</th>
@@ -260,18 +266,19 @@ if(localStorage.getItem("loggedIn") !== "true") {
 <script>
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
 
-// AUTO AGE
+// AGE
 function calcAge() {
-  let birth = new Date(document.getElementById("birthdate").value);
+  let birth = new Date(birthdate.value);
   let today = new Date();
-  let age = today.getFullYear() - birth.getFullYear();
-  document.getElementById("age").value = age;
+  age.value = today.getFullYear() - birth.getFullYear();
 }
 
-// ADD EMPLOYEE
+// ADD
 function addEmployee() {
   let emp = {
-    name: fname.value + " " + mname.value + " " + lname.value,
+    fname: fname.value,
+    mname: mname.value,
+    lname: lname.value,
     birthdate: birthdate.value,
     age: age.value,
     address: address.value,
@@ -306,7 +313,9 @@ function renderTable() {
   employees.forEach((e,i)=>{
     tbody.innerHTML += `
       <tr>
-        <td>${e.name}</td>
+        <td>${e.fname}</td>
+        <td>${e.mname}</td>
+        <td>${e.lname}</td>
         <td>${e.birthdate}</td>
         <td>${e.age}</td>
         <td>${e.address}</td>
@@ -325,7 +334,6 @@ function renderTable() {
   });
 }
 
-// NAV
 function goPage(page){
   window.location.href = page;
 }
