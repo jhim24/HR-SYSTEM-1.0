@@ -4,10 +4,7 @@
 <title>HR Dashboard</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  font-family:'Segoe UI';
-}
+*{box-sizing:border-box;font-family:'Segoe UI';}
 
 body{
   margin:0;
@@ -16,7 +13,6 @@ body{
   color:white;
 }
 
-/* OVERLAY */
 body::before{
   content:"";
   position:fixed;
@@ -25,73 +21,22 @@ body::before{
   z-index:-1;
 }
 
-/* WRAPPER */
-.wrapper{
-  display:flex;
-  height:100vh;
-}
+.wrapper{display:flex;height:100vh;}
 
-/* SIDEBAR */
 .sidebar{
   width:240px;
   background:rgba(0,0,0,0.7);
   padding:20px;
 }
 
-.menu{
-  list-style:none;
-  padding:0;
-}
+.menu{list-style:none;padding:0;}
+.menu li{padding:10px;cursor:pointer;border-radius:6px;}
+.menu li:hover{background:rgba(255,255,255,0.2);}
 
-.menu li{
-  padding:10px;
-  margin-bottom:8px;
-  cursor:pointer;
-  border-radius:6px;
-}
-
-.menu li:hover{
-  background:rgba(255,255,255,0.2);
-}
-
-/* MAIN */
 .main{
   flex:1;
   padding:20px;
   overflow:auto;
-}
-
-/* STATS */
-.stats{
-  margin-top:20px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:15px;
-}
-
-/* 🔥 LIGHT MAROON CARDS */
-.stat-card{
-  background:#f5d6d6;
-  padding:15px;
-  border-radius:12px;
-  color:#5a1f1f;
-}
-
-.stat-title{
-  font-size:12px;
-}
-
-.stat-value{
-  font-size:22px;
-  font-weight:bold;
-}
-
-/* GRID */
-.grid{
-  margin-top:20px;
-  display:grid;
-  grid-template-columns:2fr 1fr;
-  gap:15px;
 }
 
 /* BOX */
@@ -99,57 +44,31 @@ body::before{
   background:rgba(255,255,255,0.1);
   padding:15px;
   border-radius:12px;
+  margin-top:15px;
 }
 
-/* CHART */
-.chart-bar{
-  height:10px;
-  background:#ddd;
-  border-radius:10px;
-  margin-top:10px;
-}
-
-.chart-fill{
-  height:10px;
-  background:#8b2e2e;
-  border-radius:10px;
-}
-
-/* BDAY */
-.bday-card{
-  background:#e6f4ea;
-  color:#2c3e50;
+/* INPUT */
+input{
+  width:100%;
   padding:8px;
-  border-radius:10px;
-  margin-bottom:8px;
-  text-align:center;
+  margin-top:5px;
+  border-radius:6px;
+  border:none;
 }
 
-.avatar{
-  width:40px;
-  height:40px;
-  border-radius:50%;
+button{
+  padding:8px;
+  margin-top:5px;
+  border:none;
+  border-radius:6px;
   background:#2ecc71;
   color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin:auto;
-}
-
-/* LOGOUT */
-.logout{
-  margin-top:20px;
-  background:#e74c3c;
-  padding:10px;
-  border-radius:8px;
-  text-align:center;
   cursor:pointer;
 }
 </style>
 
 <script>
-if(localStorage.getItem("loggedIn") !== "true"){
+if(localStorage.getItem("loggedIn")!=="true"){
   window.location.href="login.html";
 }
 </script>
@@ -160,132 +79,70 @@ if(localStorage.getItem("loggedIn") !== "true"){
 
 <div class="wrapper">
 
-<!-- SIDEBAR -->
 <div class="sidebar">
 <h3>HR System</h3>
 <ul class="menu">
-<li onclick="goPage('employee.html')">👨‍💼 Employee</li>
-<li onclick="goPage('attendance.html')">🕒 Attendance</li>
-<li onclick="goPage('payroll.html')">💰 Payroll</li>
-<li onclick="goPage('payslip.html')">🧾 Payslip</li>
+<li onclick="goPage('employee.html')">Employee</li>
+<li onclick="goPage('attendance.html')">Attendance</li>
+<li onclick="goPage('payroll.html')">Payroll</li>
+<li onclick="goPage('payslip.html')">Payslip</li>
+<li onclick="goPage('admin-requests.html')">Requests</li>
 </ul>
-<li onclick="goPage('admin-requests.html')">📋 Requests</li>
-<div class="logout" onclick="logout()">Logout</div>
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
 <h2>Dashboard</h2>
 
-<!-- STATS -->
-<div class="stats">
-<div class="stat-card">
-<div class="stat-title">Total Employees</div>
-<div class="stat-value" id="totalEmp">0</div>
-</div>
-
-<div class="stat-card">
-<div class="stat-title">Attendance Records</div>
-<div class="stat-value" id="totalAtt">0</div>
-</div>
-
-<div class="stat-card">
-<div class="stat-title">Payroll Records</div>
-<div class="stat-value" id="totalPay">0</div>
-</div>
-</div>
-
-<!-- GRID -->
-<div class="grid">
-
-<!-- LEFT -->
+<!-- 📢 ANNOUNCEMENT -->
 <div class="box">
-<h4>System Activity</h4>
+<h3>📢 Announcements</h3>
 
-<div>Employees</div>
-<div class="chart-bar"><div id="empBar" class="chart-fill"></div></div>
+<input id="announceInput" placeholder="Enter announcement...">
+<button onclick="addAnnouncement()">Post</button>
 
-<div>Attendance</div>
-<div class="chart-bar"><div id="attBar" class="chart-fill"></div></div>
-
-<div>Payroll</div>
-<div class="chart-bar"><div id="payBar" class="chart-fill"></div></div>
-
-</div>
-
-<!-- RIGHT -->
-<div class="box">
-<h4>🎂 Birthdays</h4>
-<div id="bdayList"></div>
+<div id="announceList"></div>
 </div>
 
 </div>
 
-</div>
 </div>
 
 <script>
 
+/* NAV */
 function goPage(p){window.location.href=p;}
-function logout(){
-  localStorage.removeItem("loggedIn");
-  window.location.href="login.html";
-}
 
-/* LOAD DATA */
-function loadStats(){
-  let emp = JSON.parse(localStorage.getItem("employees"))||[];
-  let att = JSON.parse(localStorage.getItem("attendance"))||[];
-  let pay = JSON.parse(localStorage.getItem("payroll"))||[];
+/* ANNOUNCEMENT */
+let announcements = JSON.parse(localStorage.getItem("announcements")) || [];
 
-  totalEmp.innerText = emp.length;
-  totalAtt.innerText = att.length;
-  totalPay.innerText = pay.length;
+function addAnnouncement(){
+  if(!announceInput.value) return;
 
-  // simple bar %
-  let max = Math.max(emp.length, att.length, pay.length,1);
-
-  empBar.style.width = (emp.length/max*100)+"%";
-  attBar.style.width = (att.length/max*100)+"%";
-  payBar.style.width = (pay.length/max*100)+"%";
-}
-
-/* BDAY */
-function loadBirthday(){
-  let employees = JSON.parse(localStorage.getItem("employees")) || [];
-  let box = document.getElementById("bdayList");
-
-  let today = new Date();
-
-  employees.forEach(e=>{
-    if(!e.birthdate) return;
-
-    let b = new Date(e.birthdate);
-    let thisYear = new Date(today.getFullYear(), b.getMonth(), b.getDate());
-
-    let diff = Math.ceil((thisYear - today)/(1000*60*60*24));
-
-    if(diff >= 0 && diff <= 30){
-
-      let initials = (e.fname[0]||"")+(e.lname[0]||"");
-
-      box.innerHTML += `
-      <div class="bday-card">
-        <div class="avatar">${initials}</div>
-        <div>${e.fname} ${e.lname}</div>
-        <div>${thisYear.toLocaleDateString()}</div>
-      </div>`;
-    }
+  announcements.push({
+    text:announceInput.value,
+    date:new Date().toLocaleString()
   });
 
-  if(box.innerHTML===""){
-    box.innerHTML="No birthdays 🎈";
-  }
+  localStorage.setItem("announcements",JSON.stringify(announcements));
+  announceInput.value="";
+  loadAnnouncements();
 }
 
-loadStats();
-loadBirthday();
+function loadAnnouncements(){
+  let box=document.getElementById("announceList");
+  box.innerHTML="";
+
+  announcements.slice().reverse().forEach(a=>{
+    box.innerHTML+=`
+    <div style="margin-top:5px;padding:6px;background:rgba(255,255,255,0.1);border-radius:6px;">
+      📢 ${a.text}<br>
+      <small>${a.date}</small>
+    </div>`;
+  });
+}
+
+loadAnnouncements();
 
 </script>
 
