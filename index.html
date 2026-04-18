@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>HR Management Dashboard</title>
+  <title>HR Management</title>
 
 <style>
 * {
@@ -13,41 +13,29 @@ body {
   margin: 0;
   background: url('bg.jpg') no-repeat center center fixed;
   background-size: cover;
-  position: relative;
   color: white;
 }
 
-/* OVERLAY */
+/* OVERLAY (para readable text) */
 body::before {
   content: "";
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    rgba(0,0,0,0.7),
-    rgba(0,0,0,0.5)
-  );
+  inset: 0;
+  background: rgba(0,0,0,0.4);
   z-index: -1;
 }
 
 /* WRAPPER */
 .wrapper {
   display: flex;
-  gap: 20px;
-  padding: 20px;
+  height: 100vh;
 }
 
 /* SIDEBAR */
 .sidebar {
-  width: 230px;
-  height: calc(100vh - 40px);
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(15px);
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  width: 240px;
+  background: rgba(0,0,0,0.6);
+  padding: 25px;
 }
 
 /* TITLE */
@@ -64,7 +52,7 @@ body::before {
 .menu li {
   padding: 12px;
   margin-bottom: 10px;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   transition: 0.3s;
 }
@@ -78,69 +66,31 @@ body::before {
   margin-top: 30px;
   background: #e74c3c;
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 8px;
   text-align: center;
   cursor: pointer;
 }
 
-/* MAIN */
+/* MAIN HERO */
 .main {
   flex: 1;
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(15px);
-  border-radius: 20px;
-  padding: 25px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-/* HEADER */
-.header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-}
-
-.header h2 {
-  margin: 0;
-}
-
-/* GRID */
-.container {
-  margin-top: 30px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
-  gap: 20px;
-}
-
-/* CARD */
-.card {
-  background: rgba(255,255,255,0.15);
-  padding: 30px;
-  border-radius: 15px;
+  justify-content: center;
   text-align: center;
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 16px;
+  padding: 40px;
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  background: rgba(255,255,255,0.25);
-}
-
-/* ICON */
-.icon {
-  font-size: 30px;
-  display: block;
+/* HERO TEXT */
+.hero h1 {
+  font-size: 42px;
   margin-bottom: 10px;
 }
 
-/* COLORS */
-.emp { border-top: 4px solid #2ecc71; }
-.att { border-top: 4px solid #f1c40f; }
-.pay { border-top: 4px solid #3498db; }
-.payslip { border-top: 4px solid #9b59b6; }
-.history { border-top: 4px solid #e67e22; }
+.hero p {
+  font-size: 20px;
+  opacity: 0.9;
+}
 
 </style>
 
@@ -172,43 +122,12 @@ if(localStorage.getItem("loggedIn") !== "true") {
     <div class="logout" onclick="logout()">Logout</div>
   </div>
 
-  <!-- MAIN -->
+  <!-- MAIN (NO DASHBOARD CARDS) -->
   <div class="main">
-
-    <div class="header">
-      <h2>Dashboard</h2>
-      <span>Welcome, Admin 👋</span>
+    <div class="hero">
+      <h1>HR Management System</h1>
+      <p>Manage Employees, Attendance, Payroll & More</p>
     </div>
-
-    <div class="container">
-
-      <div class="card emp" onclick="goPage('employee.html')">
-        <span class="icon">👨‍💼</span>
-        Employees
-      </div>
-
-      <div class="card att" onclick="goPage('attendance.html')">
-        <span class="icon">🕒</span>
-        Attendance
-      </div>
-
-      <div class="card pay" onclick="goPage('payroll.html')">
-        <span class="icon">💰</span>
-        Payroll
-      </div>
-
-      <div class="card payslip" onclick="goPage('payslip.html')">
-        <span class="icon">🧾</span>
-        Payslips
-      </div>
-
-      <div class="card history" onclick="goPage('payroll-history.html')">
-        <span class="icon">📄</span>
-        Payroll History
-      </div>
-
-    </div>
-
   </div>
 
 </div>
