@@ -35,29 +35,14 @@ body::before {
 .sidebar {
   width: 240px;
   background: rgba(0,0,0,0.6);
-  padding: 25px;
-}
-
-.menu {
-  list-style: none;
-  padding: 0;
-}
-
-.menu li {
-  padding: 10px;
-  margin-bottom: 8px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.menu li:hover {
-  background: rgba(255,255,255,0.2);
+  padding: 20px;
 }
 
 /* MAIN */
 .main {
   flex: 1;
-  padding: 25px;
+  padding: 20px;
+  overflow-y: auto; /* SCROLL */
 }
 
 /* FORM BOX */
@@ -66,23 +51,29 @@ body::before {
   padding: 15px;
   border-radius: 12px;
   margin-bottom: 20px;
-  backdrop-filter: blur(8px);
 }
 
-/* INPUTS */
-input {
+/* GRID FORM */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+  gap: 8px;
+}
+
+/* INPUT */
+input, select {
   padding: 6px;
-  margin: 5px;
   border-radius: 6px;
   border: none;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 /* BUTTON */
 .add-btn {
-  padding: 6px 12px;
-  border: none;
+  margin-top: 10px;
+  padding: 8px;
   background: #2ecc71;
+  border: none;
   color: white;
   border-radius: 6px;
   cursor: pointer;
@@ -91,166 +82,167 @@ input {
 /* TABLE */
 .table-box {
   background: rgba(255,255,255,0.1);
+  padding: 10px;
   border-radius: 12px;
-  padding: 15px;
-  backdrop-filter: blur(8px);
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 12px;
 }
 
-th {
-  text-align: left;
-  padding: 8px;
-  background: rgba(255,255,255,0.2);
-}
-
-td {
+th, td {
   padding: 6px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
-tr:hover {
-  background: rgba(255,255,255,0.1);
-}
-
-/* ACTION BUTTONS */
+/* BUTTON */
 .btn {
   padding: 3px 6px;
-  font-size: 11px;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
-.edit { background: #3498db; color: white; }
 .delete { background: #e74c3c; color: white; }
 
-/* LOGOUT */
-.logout {
-  margin-top: 20px;
-  background: #e74c3c;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
-  cursor: pointer;
-}
-
 </style>
-
-<script>
-if(localStorage.getItem("loggedIn") !== "true") {
-  window.location.href = "login.html";
-}
-</script>
-
 </head>
+
 <body>
 
 <div class="wrapper">
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <h2>HR System</h2>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h3>HR System</h3>
+</div>
 
-    <ul class="menu">
-      <li onclick="goPage('index.html')">🏠 Dashboard</li>
-      <li onclick="goPage('employee.html')">👨‍💼 Employees</li>
-      <li onclick="goPage('attendance.html')">🕒 Attendance</li>
-      <li onclick="goPage('payroll.html')">💰 Payroll</li>
-      <li onclick="goPage('payslip.html')">🧾 Payslips</li>
-      <li onclick="goPage('payroll-history.html')">📄 History</li>
-    </ul>
+<!-- MAIN -->
+<div class="main">
 
-    <div class="logout" onclick="logout()">Logout</div>
+<h2>Employee Masterlist</h2>
+
+<!-- FORM -->
+<div class="form-box">
+  <div class="form-grid">
+
+    <input id="fname" placeholder="First Name">
+    <input id="mname" placeholder="Middle Name">
+    <input id="lname" placeholder="Last Name">
+
+    <input type="date" id="birthdate" onchange="calcAge()">
+    <input id="age" placeholder="Age" readonly>
+
+    <input id="address" placeholder="Address">
+
+    <select id="bank">
+      <option>Bank Name</option>
+      <option>BPI</option>
+      <option>BDO</option>
+      <option>Metrobank</option>
+      <option>Landbank</option>
+    </select>
+
+    <input id="bankAcc" placeholder="Bank Account">
+
+    <input id="empId" placeholder="Employee ID">
+
+    <select id="govId">
+      <option>Government ID</option>
+      <option>Passport</option>
+      <option>Driver License</option>
+      <option>National ID</option>
+    </select>
+
+    <input id="sss" placeholder="SSS">
+    <input id="philhealth" placeholder="PhilHealth">
+    <input id="pagibig" placeholder="Pag-IBIG">
+    <input id="healthcard" placeholder="Health Card">
+
+    <select id="position">
+      <option>Position</option>
+      <option>Admin</option>
+      <option>Cashier</option>
+      <option>Waiter</option>
+      <option>Waitress</option>
+      <option>Manager</option>
+      <option>Supervisor</option>
+    </select>
+
   </div>
 
-  <!-- MAIN -->
-  <div class="main">
+  <button class="add-btn" onclick="addEmployee()">Add Employee</button>
+</div>
 
-    <h2>Employee Masterlist</h2>
+<!-- TABLE -->
+<div class="table-box">
+<table id="empTable">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Position</th>
+      <th>Bank</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+</div>
 
-    <!-- FORM -->
-    <div class="form-box">
-      <input type="text" id="name" placeholder="Name">
-      <input type="text" id="position" placeholder="Position">
-      <input type="text" id="department" placeholder="Department">
-      <input type="number" id="salary" placeholder="Salary">
-      <button class="add-btn" onclick="addEmployee()">Add</button>
-    </div>
-
-    <!-- TABLE -->
-    <div class="table-box">
-      <table id="empTable">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Department</th>
-            <th>Salary</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-  </div>
-
+</div>
 </div>
 
 <script>
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
 
-function renderTable() {
-  let tbody = document.querySelector("#empTable tbody");
-  tbody.innerHTML = "";
-
-  employees.forEach((emp, index) => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${emp.name}</td>
-        <td>${emp.position}</td>
-        <td>${emp.department}</td>
-        <td>${emp.salary}</td>
-        <td>
-          <button class="btn delete" onclick="deleteEmp(${index})">Delete</button>
-        </td>
-      </tr>
-    `;
-  });
+// AUTO AGE
+function calcAge() {
+  let birth = new Date(document.getElementById("birthdate").value);
+  let today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  document.getElementById("age").value = age;
 }
 
+// ADD
 function addEmployee() {
   let emp = {
-    name: document.getElementById("name").value,
-    position: document.getElementById("position").value,
-    department: document.getElementById("department").value,
-    salary: document.getElementById("salary").value
+    name: fname.value + " " + mname.value + " " + lname.value,
+    age: age.value,
+    position: position.value,
+    bank: bank.value
   };
 
   employees.push(emp);
   localStorage.setItem("employees", JSON.stringify(employees));
-
   renderTable();
 }
 
+// DELETE
 function deleteEmp(i) {
   employees.splice(i,1);
   localStorage.setItem("employees", JSON.stringify(employees));
   renderTable();
 }
 
-function logout() {
-  localStorage.removeItem("loggedIn");
-  window.location.href = "login.html";
-}
+// RENDER
+function renderTable() {
+  let tbody = document.querySelector("#empTable tbody");
+  tbody.innerHTML = "";
 
-function goPage(page){
-  window.location.href = page;
+  employees.forEach((e,i)=>{
+    tbody.innerHTML += `
+      <tr>
+        <td>${e.name}</td>
+        <td>${e.age}</td>
+        <td>${e.position}</td>
+        <td>${e.bank}</td>
+        <td><button class="btn delete" onclick="deleteEmp(${i})">Delete</button></td>
+      </tr>
+    `;
+  });
 }
 
 renderTable();
