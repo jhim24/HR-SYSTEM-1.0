@@ -105,6 +105,7 @@ th{
     <li onclick="goPage('index.html')">🏠 Dashboard</li>
     <li onclick="goPage('employee.html')">👨‍💼 Employees</li>
     <li onclick="goPage('attendance.html')">🕒 Attendance</li>
+    <li onclick="goPage('payroll.html')">💰 Payroll</li>
   </ul>
 </div>
 
@@ -115,7 +116,6 @@ th{
 <!-- FORM -->
 <div class="top-form">
 
-  <!-- AUTO LOAD EMPLOYEES -->
   <select id="name"></select>
 
   <input type="date" id="date">
@@ -130,7 +130,7 @@ th{
   <input type="time" id="in">
   <input type="time" id="out">
 
-  <input type="number" id="break" placeholder="Break (min)">
+  <input type="number" id="breakTime" placeholder="Break (min)">
 
   <button class="btn add" onclick="addRow()">Save</button>
 
@@ -165,7 +165,7 @@ let employees = JSON.parse(localStorage.getItem("employees")) || [];
 let data = JSON.parse(localStorage.getItem("attendance")) || [];
 let editIndex = -1;
 
-/* LOAD EMPLOYEE LIST */
+/* LOAD EMPLOYEES */
 function loadEmployees(){
   let select = document.getElementById("name");
   select.innerHTML = "";
@@ -202,9 +202,15 @@ function compute(inTime, outTime, breakMin){
   };
 }
 
-/* ADD */
+/* ADD / UPDATE */
 function addRow(){
-  let c = compute(in.value, out.value, break.value);
+
+  if(!name.value || !date.value){
+    alert("Please fill required fields");
+    return;
+  }
+
+  let c = compute(in.value, out.value, breakTime.value);
 
   let row = {
     name:name.value,
@@ -212,7 +218,7 @@ function addRow(){
     status:status.value,
     in:in.value,
     out:out.value,
-    break:break.value,
+    break:breakTime.value,
     total:c.total,
     late:c.late,
     ot:c.ot
@@ -226,6 +232,7 @@ function addRow(){
   }
 
   localStorage.setItem("attendance", JSON.stringify(data));
+  clearForm();
   render();
 }
 
@@ -238,7 +245,7 @@ function editRow(i){
   status.value = r.status;
   in.value = r.in;
   out.value = r.out;
-  break.value = r.break;
+  breakTime.value = r.break;
 
   editIndex = i;
 }
@@ -250,6 +257,11 @@ function deleteRow(i){
     localStorage.setItem("attendance", JSON.stringify(data));
     render();
   }
+}
+
+/* CLEAR */
+function clearForm(){
+  document.querySelectorAll("input").forEach(i=>i.value="");
 }
 
 /* RENDER */
