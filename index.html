@@ -11,9 +11,57 @@
 
 body {
   margin: 0;
+  display: flex;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  padding: 20px;
   color: white;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 230px;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  position: fixed;
+}
+
+.sidebar h2 {
+  margin-bottom: 30px;
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+}
+
+.menu li {
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.menu li:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* LOGOUT */
+.logout {
+  margin-top: 30px;
+  background: #e74c3c;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* MAIN CONTENT */
+.main {
+  margin-left: 250px;
+  padding: 20px;
+  width: 100%;
 }
 
 /* HEADER */
@@ -21,18 +69,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-h2 {
-  margin: 0;
-}
-
-/* LOGOUT */
-.logout {
-  background: #e74c3c;
-  padding: 8px 15px;
-  border-radius: 6px;
-  cursor: pointer;
 }
 
 /* GRID */
@@ -68,7 +104,7 @@ h2 {
   margin-bottom: 10px;
 }
 
-/* COLORS PER CARD */
+/* COLORS */
 .emp { border-left: 5px solid #2ecc71; }
 .att { border-left: 5px solid #f1c40f; }
 .pay { border-left: 5px solid #3498db; }
@@ -87,37 +123,56 @@ if(localStorage.getItem("loggedIn") !== "true") {
 </head>
 <body>
 
-<div class="header">
-  <h2>HR SYSTEM DASHBOARD</h2>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>HR System</h2>
+
+  <ul class="menu">
+    <li onclick="goPage('index.html')">🏠 Dashboard</li>
+    <li onclick="goPage('employee.html')">👨‍💼 Employee</li>
+    <li onclick="goPage('attendance.html')">🕒 Attendance</li>
+    <li onclick="goPage('payroll.html')">💰 Payroll</li>
+    <li onclick="goPage('payslip.html')">🧾 Payslip</li>
+    <li onclick="goPage('payroll-history.html')">📄 History</li>
+  </ul>
+
   <div class="logout" onclick="logout()">Logout</div>
 </div>
 
-<div class="container">
+<!-- MAIN -->
+<div class="main">
 
-  <div class="card emp" onclick="goPage('employee.html')">
-    <span class="icon">👨‍💼</span>
-    Employee
+  <div class="header">
+    <h2>Dashboard</h2>
   </div>
 
-  <div class="card att" onclick="goPage('attendance.html')">
-    <span class="icon">🕒</span>
-    Attendance
-  </div>
+  <div class="container">
 
-  <div class="card pay" onclick="goPage('payroll.html')">
-    <span class="icon">💰</span>
-    Payroll
-  </div>
+    <div class="card emp" onclick="goPage('employee.html')">
+      <span class="icon">👨‍💼</span>
+      Employee
+    </div>
 
-  <div class="card payslip" onclick="goPage('payslip.html')">
-    <span class="icon">🧾</span>
-    Payslip
-  </div>
+    <div class="card att" onclick="goPage('attendance.html')">
+      <span class="icon">🕒</span>
+      Attendance
+    </div>
 
-  <!-- ✅ ADDED -->
-  <div class="card history" onclick="goPage('payroll-history.html')">
-    <span class="icon">📄</span>
-    Payroll History
+    <div class="card pay" onclick="goPage('payroll.html')">
+      <span class="icon">💰</span>
+      Payroll
+    </div>
+
+    <div class="card payslip" onclick="goPage('payslip.html')">
+      <span class="icon">🧾</span>
+      Payslip
+    </div>
+
+    <div class="card history" onclick="goPage('payroll-history.html')">
+      <span class="icon">📄</span>
+      Payroll History
+    </div>
+
   </div>
 
 </div>
