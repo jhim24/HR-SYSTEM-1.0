@@ -1,263 +1,243 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>HR System Dashboard</title>
+<title>HR System Dashboard</title>
 
 <style>
-* {
-  box-sizing: border-box;
-  font-family: Arial;
-}
+*{box-sizing:border-box;font-family:Arial;}
 
-body {
-  margin: 0;
-  display: flex;
-  height: 100vh;
-  background: url('bg.jpg') no-repeat center center fixed;
-  background-size: cover;
-  color: white;
+body{
+  margin:0;
+  display:flex;
+  height:100vh;
+  background:url('bg.jpg') no-repeat center center fixed;
+  background-size:cover;
+  color:white;
 }
 
 /* OVERLAY */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: -1;
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  z-index:-1;
 }
 
 /* SIDEBAR */
-.sidebar {
-  width: 220px;
-  background: rgba(0,0,0,0.7);
-  padding: 20px;
+.sidebar{
+  width:220px;
+  background:rgba(0,0,0,0.7);
+  padding:20px;
 }
 
-.sidebar h3 {
-  margin-top: 0;
+.menu{list-style:none;padding:0;}
+.menu li{
+  padding:10px;
+  cursor:pointer;
+  border-radius:6px;
 }
-
-.menu {
-  list-style: none;
-  padding: 0;
-}
-
-.menu li {
-  padding: 10px;
-  cursor: pointer;
-  border-radius: 6px;
-}
-
-.menu li:hover {
-  background: rgba(255,255,255,0.2);
+.menu li:hover{
+  background:rgba(255,255,255,0.2);
 }
 
 /* MAIN */
-.main {
-  flex: 1;
-  padding: 20px;
-  overflow: auto;
+.main{
+  flex:1;
+  display:flex;
+}
+
+/* LEFT CONTENT */
+.left{
+  flex:3;
+  padding:20px;
+}
+
+/* RIGHT BOX */
+.right{
+  width:300px;
+  padding:20px;
 }
 
 /* HEADER */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-/* LOGOUT */
-.logout {
-  background: #e74c3c;
-  padding: 8px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* GRID */
-.container {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
-  gap: 20px;
-}
-
-/* CARD */
-.card {
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(12px);
-  padding: 40px;
-  border-radius: 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 18px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
-
-.card:hover {
-  transform: translateY(-5px) scale(1.03);
-}
-
-/* ICON */
-.icon {
-  font-size: 35px;
-  display: block;
-  margin-bottom: 10px;
-}
-
-/* COLORS */
-.emp { border-left: 5px solid #2ecc71; }
-.att { border-left: 5px solid #f1c40f; }
-.pay { border-left: 5px solid #3498db; }
-.payslip { border-left: 5px solid #9b59b6; }
-.history { border-left: 5px solid #e67e22; }
-
-/* ANNOUNCEMENT BOX */
-.announce-box{
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(12px);
-  padding: 20px;
-  border-radius: 15px;
-  margin-top:20px;
-}
-
-.announce-box input{
-  width:100%;
-  padding:8px;
-  margin-top:10px;
-  border:none;
+.logout{
+  background:#e74c3c;
+  padding:8px 15px;
   border-radius:6px;
-}
-
-.announce-box button{
-  margin-top:10px;
-  padding:8px;
-  border:none;
-  border-radius:6px;
-  background:#2ecc71;
-  color:white;
   cursor:pointer;
 }
+
+/* CARDS */
+.container{
+  margin-top:20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(12px);
+  padding:30px;
+  border-radius:15px;
+  text-align:center;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+}
+
+.icon{
+  font-size:30px;
+}
+
+/* ANNOUNCEMENT */
+.announce{
+  margin-top:20px;
+  background:rgba(255,255,255,0.1);
+  padding:15px;
+  border-radius:10px;
+}
+
+/* BIRTHDAY BOX */
+.birthday{
+  background:rgba(255,255,255,0.1);
+  padding:20px;
+  border-radius:15px;
+  text-align:center;
+}
+
 </style>
 
 <script>
-if(localStorage.getItem("loggedIn") !== "true") {
-  window.location.href = "login.html";
+if(localStorage.getItem("loggedIn")!=="true"){
+  window.location.href="login.html";
 }
 </script>
 
 </head>
+
 <body>
 
 <!-- SIDEBAR -->
 <div class="sidebar">
-  <h3>HR SYSTEM</h3>
-  <ul class="menu">
-    <li onclick="goPage('employee.html')">👨‍💼 Employee</li>
-    <li onclick="goPage('attendance.html')">🕒 Attendance</li>
-    <li onclick="goPage('payroll.html')">💰 Payroll</li>
-    <li onclick="goPage('payslip.html')">🧾 Payslip</li>
-    <li onclick="goPage('admin-requests.html')">📋 Requests</li>
-  </ul>
+<h3>HR SYSTEM</h3>
+<ul class="menu">
+<li onclick="goPage('employee.html')">Employee</li>
+<li onclick="goPage('attendance.html')">Attendance</li>
+<li onclick="goPage('payroll.html')">Payroll</li>
+<li onclick="goPage('payslip.html')">Payslip</li>
+<li onclick="goPage('admin-requests.html')">Requests</li>
+</ul>
 </div>
 
 <!-- MAIN -->
 <div class="main">
 
+<!-- LEFT -->
+<div class="left">
+
 <div class="header">
-  <h2>DASHBOARD</h2>
-  <div class="logout" onclick="logout()">Logout</div>
+<h2>Dashboard</h2>
+<div class="logout" onclick="logout()">Logout</div>
 </div>
 
 <!-- CARDS -->
 <div class="container">
+<div class="card" onclick="goPage('employee.html')">👨‍💼 Employee</div>
+<div class="card" onclick="goPage('attendance.html')">🕒 Attendance</div>
+<div class="card" onclick="goPage('payroll.html')">💰 Payroll</div>
+<div class="card" onclick="goPage('payslip.html')">🧾 Payslip</div>
+</div>
 
-  <div class="card emp" onclick="goPage('employee.html')">
-    <span class="icon">👨‍💼</span>
-    Employee
-  </div>
+<!-- 📢 ANNOUNCEMENT -->
+<div class="announce">
+<h3>📢 Announcements</h3>
 
-  <div class="card att" onclick="goPage('attendance.html')">
-    <span class="icon">🕒</span>
-    Attendance
-  </div>
+<input id="announceInput" placeholder="Enter..." style="width:100%;padding:8px;border-radius:6px;border:none;">
+<button onclick="addAnnouncement()">Post</button>
 
-  <div class="card pay" onclick="goPage('payroll.html')">
-    <span class="icon">💰</span>
-    Payroll
-  </div>
-
-  <div class="card payslip" onclick="goPage('payslip.html')">
-    <span class="icon">🧾</span>
-    Payslip
-  </div>
-
-  <div class="card history" onclick="goPage('admin-requests.html')">
-    <span class="icon">📄</span>
-    Requests
-  </div>
+<div id="announceList"></div>
+</div>
 
 </div>
 
-<!-- 📢 ANNOUNCEMENT (ADDED LANG) -->
-<div class="announce-box">
-  <h3>📢 Announcements</h3>
+<!-- RIGHT SIDE -->
+<div class="right">
 
-  <input id="announceInput" placeholder="Enter announcement...">
-  <button onclick="addAnnouncement()">Post</button>
+<!-- 🎂 BIRTHDAY -->
+<div class="birthday">
+<h3>🎂 Birthday Today</h3>
+<div id="bdayList"></div>
+</div>
 
-  <div id="announceList" style="margin-top:10px;"></div>
 </div>
 
 </div>
 
 <script>
 
-function logout() {
+function logout(){
   localStorage.removeItem("loggedIn");
-  window.location.href = "login.html";
+  window.location.href="login.html";
 }
 
-function goPage(page){
-  window.location.href = page;
-}
+function goPage(p){window.location.href=p;}
 
-/* ANNOUNCEMENT SYSTEM */
-let announcements = JSON.parse(localStorage.getItem("announcements")) || [];
+/* ANNOUNCEMENT */
+let announcements = JSON.parse(localStorage.getItem("announcements"))||[];
 
 function addAnnouncement(){
-
   if(!announceInput.value) return;
 
   announcements.push({
-    text: announceInput.value,
-    date: new Date().toLocaleString()
+    text:announceInput.value,
+    date:new Date().toLocaleString()
   });
 
-  localStorage.setItem("announcements", JSON.stringify(announcements));
-
+  localStorage.setItem("announcements",JSON.stringify(announcements));
   announceInput.value="";
   loadAnnouncements();
 }
 
 function loadAnnouncements(){
-
-  let box = document.getElementById("announceList");
-  box.innerHTML="";
-
+  announceList.innerHTML="";
   announcements.slice().reverse().forEach(a=>{
-    box.innerHTML += `
-      <div style="margin-bottom:6px;padding:6px;background:rgba(255,255,255,0.1);border-radius:6px;">
-        📢 ${a.text}<br>
-        <small>${a.date}</small>
-      </div>
-    `;
+    announceList.innerHTML+=`
+    <div>📢 ${a.text}<br><small>${a.date}</small></div>`;
   });
 }
 
+/* 🎂 BIRTHDAY SYSTEM */
+function loadBirthday(){
+
+  let emp = JSON.parse(localStorage.getItem("employees"))||[];
+  let today = new Date().toISOString().slice(5,10);
+
+  let celebrants = emp.filter(e=>{
+    if(!e.birthdate) return false;
+    return e.birthdate.slice(5,10)===today;
+  });
+
+  if(celebrants.length===0){
+    bdayList.innerHTML="No birthday today";
+  }else{
+    bdayList.innerHTML = celebrants.map(e=>
+      `🎉 ${e.fname} ${e.lname}`
+    ).join("<br>");
+  }
+}
+
 loadAnnouncements();
+loadBirthday();
 
 </script>
 
