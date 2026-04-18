@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Employee Login</title>
+
+<style>
+body{
+  font-family:Arial;
+  background:#2c3e50;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.box{
+  background:white;
+  padding:20px;
+  width:300px;
+  text-align:center;
+}
+
+input,button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+<h3>Employee Login</h3>
+
+<input id="name" placeholder="Full Name">
+<input id="id" placeholder="Employee ID">
+
+<button onclick="login()">Login</button>
+</div>
+
+<script>
+function login(){
+
+  let nameVal = document.getElementById("name").value;
+  let idVal = document.getElementById("id").value;
+
+  let emp = JSON.parse(localStorage.getItem("employees"))||[];
+
+  let found = emp.find(e =>
+    (e.fname+" "+e.lname)===nameVal &&
+    e.empId===idVal
+  );
+
+  if(found){
+    localStorage.setItem("empSession", JSON.stringify(found));
+    window.location.href="employee-portal.html";
+  }else{
+    alert("Invalid login");
+  }
+}
+</script>
+
+</body>
+</html>
