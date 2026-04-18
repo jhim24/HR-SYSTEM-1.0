@@ -13,13 +13,11 @@ body{
   color:white;
 }
 
-/* CONTAINER */
 .container{
   max-width:900px;
   margin:auto;
 }
 
-/* FLOATING CARD */
 .box{
   background:rgba(255,255,255,0.1);
   backdrop-filter:blur(15px);
@@ -27,15 +25,8 @@ body{
   margin-bottom:20px;
   border-radius:15px;
   box-shadow:0 10px 30px rgba(0,0,0,0.3);
-  animation:fadeIn 0.5s ease;
 }
 
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(20px);}
-  to{opacity:1;}
-}
-
-/* HEADER */
 .logout{
   float:right;
   background:#ff4d4d;
@@ -44,17 +35,14 @@ body{
   cursor:pointer;
 }
 
-/* INPUT */
 input,select,textarea{
   width:100%;
   padding:10px;
   margin-top:8px;
   border:none;
   border-radius:8px;
-  outline:none;
 }
 
-/* BUTTON */
 button{
   width:100%;
   padding:10px;
@@ -64,21 +52,13 @@ button{
   background:linear-gradient(45deg,#00c6ff,#0072ff);
   color:white;
   cursor:pointer;
-  font-weight:bold;
-  transition:0.3s;
 }
 
-button:hover{
-  transform:scale(1.05);
-}
-
-/* TABLE */
 table{
   width:100%;
   border-collapse:collapse;
   margin-top:10px;
   font-size:12px;
-  background:rgba(255,255,255,0.1);
 }
 
 th,td{
@@ -86,19 +66,9 @@ th,td{
   text-align:center;
 }
 
-th{
-  background:rgba(0,0,0,0.4);
-}
-
-tr{
-  border-bottom:1px solid rgba(255,255,255,0.2);
-}
-
-/* STATUS COLORS */
 .pending{color:yellow;}
 .approved{color:#00ffcc;}
 .rejected{color:#ff6b6b;}
-
 </style>
 </head>
 
@@ -106,29 +76,26 @@ tr{
 
 <div class="container">
 
-<!-- USER -->
 <div class="box">
 <div class="logout" onclick="logout()">Logout</div>
 <h2>Employee Dashboard</h2>
 <div id="userInfo"></div>
 </div>
 
-<!-- FORM -->
 <div class="box">
 <h3>Request Leave / Day Off</h3>
 
 <select id="type">
-  <option value="Leave">Leave</option>
-  <option value="Day Off">Day Off</option>
+<option value="Leave">Leave</option>
+<option value="Day Off">Day Off</option>
 </select>
 
 <input type="date" id="date">
-<textarea id="reason" placeholder="Enter reason..."></textarea>
+<textarea id="reason"></textarea>
 
-<button onclick="submitRequest()">Submit Request</button>
+<button onclick="submitRequest()">Submit</button>
 </div>
 
-<!-- TABLE -->
 <div class="box">
 <h3>My Requests</h3>
 
@@ -151,26 +118,17 @@ tr{
 
 <script>
 
-/* SESSION */
 let user = JSON.parse(localStorage.getItem("empSession"));
 
 if(!user){
   window.location.href="login.html";
 }
 
-document.getElementById("userInfo").innerHTML =
-  `<b>${user.fname} ${user.lname}</b> - ${user.position || ""}`;
+userInfo.innerHTML = `${user.fname} ${user.lname}`;
 
-/* STORAGE */
 let requests = JSON.parse(localStorage.getItem("requests")) || [];
 
-/* SUBMIT */
 function submitRequest(){
-
-  if(!date.value){
-    alert("Select date");
-    return;
-  }
 
   let r = {
     name: user.fname + " " + user.lname,
@@ -183,255 +141,26 @@ function submitRequest(){
   requests.push(r);
   localStorage.setItem("requests", JSON.stringify(requests));
 
-  reason.value="";
   loadRequests();
 }
 
-/* LOAD */
 function loadRequests(){
-
-  let tbody = document.getElementById("reqTable");
-  tbody.innerHTML = "";
+  let tbody = reqTable;
+  tbody.innerHTML="";
 
   requests
-    .filter(r => r.name === (user.fname + " " + user.lname))
-    .forEach(r => {
-
-      let statusClass = r.status.toLowerCase();
-
-      tbody.innerHTML += `
-      <tr>
-        <td>${r.type}</td>
-        <td>${r.date}</td>
-        <td>${r.reason}</td>
-        <td class="${statusClass}">${r.status}</td>
-      </tr>`;
-    });
+  .filter(r=>r.name===user.fname+" "+user.lname)
+  .forEach(r=>{
+    tbody.innerHTML+=`
+    <tr>
+    <td>${r.type}</td>
+    <td>${r.date}</td>
+    <td>${r.reason}</td>
+    <td class="${r.status.toLowerCase()}">${r.status}</td>
+    </tr>`;
+  });
 }
 
-/* LOGOUT */
-function logout(){
-  localStorage.removeItem("empSession");
-  window.location.href="login.html";
-}
-
-loadRequests();
-
-</script>
-
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-<title>Employee Portal</title>
-
-<style>
-*{box-sizing:border-box;font-family:'Segoe UI';}
-
-body{
-  margin:0;
-  background:linear-gradient(135deg,#667eea,#764ba2);
-  padding:20px;
-  color:white;
-}
-
-/* CONTAINER */
-.container{
-  max-width:900px;
-  margin:auto;
-}
-
-/* FLOATING CARD */
-.box{
-  background:rgba(255,255,255,0.1);
-  backdrop-filter:blur(15px);
-  padding:20px;
-  margin-bottom:20px;
-  border-radius:15px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.3);
-  animation:fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(20px);}
-  to{opacity:1;}
-}
-
-/* HEADER */
-.logout{
-  float:right;
-  background:#ff4d4d;
-  padding:6px 10px;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-/* INPUT */
-input,select,textarea{
-  width:100%;
-  padding:10px;
-  margin-top:8px;
-  border:none;
-  border-radius:8px;
-  outline:none;
-}
-
-/* BUTTON */
-button{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  border:none;
-  border-radius:8px;
-  background:linear-gradient(45deg,#00c6ff,#0072ff);
-  color:white;
-  cursor:pointer;
-  font-weight:bold;
-  transition:0.3s;
-}
-
-button:hover{
-  transform:scale(1.05);
-}
-
-/* TABLE */
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:10px;
-  font-size:12px;
-  background:rgba(255,255,255,0.1);
-}
-
-th,td{
-  padding:8px;
-  text-align:center;
-}
-
-th{
-  background:rgba(0,0,0,0.4);
-}
-
-tr{
-  border-bottom:1px solid rgba(255,255,255,0.2);
-}
-
-/* STATUS COLORS */
-.pending{color:yellow;}
-.approved{color:#00ffcc;}
-.rejected{color:#ff6b6b;}
-
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<!-- USER -->
-<div class="box">
-<div class="logout" onclick="logout()">Logout</div>
-<h2>Employee Dashboard</h2>
-<div id="userInfo"></div>
-</div>
-
-<!-- FORM -->
-<div class="box">
-<h3>Request Leave / Day Off</h3>
-
-<select id="type">
-  <option value="Leave">Leave</option>
-  <option value="Day Off">Day Off</option>
-</select>
-
-<input type="date" id="date">
-<textarea id="reason" placeholder="Enter reason..."></textarea>
-
-<button onclick="submitRequest()">Submit Request</button>
-</div>
-
-<!-- TABLE -->
-<div class="box">
-<h3>My Requests</h3>
-
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Date</th>
-<th>Reason</th>
-<th>Status</th>
-</tr>
-</thead>
-
-<tbody id="reqTable"></tbody>
-</table>
-
-</div>
-
-</div>
-
-<script>
-
-/* SESSION */
-let user = JSON.parse(localStorage.getItem("empSession"));
-
-if(!user){
-  window.location.href="login.html";
-}
-
-document.getElementById("userInfo").innerHTML =
-  `<b>${user.fname} ${user.lname}</b> - ${user.position || ""}`;
-
-/* STORAGE */
-let requests = JSON.parse(localStorage.getItem("requests")) || [];
-
-/* SUBMIT */
-function submitRequest(){
-
-  if(!date.value){
-    alert("Select date");
-    return;
-  }
-
-  let r = {
-    name: user.fname + " " + user.lname,
-    type: type.value,
-    date: date.value,
-    reason: reason.value,
-    status: "Pending"
-  };
-
-  requests.push(r);
-  localStorage.setItem("requests", JSON.stringify(requests));
-
-  reason.value="";
-  loadRequests();
-}
-
-/* LOAD */
-function loadRequests(){
-
-  let tbody = document.getElementById("reqTable");
-  tbody.innerHTML = "";
-
-  requests
-    .filter(r => r.name === (user.fname + " " + user.lname))
-    .forEach(r => {
-
-      let statusClass = r.status.toLowerCase();
-
-      tbody.innerHTML += `
-      <tr>
-        <td>${r.type}</td>
-        <td>${r.date}</td>
-        <td>${r.reason}</td>
-        <td class="${statusClass}">${r.status}</td>
-      </tr>`;
-    });
-}
-
-/* LOGOUT */
 function logout(){
   localStorage.removeItem("empSession");
   window.location.href="login.html";
