@@ -1,292 +1,251 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Attendance System</title>
+<title>Attendance</title>
 
 <style>
-body {
-  font-family: Arial;
-  background: linear-gradient(135deg, #141e30, #243b55);
-  padding: 20px;
-  color: white;
-}
+*{box-sizing:border-box;font-family:'Segoe UI';}
 
-h2 { text-align:center; }
-
-.top-bar { margin-bottom:10px; }
-
-.back-btn {
-  background:#34495e;
+body{
+  margin:0;
+  background:url('bg.jpg') no-repeat center center fixed;
+  background-size:cover;
   color:white;
-  padding:8px;
-  border:none;
-  border-radius:5px;
-  cursor:pointer;
 }
 
-.card {
-  background: rgba(255,255,255,0.1);
-  padding: 20px;
-  border-radius: 15px;
-  margin-bottom: 20px;
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  z-index:-1;
 }
 
-.form {
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
-  gap:10px;
+.wrapper{display:flex;height:100vh;}
+
+.sidebar{
+  width:240px;
+  background:rgba(0,0,0,0.6);
+  padding:20px;
 }
 
-input, select {
+.menu{list-style:none;padding:0;}
+.menu li{padding:10px;cursor:pointer;border-radius:6px;}
+.menu li:hover{background:rgba(255,255,255,0.2);}
+
+.main{
+  flex:1;
+  padding:20px;
+  overflow:auto;
+}
+
+/* HEADER FORM */
+.top-form{
+  background:rgba(255,255,255,0.1);
   padding:10px;
-  border:none;
-  border-radius:6px;
+  border-radius:10px;
+  margin-bottom:10px;
 }
 
-button {
-  padding:8px;
-  border:none;
+input, select{
+  padding:6px;
+  margin:3px;
   border-radius:5px;
-  cursor:pointer;
+  border:none;
+  font-size:12px;
 }
-
-.save { background:#2ecc71; }
-.update { background:#f39c12; }
-.cancel { background:#7f8c8d; }
-.delete { background:#e74c3c; }
 
 /* TABLE */
-.table-box {
-  background:white;
-  color:black;
+.table-box{
+  background:#eaf4ff;
   border-radius:10px;
-  padding:10px;
-  overflow-x:auto;
+  overflow:auto;
 }
 
-table {
-  border-collapse: collapse;
-  min-width:1200px;
+table{
+  width:100%;
+  border-collapse:collapse;
+  color:#2c3e50;
+  font-size:12px;
 }
 
-th, td {
+th,td{
   border:1px solid #ccc;
   padding:6px;
   text-align:center;
-  font-size:11px;
+  white-space:nowrap;
 }
 
-th {
-  background:#2ecc71;
+th{
+  background:#3c89b8;
   color:white;
 }
-</style>
 
-<script>
-if(localStorage.getItem("loggedIn") !== "true"){
-  window.location.href="login.html";
+/* BUTTON */
+.btn{
+  padding:3px 6px;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
 }
-</script>
 
+.add{background:#2ecc71;color:white;}
+.edit{background:#3498db;color:white;}
+.delete{background:#e74c3c;color:white;}
+
+</style>
 </head>
+
 <body>
 
-<div class="top-bar">
-  <button class="back-btn" onclick="goBack()">⬅ Back</button>
+<div class="wrapper">
+
+<div class="sidebar">
+  <h3>HR System</h3>
+  <ul class="menu">
+    <li onclick="goPage('index.html')">🏠 Dashboard</li>
+    <li onclick="goPage('employee.html')">👨‍💼 Employees</li>
+    <li onclick="goPage('attendance.html')">🕒 Attendance</li>
+  </ul>
 </div>
 
-<h2>ATTENDANCE SYSTEM (MANUAL)</h2>
+<div class="main">
 
-<div class="card">
-  <div class="form">
+<h2>Daily Attendance</h2>
 
-    <select id="employee"></select>
-    <input type="date" id="date">
+<!-- TOP INPUT -->
+<div class="top-form">
+  <input id="name" placeholder="Employee Name">
+  
+  <select id="status">
+    <option>Attended</option>
+    <option>Late</option>
+    <option>Sick Leave</option>
+    <option>Vacation</option>
+  </select>
 
-    <input type="time" id="timein">
-    <input type="time" id="breakout">
-    <input type="time" id="breakin">
-    <input type="time" id="timeout">
+  <input type="time" id="in">
+  <input type="time" id="out">
 
-    <button class="save" onclick="saveAttendance()">Save</button>
-    <button class="update" onclick="updateAttendance()" id="updateBtn" style="display:none;">Update</button>
-    <button class="cancel" onclick="cancelEdit()" id="cancelBtn" style="display:none;">Cancel</button>
-
-  </div>
+  <button class="btn add" onclick="addRow()">Add</button>
 </div>
 
+<!-- TABLE -->
 <div class="table-box">
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Date</th>
-        <th>Time In</th>
-        <th>Break Out</th>
-        <th>Break In</th>
-        <th>Time Out</th>
-        <th>Late</th>
-        <th>OT</th>
-        <th>Total</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="table"></tbody>
-  </table>
+<table id="tbl">
+<thead>
+<tr>
+<th>Name</th>
+<th>Status</th>
+<th>Time In</th>
+<th>Time Out</th>
+<th>Total Hours</th>
+<th>Late</th>
+<th>OT</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+
+</div>
 </div>
 
 <script>
-let employees = JSON.parse(localStorage.getItem("employees")) || [];
-let attendance = JSON.parse(localStorage.getItem("attendance")) || [];
+let data = JSON.parse(localStorage.getItem("attendance")) || [];
 let editIndex = -1;
 
-/* BACK */
-function goBack(){
-  window.location.href="index.html";
+// COMPUTE
+function compute(inTime, outTime){
+  if(!inTime || !outTime) return {total:0, late:0, ot:0};
+
+  let start = new Date("2000-01-01 "+inTime);
+  let end = new Date("2000-01-01 "+outTime);
+
+  let hours = (end - start) / 1000 / 60 / 60;
+
+  let late = start > new Date("2000-01-01 08:00") ? (start - new Date("2000-01-01 08:00"))/1000/60 : 0;
+
+  let ot = hours > 8 ? hours - 8 : 0;
+
+  return {
+    total: hours.toFixed(2),
+    late: Math.floor(late),
+    ot: ot.toFixed(2)
+  };
 }
 
-/* LOAD EMPLOYEE */
-function loadEmployees(){
-  employee.innerHTML = "<option value=''>Select Employee</option>";
+// ADD / UPDATE
+function addRow(){
+  let c = compute(in.value, out.value);
 
-  employees.forEach((e,i)=>{
-    employee.innerHTML += `<option value="${i}">${e.fname} ${e.lname}</option>`;
-  });
-}
-
-/* TIME TO HOURS */
-function toHours(t){
-  if(!t) return 0;
-  let [h,m] = t.split(":");
-  return parseInt(h) + (parseInt(m)/60);
-}
-
-/* COMPUTE */
-function computeData(){
-  let tin = toHours(timein.value);
-  let tout = toHours(timeout.value);
-  let bout = toHours(breakout.value);
-  let bin = toHours(breakin.value);
-
-  let breakTime = (bin - bout) || 0;
-  let total = (tout - tin) - breakTime;
-
-  let late = tin > 8 ? (tin - 8).toFixed(2) : 0;
-  let ot = tout > 17 ? (tout - 17).toFixed(2) : 0;
-
-  return {late, ot, total: total.toFixed(2)};
-}
-
-/* SAVE */
-function saveAttendance(){
-  let i = employee.value;
-  if(i==="") return alert("Select employee");
-
-  let empName = employees[i].fname + " " + employees[i].lname;
-
-  let comp = computeData();
-
-  attendance.push({
-    name: empName,
-    date: date.value,
-    timein: timein.value,
-    breakout: breakout.value,
-    breakin: breakin.value,
-    timeout: timeout.value,
-    ...comp
-  });
-
-  save(); display(); clearForm();
-}
-
-/* EDIT */
-function editAttendance(i){
-  let a = attendance[i];
-
-  date.value = a.date;
-  timein.value = a.timein;
-  breakout.value = a.breakout;
-  breakin.value = a.breakin;
-  timeout.value = a.timeout;
-
-  editIndex = i;
-
-  updateBtn.style.display="inline-block";
-  cancelBtn.style.display="inline-block";
-}
-
-/* UPDATE */
-function updateAttendance(){
-  if(editIndex === -1) return;
-
-  let comp = computeData();
-
-  attendance[editIndex] = {
-    ...attendance[editIndex],
-    date: date.value,
-    timein: timein.value,
-    breakout: breakout.value,
-    breakin: breakin.value,
-    timeout: timeout.value,
-    ...comp
+  let row = {
+    name:name.value,
+    status:status.value,
+    in:in.value,
+    out:out.value,
+    total:c.total,
+    late:c.late,
+    ot:c.ot
   };
 
-  save(); display(); cancelEdit();
+  if(editIndex === -1){
+    data.push(row);
+  } else {
+    data[editIndex] = row;
+    editIndex = -1;
+  }
+
+  localStorage.setItem("attendance", JSON.stringify(data));
+  render();
 }
 
-/* CANCEL */
-function cancelEdit(){
-  editIndex = -1;
-  clearForm();
-  updateBtn.style.display="none";
-  cancelBtn.style.display="none";
+// EDIT
+function editRow(i){
+  let r = data[i];
+  name.value = r.name;
+  status.value = r.status;
+  in.value = r.in;
+  out.value = r.out;
+  editIndex = i;
 }
 
-/* DELETE */
-function del(i){
+// DELETE
+function deleteRow(i){
   if(confirm("Delete?")){
-    attendance.splice(i,1);
-    save(); display();
+    data.splice(i,1);
+    localStorage.setItem("attendance", JSON.stringify(data));
+    render();
   }
 }
 
-/* DISPLAY */
-function display(){
-  table.innerHTML="";
+// RENDER
+function render(){
+  let tbody = document.querySelector("#tbl tbody");
+  tbody.innerHTML = "";
 
-  attendance.forEach((a,i)=>{
-    table.innerHTML += `
-      <tr>
-        <td>${a.name}</td>
-        <td>${a.date}</td>
-        <td>${a.timein}</td>
-        <td>${a.breakout}</td>
-        <td>${a.breakin}</td>
-        <td>${a.timeout}</td>
-        <td>${a.late}</td>
-        <td>${a.ot}</td>
-        <td>${a.total}</td>
-        <td>
-          <button onclick="editAttendance(${i})">Edit</button>
-          <button class="delete" onclick="del(${i})">Delete</button>
-        </td>
-      </tr>
-    `;
+  data.forEach((r,i)=>{
+    tbody.innerHTML += `
+    <tr>
+      <td>${r.name}</td>
+      <td>${r.status}</td>
+      <td>${r.in}</td>
+      <td>${r.out}</td>
+      <td>${r.total}</td>
+      <td>${r.late}</td>
+      <td>${r.ot}</td>
+      <td>
+        <button class="btn edit" onclick="editRow(${i})">Edit</button>
+        <button class="btn delete" onclick="deleteRow(${i})">Delete</button>
+      </td>
+    </tr>`;
   });
 }
 
-/* HELPERS */
-function save(){
-  localStorage.setItem("attendance", JSON.stringify(attendance));
-}
+function goPage(p){window.location.href=p;}
 
-function clearForm(){
-  document.querySelectorAll("input").forEach(i=>i.value="");
-}
-
-/* INIT */
-loadEmployees();
-display();
+render();
 </script>
 
 </body>
