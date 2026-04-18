@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>My Payslip</title>
+<title>Employee Portal</title>
 
 <style>
 body{
@@ -10,63 +10,159 @@ body{
   padding:20px;
 }
 
-.box{
-  max-width:600px;
+.container{
+  max-width:800px;
   margin:auto;
+}
+
+.box{
   background:white;
-  padding:20px;
+  padding:15px;
+  margin-bottom:15px;
+  border-radius:10px;
 }
 
 .logout{
+  float:right;
   background:red;
   color:white;
   padding:5px;
   cursor:pointer;
-  float:right;
+}
+
+/* INPUT */
+input,select,textarea{
+  width:100%;
+  padding:8px;
+  margin-top:5px;
+}
+
+/* BUTTON */
+button{
+  padding:8px;
+  margin-top:8px;
+  cursor:pointer;
+}
+
+/* TABLE */
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+}
+
+th,td{
+  border:1px solid #ccc;
+  padding:5px;
+  text-align:center;
 }
 </style>
 </head>
 
 <body>
 
+<div class="container">
+
 <div class="box">
-
 <div class="logout" onclick="logout()">Logout</div>
+<h2>Employee Dashboard</h2>
+<div id="userInfo"></div>
+</div>
 
-<h2>My Payslip</h2>
+<!-- REQUEST FORM -->
+<div class="box">
+<h3>Request Form</h3>
 
-<div id="info"></div>
+<select id="type">
+  <option value="Leave">Leave</option>
+  <option value="Day Off">Day Off</option>
+</select>
+
+<input type="date" id="date">
+<textarea id="reason" placeholder="Reason"></textarea>
+
+<button onclick="submitRequest()">Submit</button>
+</div>
+
+<!-- HISTORY -->
+<div class="box">
+<h3>My Requests</h3>
+
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Date</th>
+<th>Reason</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="reqTable"></tbody>
+</table>
+
+</div>
 
 </div>
 
 <script>
 
+/* SESSION */
 let user = JSON.parse(localStorage.getItem("empSession"));
 
 if(!user){
-  window.location.href="employee-login.html";
+  window.location.href="login.html";
 }
 
-let payroll = JSON.parse(localStorage.getItem("payroll"))||[];
+document.getElementById("userInfo").innerHTML =
+  `<b>${user.fname} ${user.lname}</b> - ${user.position || ""}`;
 
-let fullName = user.fname + " " + user.lname;
+/* STORAGE */
+let requests = JSON.parse(localStorage.getItem("requests")) || [];
 
-let p = payroll.find(x=>x.name === fullName);
+/* SUBMIT */
+function submitRequest(){
 
-if(p){
-  document.getElementById("info").innerHTML = `
-    <p><b>Name:</b> ${p.name}</p>
-    <p><b>Gross:</b> ${p.gross}</p>
-    <p><b>Net:</b> ${p.net}</p>
-  `;
-}else{
-  document.getElementById("info").innerHTML = "No payslip available";
+  let r = {
+    name: user.fname + " " + user.lname,
+    type: type.value,
+    date: date.value,
+    reason: reason.value,
+    status: "Pending"
+  };
+
+  requests.push(r);
+  localStorage.setItem("requests", JSON.stringify(requests));
+
+  loadRequests();
+}
+
+/* LOAD */
+function loadRequests(){
+
+  let tbody = document.getElementById("reqTable");
+  tbody.innerHTML = "";
+
+  requests
+    .filter(r => r.name === (user.fname + " " + user.lname))
+    .forEach(r => {
+
+      tbody.innerHTML += `
+      <tr>
+        <td>${r.type}</td>
+        <td>${r.date}</td>
+        <td>${r.reason}</td>
+        <td>${r.status}</td>
+      </tr>`;
+    });
 }
 
 function logout(){
   localStorage.removeItem("empSession");
-  window.location.href="employee-login.html";
+  window.location.href="login.html";
 }
+
+loadRequests();
+
 </script>
 
 </body>
