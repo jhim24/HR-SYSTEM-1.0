@@ -1,122 +1,192 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Payslip</title>
+<title>Payslip</title>
 
 <style>
-body {
-  font-family: Arial;
-  background: #f0f0f0;
-  padding: 20px;
+body{
+  font-family:Arial;
+  background:#f0f0f0;
+  padding:20px;
 }
 
-.container {
-  background: white;
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
-  border-radius: 10px;
+/* CONTAINER */
+.payslip{
+  background:white;
+  max-width:800px;
+  margin:auto;
+  padding:20px;
+  border:4px solid #2c3e50;
 }
 
 /* HEADER */
-.header {
-  text-align: center;
-  border-bottom: 2px solid #000;
-  margin-bottom: 15px;
+.header{
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.header h2{
+  margin:0;
+}
+
+.sub{
+  color:#555;
+  font-size:12px;
+}
+
+/* SECTION TITLE */
+.title{
+  background:#3c6fa5;
+  color:white;
+  padding:5px;
+  font-size:12px;
+  margin-top:10px;
 }
 
 /* GRID */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2,1fr);
-  gap: 10px;
-  margin-bottom: 10px;
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  font-size:12px;
+}
+
+.box{
+  border:1px solid #ccc;
+  padding:8px;
 }
 
 /* TABLE */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
+table{
+  width:100%;
+  font-size:12px;
+  border-collapse:collapse;
 }
 
-th, td {
-  border: 1px solid #000;
-  padding: 8px;
-  text-align: center;
+td{
+  padding:4px;
+  border-bottom:1px solid #ddd;
 }
 
-th {
-  background: #eee;
-}
-
-/* BUTTON */
-.print-btn {
-  margin-top: 15px;
-  padding: 10px;
-  background: #2ecc71;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-/* PRINT MODE */
-@media print {
-  .print-btn { display: none; }
-  body { background: white; }
+/* NET */
+.net{
+  background:#2c3e50;
+  color:white;
+  padding:10px;
+  text-align:center;
+  margin-top:10px;
+  font-weight:bold;
 }
 </style>
 
 </head>
+
 <body>
 
-<div class="container">
+<div class="payslip">
 
-  <div class="header">
-    <h2>COMPANY NAME</h2>
-    <p>Payslip</p>
-  </div>
+<div class="header">
+  <h2>Monthly Payslip</h2>
+  <div class="sub">Your Company Name</div>
+</div>
 
-  <div class="grid">
-    <div><b>Employee:</b> <span id="name"></span></div>
-    <div><b>Date:</b> <span id="date"></span></div>
-  </div>
+<div class="title">Employee & Payroll Details</div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Description</th>
-        <th>Amount</th>
-      </tr>
-    </thead>
-    <tbody id="details"></tbody>
-  </table>
+<div class="grid">
+<div class="box">
+Employee Name: <span id="empName"></span><br>
+Employee ID: <span id="empId"></span><br>
+Position: <span id="position"></span>
+</div>
 
-  <button class="print-btn" onclick="window.print()">Print Payslip</button>
+<div class="box">
+Pay Period: <span id="period"></span><br>
+Pay Date: <span id="payDate"></span><br>
+Bank: <span id="bank"></span>
+</div>
+</div>
+
+<div class="grid">
+
+<!-- EARNINGS -->
+<div class="box">
+<b>Earnings</b>
+<table>
+<tr><td>Basic Salary</td><td id="basic"></td></tr>
+<tr><td>Overtime</td><td id="ot"></td></tr>
+<tr><td>Holiday</td><td id="holiday"></td></tr>
+<tr><td>Sick Leave</td><td id="sick"></td></tr>
+<tr><td>Vacation Leave</td><td id="vac"></td></tr>
+<tr><td><b>Total</b></td><td id="earnTotal"></td></tr>
+</table>
+</div>
+
+<!-- DEDUCTIONS -->
+<div class="box">
+<b>Deductions</b>
+<table>
+<tr><td>SSS</td><td id="sss"></td></tr>
+<tr><td>Pagibig</td><td id="pagibig"></td></tr>
+<tr><td>Philhealth</td><td id="phil"></td></tr>
+<tr><td>Loan</td><td id="loan"></td></tr>
+<tr><td><b>Total</b></td><td id="dedTotal"></td></tr>
+</table>
+</div>
+
+</div>
+
+<div class="net">
+NET SALARY: <span id="net"></span>
+</div>
 
 </div>
 
 <script>
+
+/* LOAD SAMPLE (CONNECTED SA PAYROLL) */
 let payroll = JSON.parse(localStorage.getItem("payroll")) || [];
+let emp = JSON.parse(localStorage.getItem("employees")) || [];
 
 /* GET LAST RECORD */
-let p = payroll[payroll.length - 1];
+let p = payroll[payroll.length-1];
 
 if(p){
-  name.innerText = p.name;
-  date.innerText = new Date().toLocaleDateString();
 
-  details.innerHTML = `
-    <tr><td>Gross Pay</td><td>${p.gross}</td></tr>
-    <tr><td>SSS</td><td>${p.sss}</td></tr>
-    <tr><td>Pag-IBIG</td><td>${p.pagibig}</td></tr>
-    <tr><td>PhilHealth</td><td>${p.philhealth}</td></tr>
-    <tr><td>Health Card</td><td>${p.healthcard}</td></tr>
-    <tr><td>${p.othername}</td><td>${p.other}</td></tr>
-    <tr><th>Total Deduction</th><th>${p.totalDed}</th></tr>
-    <tr><th>Net Pay</th><th>${p.net}</th></tr>
-  `;
+  let e = emp.find(x => (x.fname+" "+x.lname) === p.name) || {};
+
+  empName.innerText = p.name;
+  empId.innerText = e.empId || "-";
+  position.innerText = e.position || "-";
+  bank.innerText = e.bank || "-";
+
+  period.innerText = "Monthly";
+  payDate.innerText = new Date().toLocaleDateString();
+
+  basic.innerText = p.gross;
+  ot.innerText = p.ot;
+  holiday.innerText = p.holiday;
+  sick.innerText = p.sick;
+  vac.innerText = p.vacation;
+
+  let earnTotal = 
+    Number(p.gross) +
+    Number(p.ot||0) +
+    Number(p.holiday||0);
+
+  earnTotalEl = document.getElementById("earnTotal");
+  earnTotalEl.innerText = earnTotal;
+
+  let dedTotal =
+    Number(p.sss||0)+
+    Number(p.pagibig||0)+
+    Number(p.philhealth||0)+
+    Number(p.loan||0);
+
+  document.getElementById("dedTotal").innerText = dedTotal;
+
+  net.innerText = p.net;
 }
+
 </script>
 
 </body>
