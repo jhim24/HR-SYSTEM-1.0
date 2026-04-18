@@ -38,10 +38,6 @@ body::before {
   padding: 25px;
 }
 
-.sidebar h2 {
-  margin-bottom: 30px;
-}
-
 .menu {
   list-style: none;
   padding: 0;
@@ -64,65 +60,74 @@ body::before {
   padding: 25px;
 }
 
-/* HEADER */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* FORM BOX */
+.form-box {
+  background: rgba(255,255,255,0.1);
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(8px);
 }
 
-/* TABLE CONTAINER */
+/* INPUTS */
+input {
+  padding: 6px;
+  margin: 5px;
+  border-radius: 6px;
+  border: none;
+  font-size: 13px;
+}
+
+/* BUTTON */
+.add-btn {
+  padding: 6px 12px;
+  border: none;
+  background: #2ecc71;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* TABLE */
 .table-box {
-  margin-top: 20px;
   background: rgba(255,255,255,0.1);
   border-radius: 12px;
   padding: 15px;
   backdrop-filter: blur(8px);
 }
 
-/* TABLE */
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px; /* mas maliit */
+  font-size: 13px;
 }
 
-/* HEADER */
 th {
   text-align: left;
   padding: 8px;
   background: rgba(255,255,255,0.2);
 }
 
-/* ROW */
 td {
-  padding: 6px 8px; /* mas maliit row height */
+  padding: 6px;
   border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-/* HOVER */
 tr:hover {
   background: rgba(255,255,255,0.1);
 }
 
-/* BUTTON */
+/* ACTION BUTTONS */
 .btn {
-  padding: 4px 8px;
-  font-size: 12px;
+  padding: 3px 6px;
+  font-size: 11px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.edit {
-  background: #3498db;
-  color: white;
-}
-
-.delete {
-  background: #e74c3c;
-  color: white;
-}
+.edit { background: #3498db; color: white; }
+.delete { background: #e74c3c; color: white; }
 
 /* LOGOUT */
 .logout {
@@ -166,12 +171,20 @@ if(localStorage.getItem("loggedIn") !== "true") {
   <!-- MAIN -->
   <div class="main">
 
-    <div class="header">
-      <h2>Employee Masterlist</h2>
+    <h2>Employee Masterlist</h2>
+
+    <!-- FORM -->
+    <div class="form-box">
+      <input type="text" id="name" placeholder="Name">
+      <input type="text" id="position" placeholder="Position">
+      <input type="text" id="department" placeholder="Department">
+      <input type="number" id="salary" placeholder="Salary">
+      <button class="add-btn" onclick="addEmployee()">Add</button>
     </div>
 
+    <!-- TABLE -->
     <div class="table-box">
-      <table>
+      <table id="empTable">
         <thead>
           <tr>
             <th>Name</th>
@@ -181,20 +194,7 @@ if(localStorage.getItem("loggedIn") !== "true") {
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
-
-          <tr>
-            <td>Juan Dela Cruz</td>
-            <td>HR Staff</td>
-            <td>HR</td>
-            <td>15000</td>
-            <td>
-              <button class="btn edit">Edit</button>
-              <button class="btn delete">Delete</button>
-            </td>
-          </tr>
-
-        </tbody>
+        <tbody></tbody>
       </table>
     </div>
 
@@ -203,6 +203,47 @@ if(localStorage.getItem("loggedIn") !== "true") {
 </div>
 
 <script>
+let employees = JSON.parse(localStorage.getItem("employees")) || [];
+
+function renderTable() {
+  let tbody = document.querySelector("#empTable tbody");
+  tbody.innerHTML = "";
+
+  employees.forEach((emp, index) => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${emp.name}</td>
+        <td>${emp.position}</td>
+        <td>${emp.department}</td>
+        <td>${emp.salary}</td>
+        <td>
+          <button class="btn delete" onclick="deleteEmp(${index})">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+function addEmployee() {
+  let emp = {
+    name: document.getElementById("name").value,
+    position: document.getElementById("position").value,
+    department: document.getElementById("department").value,
+    salary: document.getElementById("salary").value
+  };
+
+  employees.push(emp);
+  localStorage.setItem("employees", JSON.stringify(employees));
+
+  renderTable();
+}
+
+function deleteEmp(i) {
+  employees.splice(i,1);
+  localStorage.setItem("employees", JSON.stringify(employees));
+  renderTable();
+}
+
 function logout() {
   localStorage.removeItem("loggedIn");
   window.location.href = "login.html";
@@ -211,6 +252,8 @@ function logout() {
 function goPage(page){
   window.location.href = page;
 }
+
+renderTable();
 </script>
 
 </body>
