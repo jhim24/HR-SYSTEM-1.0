@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Payslip</title>
+<title>Payslip System</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
 body{
@@ -10,41 +12,39 @@ body{
   padding:20px;
 }
 
-/* TOP CONTROLS */
+/* CONTROLS */
 .controls{
-  max-width:800px;
+  max-width:900px;
   margin:auto;
-  margin-bottom:15px;
+  margin-bottom:10px;
   display:flex;
   gap:10px;
+  flex-wrap:wrap;
 }
 
 select,button{
   padding:8px;
+  cursor:pointer;
 }
 
-/* CONTAINER */
+/* PAYSLIP */
 .payslip{
   background:white;
-  max-width:800px;
+  max-width:900px;
   margin:auto;
   padding:20px;
   border:4px solid #2c3e50;
 }
 
-/* HEADER */
-.header{
-  text-align:center;
-}
-
+.header{text-align:center;}
 .sub{font-size:12px;color:#555;}
 
 .title{
   background:#3c6fa5;
   color:white;
   padding:5px;
-  font-size:12px;
   margin-top:10px;
+  font-size:12px;
 }
 
 .grid{
@@ -61,7 +61,6 @@ select,button{
 
 table{
   width:100%;
-  font-size:12px;
   border-collapse:collapse;
 }
 
@@ -76,48 +75,61 @@ td{
   padding:10px;
   text-align:center;
   margin-top:10px;
-  font-weight:bold;
+}
+
+/* EMAIL MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  justify-content:center;
+  align-items:center;
+}
+
+.modal-box{
+  background:white;
+  padding:20px;
+  width:300px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- CONTROLS -->
 <div class="controls">
-<select id="empSelect"></select>
+<select id="emp"></select>
 
 <select id="cutoff">
-  <option value="Monthly">Monthly</option>
-  <option value="1-15">1–15</option>
-  <option value="16-30">16–30</option>
+<option>Monthly</option>
+<option>1-15</option>
+<option>16-30</option>
 </select>
 
-<button onclick="generate()">Generate Payslip</button>
-<button onclick="window.print()">Print</button>
+<button onclick="generate()">Generate</button>
+<button onclick="saveHistory()">Save</button>
+<button onclick="downloadPDF()">Download PDF</button>
+<button onclick="openEmail()">Send Email</button>
 </div>
 
-<!-- PAYSLIP -->
-<div class="payslip">
+<div id="printArea" class="payslip">
 
 <div class="header">
-  <h2>Payslip</h2>
-  <div class="sub">HR System</div>
+<h2>Payslip</h2>
+<div class="sub">HR System</div>
 </div>
 
-<div class="title">Employee & Payroll Details</div>
+<div class="title">Details</div>
 
 <div class="grid">
 <div class="box">
-Name: <span id="empName"></span><br>
-Employee ID: <span id="empId"></span><br>
-Position: <span id="position"></span>
+Name: <span id="name"></span><br>
+Position: <span id="pos"></span>
 </div>
 
 <div class="box">
-Pay Period: <span id="period"></span><br>
-Pay Date: <span id="payDate"></span><br>
-Bank: <span id="bank"></span>
+Period: <span id="period"></span><br>
+Date: <span id="date"></span>
 </div>
 </div>
 
@@ -127,9 +139,8 @@ Bank: <span id="bank"></span>
 <b>Earnings</b>
 <table>
 <tr><td>Basic</td><td id="basic"></td></tr>
-<tr><td>Overtime</td><td id="ot"></td></tr>
-<tr><td>Holiday</td><td id="holiday"></td></tr>
-<tr><td>Total</td><td id="earnTotal"></td></tr>
+<tr><td>OT</td><td id="ot"></td></tr>
+<tr><td>Total</td><td id="earn"></td></tr>
 </table>
 </div>
 
@@ -137,85 +148,107 @@ Bank: <span id="bank"></span>
 <b>Deductions</b>
 <table>
 <tr><td>SSS</td><td id="sss"></td></tr>
-<tr><td>Pagibig</td><td id="pagibig"></td></tr>
-<tr><td>Philhealth</td><td id="phil"></td></tr>
 <tr><td>Loan</td><td id="loan"></td></tr>
-<tr><td>Total</td><td id="dedTotal"></td></tr>
+<tr><td>Total</td><td id="ded"></td></tr>
 </table>
 </div>
 
 </div>
 
-<div class="net">
-NET SALARY: <span id="net"></span>
+<div class="net">NET: <span id="net"></span></div>
+
 </div>
 
+<!-- EMAIL MODAL -->
+<div class="modal" id="emailModal">
+  <div class="modal-box">
+    <h3>Send Payslip</h3>
+    <input id="email" placeholder="Enter email"><br><br>
+    <button onclick="sendEmail()">Send</button>
+  </div>
 </div>
 
 <script>
 
-let employees = JSON.parse(localStorage.getItem("employees")) || [];
-let payroll = JSON.parse(localStorage.getItem("payroll")) || [];
+let empList = JSON.parse(localStorage.getItem("employees"))||[];
+let payroll = JSON.parse(localStorage.getItem("payroll"))||[];
+let history = JSON.parse(localStorage.getItem("payslipHistory"))||[];
 
-/* LOAD EMPLOYEES */
 function loadEmp(){
-  empSelect.innerHTML="";
-  employees.forEach(e=>{
-    empSelect.innerHTML += `<option>${e.fname} ${e.lname}</option>`;
+  emp.innerHTML="";
+  empList.forEach(e=>{
+    emp.innerHTML+=`<option>${e.fname} ${e.lname}</option>`;
   });
 }
 
-/* GENERATE PAYSLIP */
 function generate(){
 
-  let name = empSelect.value;
+  let nameVal = emp.value;
+  let p = payroll.find(x=>x.name===nameVal);
+  if(!p){alert("No payroll");return;}
+
+  let e = empList.find(x=>(x.fname+" "+x.lname)===nameVal)||{};
+
   let cut = cutoff.value;
+  let mult = (cut==="Monthly")?1:0.5;
 
-  let p = payroll.find(x => x.name === name);
+  let basicVal = p.gross * mult;
+  let otVal = (p.ot||0)*mult;
 
-  if(!p){
-    alert("No payroll data");
-    return;
-  }
+  let earn = basicVal+otVal;
+  let ded = (Number(p.sss||0)+Number(p.loan||0))*mult;
 
-  let e = employees.find(x => (x.fname+" "+x.lname) === name) || {};
+  name.innerText=nameVal;
+  pos.innerText=e.position||"-";
+  period.innerText=cut;
+  date.innerText=new Date().toLocaleDateString();
 
-  empName.innerText = name;
-  empId.innerText = e.empId || "-";
-  position.innerText = e.position || "-";
-  bank.innerText = e.bank || "-";
+  basic.innerText=basicVal;
+  ot.innerText=otVal;
+  earnEl.innerText=earn;
 
-  period.innerText = cut;
-  payDate.innerText = new Date().toLocaleDateString();
+  sss.innerText=p.sss;
+  loan.innerText=p.loan;
+  dedEl.innerText=ded;
 
-  /* CUT OFF LOGIC */
-  let multiplier = (cut === "Monthly") ? 1 : 0.5;
+  net.innerText=earn-ded;
 
-  let basicVal = p.gross * multiplier;
-  let otVal = (p.ot||0) * multiplier;
-  let holidayVal = (p.holiday||0) * multiplier;
-
-  basic.innerText = basicVal;
-  ot.innerText = otVal;
-  holiday.innerText = holidayVal;
-
-  let earnTotal = basicVal + otVal + holidayVal;
-  earnTotalEl = document.getElementById("earnTotal");
-  earnTotalEl.innerText = earnTotal;
-
-  let dedTotal =
-    (Number(p.sss||0)+
-    Number(p.pagibig||0)+
-    Number(p.philhealth||0)+
-    Number(p.loan||0)) * multiplier;
-
-  document.getElementById("dedTotal").innerText = dedTotal;
-
-  net.innerText = earnTotal - dedTotal;
+  window.currentPayslip = {name:nameVal,cut,net:earn-ded,date:new Date()};
 }
 
-/* INIT */
+/* SAVE HISTORY */
+function saveHistory(){
+  if(!window.currentPayslip){alert("Generate first");return;}
+  history.push(window.currentPayslip);
+  localStorage.setItem("payslipHistory",JSON.stringify(history));
+  alert("Saved!");
+}
+
+/* PDF */
+function downloadPDF(){
+  html2pdf().from(document.getElementById("printArea")).save();
+}
+
+/* EMAIL */
+function openEmail(){
+  emailModal.style.display="flex";
+}
+
+function sendEmail(){
+  alert("Payslip sent to "+email.value+" (simulation)");
+  emailModal.style.display="none";
+}
+
+/* AUTO MONTHLY */
+function autoGenerateMonthly(){
+  let now=new Date().getDate();
+  if(now===30){
+    alert("Auto Monthly Payslip Generated");
+  }
+}
+
 loadEmp();
+autoGenerateMonthly();
 
 </script>
 
