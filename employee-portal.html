@@ -1,108 +1,123 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>HR Dashboard</title>
+<title>Employee Portal</title>
 
 <style>
 *{box-sizing:border-box;font-family:'Segoe UI';}
 
 body{
   margin:0;
-  background:url('bg.jpg') no-repeat center center fixed;
-  background-size:cover;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  padding:20px;
   color:white;
 }
 
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.6);
-  z-index:-1;
-}
+.container{max-width:900px;margin:auto;}
 
-.wrapper{display:flex;height:100vh;}
-
-.sidebar{
-  width:240px;
-  background:rgba(0,0,0,0.7);
-  padding:20px;
-}
-
-.menu{list-style:none;padding:0;}
-.menu li{padding:10px;cursor:pointer;border-radius:6px;}
-.menu li:hover{background:rgba(255,255,255,0.2);}
-
-.main{
-  flex:1;
-  padding:20px;
-  overflow:auto;
-}
-
-/* BOX */
 .box{
   background:rgba(255,255,255,0.1);
-  padding:15px;
-  border-radius:12px;
-  margin-top:15px;
+  backdrop-filter:blur(15px);
+  padding:20px;
+  margin-bottom:20px;
+  border-radius:15px;
+}
+
+.logout{
+  float:right;
+  background:#ff4d4d;
+  padding:6px;
+  cursor:pointer;
 }
 
 /* INPUT */
-input{
+input,select,textarea{
   width:100%;
-  padding:8px;
-  margin-top:5px;
-  border-radius:6px;
+  padding:10px;
+  margin-top:8px;
   border:none;
+  border-radius:8px;
 }
 
+/* BUTTON */
 button{
-  padding:8px;
-  margin-top:5px;
+  width:100%;
+  padding:10px;
+  margin-top:10px;
   border:none;
-  border-radius:6px;
-  background:#2ecc71;
+  border-radius:8px;
+  background:#00c6ff;
   color:white;
-  cursor:pointer;
 }
+
+/* TABLE */
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+
+th,td{
+  border:1px solid rgba(255,255,255,0.3);
+  padding:8px;
+  text-align:center;
+}
+
+.pending{color:yellow;}
+.approved{color:#00ffcc;}
+.rejected{color:#ff6b6b;}
 </style>
-
-<script>
-if(localStorage.getItem("loggedIn")!=="true"){
-  window.location.href="login.html";
-}
-</script>
-
 </head>
 
 <body>
 
-<div class="wrapper">
+<div class="container">
 
-<div class="sidebar">
-<h3>HR System</h3>
-<ul class="menu">
-<li onclick="goPage('employee.html')">Employee</li>
-<li onclick="goPage('attendance.html')">Attendance</li>
-<li onclick="goPage('payroll.html')">Payroll</li>
-<li onclick="goPage('payslip.html')">Payslip</li>
-<li onclick="goPage('admin-requests.html')">Requests</li>
-</ul>
+<!-- USER -->
+<div class="box">
+<div class="logout" onclick="logout()">Logout</div>
+<h2>Employee Dashboard</h2>
+<div id="userInfo"></div>
 </div>
-
-<div class="main">
-
-<h2>Dashboard</h2>
 
 <!-- 📢 ANNOUNCEMENT -->
 <div class="box">
 <h3>📢 Announcements</h3>
-
-<input id="announceInput" placeholder="Enter announcement...">
-<button onclick="addAnnouncement()">Post</button>
-
 <div id="announceList"></div>
 </div>
+
+<!-- FORM -->
+<div class="box">
+<h3>Request</h3>
+
+<select id="type">
+<option>Leave</option>
+<option>Day Off</option>
+<option>Birthday Leave</option>
+<option>Vacation Leave</option>
+</select>
+
+<input type="date" id="date">
+<textarea id="reason"></textarea>
+
+<button onclick="submitRequest()">Submit</button>
+</div>
+
+<!-- TABLE -->
+<div class="box">
+<h3>My Requests</h3>
+
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Date</th>
+<th>Reason</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="reqTable"></tbody>
+</table>
 
 </div>
 
@@ -110,38 +125,66 @@ if(localStorage.getItem("loggedIn")!=="true"){
 
 <script>
 
-/* NAV */
-function goPage(p){window.location.href=p;}
+let user=JSON.parse(localStorage.getItem("empSession"));
+if(!user){window.location.href="login.html";}
 
-/* ANNOUNCEMENT */
-let announcements = JSON.parse(localStorage.getItem("announcements")) || [];
+userInfo.innerHTML=user.fname+" "+user.lname;
 
-function addAnnouncement(){
-  if(!announceInput.value) return;
+let requests=JSON.parse(localStorage.getItem("requests"))||[];
 
-  announcements.push({
-    text:announceInput.value,
-    date:new Date().toLocaleString()
-  });
+/* SUBMIT */
+function submitRequest(){
+  let r={
+    name:user.fname+" "+user.lname,
+    type:type.value,
+    date:date.value,
+    reason:reason.value,
+    status:"Pending"
+  };
 
-  localStorage.setItem("announcements",JSON.stringify(announcements));
-  announceInput.value="";
-  loadAnnouncements();
+  requests.push(r);
+  localStorage.setItem("requests",JSON.stringify(requests));
+  loadRequests();
 }
 
-function loadAnnouncements(){
-  let box=document.getElementById("announceList");
-  box.innerHTML="";
+/* LOAD REQUEST */
+function loadRequests(){
+  let tbody=reqTable;
+  tbody.innerHTML="";
 
+  requests.filter(r=>r.name===user.fname+" "+user.lname)
+  .forEach(r=>{
+    tbody.innerHTML+=`
+    <tr>
+    <td>${r.type}</td>
+    <td>${r.date}</td>
+    <td>${r.reason}</td>
+    <td class="${r.status.toLowerCase()}">${r.status}</td>
+    </tr>`;
+  });
+}
+
+/* ANNOUNCEMENT */
+function loadAnnouncements(){
+  let announcements=JSON.parse(localStorage.getItem("announcements"))||[];
+  let box=document.getElementById("announceList");
+
+  box.innerHTML="";
   announcements.slice().reverse().forEach(a=>{
     box.innerHTML+=`
-    <div style="margin-top:5px;padding:6px;background:rgba(255,255,255,0.1);border-radius:6px;">
+    <div style="margin-bottom:5px;padding:6px;background:rgba(255,255,255,0.1);border-radius:6px;">
       📢 ${a.text}<br>
       <small>${a.date}</small>
     </div>`;
   });
 }
 
+function logout(){
+  localStorage.removeItem("empSession");
+  window.location.href="login.html";
+}
+
+loadRequests();
 loadAnnouncements();
 
 </script>
