@@ -4,51 +4,91 @@
 <title>Admin Requests</title>
 
 <style>
+*{box-sizing:border-box;font-family:'Segoe UI';}
+
 body{
-  font-family:Arial;
-  background:#f0f0f0;
+  margin:0;
+  background:linear-gradient(135deg,#ff758c,#ff7eb3);
   padding:20px;
+  color:white;
 }
 
+/* CONTAINER */
 .container{
-  max-width:900px;
+  max-width:1000px;
   margin:auto;
 }
 
+/* FLOATING CARD */
 .box{
-  background:white;
-  padding:15px;
-  border-radius:10px;
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(15px);
+  padding:20px;
+  border-radius:15px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+  animation:fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;}
+}
+
+/* TITLE */
+h2{
+  margin-top:0;
 }
 
 /* TABLE */
 table{
   width:100%;
   border-collapse:collapse;
-  font-size:12px;
+  margin-top:10px;
+  font-size:13px;
+  background:rgba(255,255,255,0.1);
 }
 
 th,td{
-  border:1px solid #ccc;
-  padding:6px;
+  padding:10px;
   text-align:center;
 }
 
 th{
-  background:#2c3e50;
-  color:white;
+  background:rgba(0,0,0,0.4);
 }
+
+tr{
+  border-bottom:1px solid rgba(255,255,255,0.2);
+}
+
+/* STATUS COLORS */
+.pending{color:yellow;}
+.approved{color:#00ffcc;}
+.rejected{color:#ff4d4d;}
 
 /* BUTTON */
 .btn{
-  padding:5px;
+  padding:6px 10px;
   border:none;
+  border-radius:6px;
   cursor:pointer;
+  margin:2px;
   color:white;
+  font-size:12px;
+  transition:0.3s;
 }
 
-.approve{background:#2ecc71;}
-.reject{background:#e74c3c;}
+.approve{
+  background:linear-gradient(45deg,#00c853,#00e676);
+}
+
+.reject{
+  background:linear-gradient(45deg,#ff1744,#ff5252);
+}
+
+.btn:hover{
+  transform:scale(1.1);
+}
 </style>
 </head>
 
@@ -57,7 +97,8 @@ th{
 <div class="container">
 
 <div class="box">
-<h2>Employee Requests</h2>
+
+<h2>📋 Employee Requests</h2>
 
 <table>
 <thead>
@@ -72,6 +113,7 @@ th{
 </thead>
 
 <tbody id="reqTable"></tbody>
+
 </table>
 
 </div>
@@ -90,13 +132,15 @@ function load(){
 
   requests.forEach((r,i)=>{
 
+    let statusClass = r.status.toLowerCase();
+
     tbody.innerHTML += `
     <tr>
       <td>${r.name}</td>
       <td>${r.type}</td>
       <td>${r.date}</td>
       <td>${r.reason}</td>
-      <td>${r.status}</td>
+      <td class="${statusClass}">${r.status}</td>
       <td>
         <button class="btn approve" onclick="approve(${i})">Approve</button>
         <button class="btn reject" onclick="reject(${i})">Reject</button>
