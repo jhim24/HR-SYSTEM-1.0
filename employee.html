@@ -97,7 +97,7 @@ input, select {
   cursor: pointer;
 }
 
-/* TABLE BOX (LIGHT BLUE) */
+/* TABLE BOX */
 .table-box {
   background: #eaf4ff;
   padding: 10px;
@@ -119,7 +119,6 @@ th, td {
   padding: 6px;
   border: 1px solid rgba(0,0,0,0.1);
   text-align: left;
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -128,7 +127,6 @@ th, td {
 /* HEADER */
 th {
   background: #cfe4ff;
-  color: #1a2a3a;
 }
 
 /* HOVER */
@@ -157,6 +155,11 @@ tr:hover {
   border-radius: 8px;
   text-align: center;
   cursor: pointer;
+}
+
+/* SEARCH BAR */
+.search-box {
+  margin-bottom: 10px;
 }
 </style>
 
@@ -240,7 +243,13 @@ if(localStorage.getItem("loggedIn") !== "true") {
 
   </div>
 
-  <button class="add-btn" onclick="addEmployee()">Add Employee</button>
+  <button class="add-btn" onclick="addEmployee()">Save / Update</button>
+</div>
+
+<!-- SEARCH + TOTAL -->
+<div class="search-box">
+  <input type="text" id="search" placeholder="🔍 Search..." onkeyup="searchEmp()">
+  <span id="total"></span>
 </div>
 
 <!-- TABLE -->
@@ -275,6 +284,7 @@ if(localStorage.getItem("loggedIn") !== "true") {
 
 <script>
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
+let editIndex = -1;
 
 function calcAge() {
   let birth = new Date(birthdate.value);
@@ -283,6 +293,8 @@ function calcAge() {
 }
 
 function addEmployee() {
+  let idVal = empId.value || "EMP-" + Date.now();
+
   let emp = {
     fname: fname.value,
     mname: mname.value,
@@ -292,7 +304,7 @@ function addEmployee() {
     address: address.value,
     bank: bank.value,
     account: bankAcc.value,
-    empId: empId.value,
+    empId: idVal,
     govId: govId.value,
     sss: sss.value,
     philhealth: philhealth.value,
@@ -301,50 +313,95 @@ function addEmployee() {
     position: position.value
   };
 
-  employees.push(emp);
+  if(editIndex === -1){
+    employees.push(emp);
+  } else {
+    employees[editIndex] = emp;
+    editIndex = -1;
+  }
+
   localStorage.setItem("employees", JSON.stringify(employees));
+  clearForm();
   renderTable();
 }
 
-function deleteEmp(i) {
-  employees.splice(i,1);
-  localStorage.setItem("employees", JSON.stringify(employees));
-  renderTable();
+function editEmp(i){
+  let e = employees[i];
+  fname.value = e.fname;
+  mname.value = e.mname;
+  lname.value = e.lname;
+  birthdate.value = e.birthdate;
+  age.value = e.age;
+  address.value = e.address;
+  bank.value = e.bank;
+  bankAcc.value = e.account;
+  empId.value = e.empId;
+  govId.value = e.govId;
+  sss.value = e.sss;
+  philhealth.value = e.philhealth;
+  pagibig.value = e.pagibig;
+  healthcard.value = e.healthcard;
+  position.value = e.position;
+
+  editIndex = i;
 }
 
-function renderTable() {
+function deleteEmp(i){
+  if(confirm("Delete this employee?")){
+    employees.splice(i,1);
+    localStorage.setItem("employees", JSON.stringify(employees));
+    renderTable();
+  }
+}
+
+function searchEmp(){
+  let val = search.value.toLowerCase();
+  document.querySelectorAll("#empTable tbody tr").forEach(row=>{
+    row.style.display = row.innerText.toLowerCase().includes(val) ? "" : "none";
+  });
+}
+
+function clearForm(){
+  document.querySelectorAll("input, select").forEach(el=>{
+    if(el.type !== "button") el.value = "";
+  });
+}
+
+function renderTable(){
   let tbody = document.querySelector("#empTable tbody");
   tbody.innerHTML = "";
 
   employees.forEach((e,i)=>{
     tbody.innerHTML += `
-      <tr>
-        <td>${e.fname}</td>
-        <td>${e.mname}</td>
-        <td>${e.lname}</td>
-        <td>${e.birthdate}</td>
-        <td>${e.age}</td>
-        <td>${e.address}</td>
-        <td>${e.bank}</td>
-        <td>${e.account}</td>
-        <td>${e.empId}</td>
-        <td>${e.govId}</td>
-        <td>${e.sss}</td>
-        <td>${e.philhealth}</td>
-        <td>${e.pagibig}</td>
-        <td>${e.healthcard}</td>
-        <td>${e.position}</td>
-        <td><button class="btn delete" onclick="deleteEmp(${i})">Delete</button></td>
-      </tr>
-    `;
+    <tr>
+      <td>${e.fname}</td>
+      <td>${e.mname}</td>
+      <td>${e.lname}</td>
+      <td>${e.birthdate}</td>
+      <td>${e.age}</td>
+      <td>${e.address}</td>
+      <td>${e.bank}</td>
+      <td>${e.account}</td>
+      <td>${e.empId}</td>
+      <td>${e.govId}</td>
+      <td>${e.sss}</td>
+      <td>${e.philhealth}</td>
+      <td>${e.pagibig}</td>
+      <td>${e.healthcard}</td>
+      <td>${e.position}</td>
+      <td>
+        <button class="btn" onclick="editEmp(${i})">Edit</button>
+        <button class="btn delete" onclick="deleteEmp(${i})">Delete</button>
+      </td>
+    </tr>`;
   });
+
+  total.innerText = "Total: " + employees.length;
 }
 
-function goPage(page){
-  window.location.href = page;
-}
+function goPage(p){ window.location.href = p; }
 
-function logout() {
+function logout(){
   localStorage.removeItem("loggedIn");
   window.location.href = "login.html";
 }
