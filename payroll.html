@@ -32,11 +32,47 @@ body{
   overflow:auto;
 }
 
-input,select{
-  padding:5px;
-  margin:3px;
-  font-size:12px;
+/* 🔥 FORM DESIGN */
+.form-box{
+  background:rgba(255,255,255,0.1);
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:15px;
 }
+
+/* GRID ALIGN */
+.form-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+  gap:8px;
+}
+
+/* INPUT STYLE */
+input,select{
+  padding:8px;
+  border-radius:8px;
+  border:none;
+  font-size:12px;
+  background:rgba(255,255,255,0.2);
+  color:white;
+  outline:none;
+}
+
+input::placeholder{
+  color:#ddd;
+}
+
+/* BUTTON */
+.btn{
+  padding:8px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.save{background:#2ecc71;color:white;}
+.edit{background:#3498db;color:white;}
+.delete{background:#e74c3c;color:white;}
 
 /* TABLE */
 .table-box{
@@ -64,17 +100,6 @@ th{
   background:#3c89b8;
   color:white;
 }
-
-.btn{
-  padding:4px 6px;
-  border:none;
-  border-radius:4px;
-  cursor:pointer;
-}
-
-.save{background:#2ecc71;color:white;}
-.edit{background:#3498db;color:white;}
-.delete{background:#e74c3c;color:white;}
 </style>
 </head>
 
@@ -82,7 +107,6 @@ th{
 
 <div class="wrapper">
 
-<!-- SIDEBAR -->
 <div class="sidebar">
 <h3>HR System</h3>
 <ul class="menu">
@@ -92,20 +116,18 @@ th{
 </ul>
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
 <h2>Payroll</h2>
 
 <!-- FORM -->
-<div>
+<div class="form-box">
+<div class="form-grid">
 
 <select id="emp"></select>
 
 <input id="days" type="number" placeholder="Total Days">
 <input id="rate" type="number" placeholder="Daily Rate">
-
-<br>
 
 <input id="ot" type="number" placeholder="Overtime">
 <input id="holiday" type="number" placeholder="Holiday Pay">
@@ -113,20 +135,18 @@ th{
 <input id="bday" type="number" placeholder="Birthday Leave">
 <input id="vacation" type="number" placeholder="Vacation Leave">
 
-<br>
-
 <input id="sss" placeholder="SSS">
 <input id="pagibig" placeholder="Pag-IBIG">
 <input id="philhealth" placeholder="PhilHealth">
 <input id="health" placeholder="Health Card">
-<input id="others" placeholder="Others Deduction">
+<input id="others" placeholder="Others">
 <input id="loan" placeholder="Loan">
-
-<button class="btn save" onclick="save()">Compute & Save</button>
 
 </div>
 
 <br>
+<button class="btn save" onclick="save()">Compute & Save</button>
+</div>
 
 <!-- TABLE -->
 <div class="table-box">
@@ -136,6 +156,7 @@ th{
 <th>Name</th>
 <th>Days</th>
 <th>Rate</th>
+<th>Gross</th>
 <th>OT</th>
 <th>Holiday</th>
 <th>Sick</th>
@@ -161,7 +182,7 @@ let empList = JSON.parse(localStorage.getItem("employees")) || [];
 let payroll = JSON.parse(localStorage.getItem("payroll")) || [];
 let editIndex = -1;
 
-/* LOAD EMPLOYEES */
+/* LOAD EMP */
 function loadEmp(){
   emp.innerHTML="";
   empList.forEach(e=>{
@@ -174,32 +195,33 @@ function loadEmp(){
 function save(){
 
   let name = emp.value;
-  let daysVal = Number(days.value || 0);
-  let rateVal = Number(rate.value || 0);
+  let daysVal = Number(days.value||0);
+  let rateVal = Number(rate.value||0);
 
-  let basic = daysVal * rateVal;
+  let gross = daysVal * rateVal;
 
   let earnings =
-    Number(ot.value||0) +
-    Number(holiday.value||0) +
-    Number(sick.value||0) +
-    Number(bday.value||0) +
+    Number(ot.value||0)+
+    Number(holiday.value||0)+
+    Number(sick.value||0)+
+    Number(bday.value||0)+
     Number(vacation.value||0);
 
   let deduction =
-    Number(sss.value||0) +
-    Number(pagibig.value||0) +
-    Number(philhealth.value||0) +
-    Number(health.value||0) +
-    Number(others.value||0) +
+    Number(sss.value||0)+
+    Number(pagibig.value||0)+
+    Number(philhealth.value||0)+
+    Number(health.value||0)+
+    Number(others.value||0)+
     Number(loan.value||0);
 
-  let net = basic + earnings - deduction;
+  let net = gross + earnings - deduction;
 
   let row = {
     name,
     days:daysVal,
     rate:rateVal,
+    gross,
     ot:ot.value,
     holiday:holiday.value,
     sick:sick.value,
@@ -212,63 +234,58 @@ function save(){
     net
   };
 
-  if(editIndex === -1){
+  if(editIndex===-1){
     payroll.push(row);
   } else {
-    payroll[editIndex] = row;
-    editIndex = -1;
+    payroll[editIndex]=row;
+    editIndex=-1;
   }
 
-  localStorage.setItem("payroll", JSON.stringify(payroll));
-  clearForm();
+  localStorage.setItem("payroll",JSON.stringify(payroll));
   render();
 }
 
 /* EDIT */
 function editRow(i){
-  let r = payroll[i];
+  let r=payroll[i];
 
-  emp.value = r.name;
-  days.value = r.days;
-  rate.value = r.rate;
-  ot.value = r.ot;
-  holiday.value = r.holiday;
-  sick.value = r.sick;
-  bday.value = r.bday;
-  vacation.value = r.vacation;
-  sss.value = r.sss;
-  pagibig.value = r.pagibig;
-  philhealth.value = r.philhealth;
-  loan.value = r.loan;
+  emp.value=r.name;
+  days.value=r.days;
+  rate.value=r.rate;
+  ot.value=r.ot;
+  holiday.value=r.holiday;
+  sick.value=r.sick;
+  bday.value=r.bday;
+  vacation.value=r.vacation;
+  sss.value=r.sss;
+  pagibig.value=r.pagibig;
+  philhealth.value=r.philhealth;
+  loan.value=r.loan;
 
-  editIndex = i;
+  editIndex=i;
 }
 
 /* DELETE */
 function deleteRow(i){
   if(confirm("Delete?")){
     payroll.splice(i,1);
-    localStorage.setItem("payroll", JSON.stringify(payroll));
+    localStorage.setItem("payroll",JSON.stringify(payroll));
     render();
   }
 }
 
-/* CLEAR */
-function clearForm(){
-  document.querySelectorAll("input").forEach(i=>i.value="");
-}
-
 /* RENDER */
 function render(){
-  let tbody = document.querySelector("#tbl tbody");
+  let tbody=document.querySelector("#tbl tbody");
   tbody.innerHTML="";
 
   payroll.forEach((r,i)=>{
-    tbody.innerHTML += `
+    tbody.innerHTML+=`
     <tr>
       <td>${r.name}</td>
       <td>${r.days}</td>
       <td>${r.rate}</td>
+      <td>${r.gross}</td>
       <td>${r.ot}</td>
       <td>${r.holiday}</td>
       <td>${r.sick}</td>
