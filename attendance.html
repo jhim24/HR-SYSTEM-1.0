@@ -39,7 +39,7 @@ body::before{
   overflow:auto;
 }
 
-/* HEADER FORM */
+/* FORM */
 .top-form{
   background:rgba(255,255,255,0.1);
   padding:10px;
@@ -92,7 +92,6 @@ th{
 .add{background:#2ecc71;color:white;}
 .edit{background:#3498db;color:white;}
 .delete{background:#e74c3c;color:white;}
-
 </style>
 </head>
 
@@ -113,10 +112,14 @@ th{
 
 <h2>Daily Attendance</h2>
 
-<!-- TOP INPUT -->
+<!-- FORM -->
 <div class="top-form">
-  <input id="name" placeholder="Employee Name">
-  
+
+  <!-- AUTO LOAD EMPLOYEES -->
+  <select id="name"></select>
+
+  <input type="date" id="date">
+
   <select id="status">
     <option>Attended</option>
     <option>Late</option>
@@ -127,7 +130,10 @@ th{
   <input type="time" id="in">
   <input type="time" id="out">
 
-  <button class="btn add" onclick="addRow()">Add</button>
+  <input type="number" id="break" placeholder="Break (min)">
+
+  <button class="btn add" onclick="addRow()">Save</button>
+
 </div>
 
 <!-- TABLE -->
@@ -136,11 +142,13 @@ th{
 <thead>
 <tr>
 <th>Name</th>
+<th>Date</th>
 <th>Status</th>
 <th>Time In</th>
 <th>Time Out</th>
+<th>Break</th>
 <th>Total Hours</th>
-<th>Late</th>
+<th>Late (min)</th>
 <th>OT</th>
 <th>Action</th>
 </tr>
@@ -153,11 +161,25 @@ th{
 </div>
 
 <script>
+let employees = JSON.parse(localStorage.getItem("employees")) || [];
 let data = JSON.parse(localStorage.getItem("attendance")) || [];
 let editIndex = -1;
 
-// COMPUTE
-function compute(inTime, outTime){
+/* LOAD EMPLOYEE LIST */
+function loadEmployees(){
+  let select = document.getElementById("name");
+  select.innerHTML = "";
+
+  employees.forEach(e=>{
+    let option = document.createElement("option");
+    option.value = e.fname + " " + e.lname;
+    option.textContent = e.fname + " " + e.lname;
+    select.appendChild(option);
+  });
+}
+
+/* COMPUTE */
+function compute(inTime, outTime, breakMin){
   if(!inTime || !outTime) return {total:0, late:0, ot:0};
 
   let start = new Date("2000-01-01 "+inTime);
@@ -165,7 +187,11 @@ function compute(inTime, outTime){
 
   let hours = (end - start) / 1000 / 60 / 60;
 
-  let late = start > new Date("2000-01-01 08:00") ? (start - new Date("2000-01-01 08:00"))/1000/60 : 0;
+  hours -= (breakMin || 0) / 60;
+
+  let late = start > new Date("2000-01-01 08:00")
+    ? (start - new Date("2000-01-01 08:00"))/1000/60
+    : 0;
 
   let ot = hours > 8 ? hours - 8 : 0;
 
@@ -176,15 +202,17 @@ function compute(inTime, outTime){
   };
 }
 
-// ADD / UPDATE
+/* ADD */
 function addRow(){
-  let c = compute(in.value, out.value);
+  let c = compute(in.value, out.value, break.value);
 
   let row = {
     name:name.value,
+    date:date.value,
     status:status.value,
     in:in.value,
     out:out.value,
+    break:break.value,
     total:c.total,
     late:c.late,
     ot:c.ot
@@ -201,17 +229,21 @@ function addRow(){
   render();
 }
 
-// EDIT
+/* EDIT */
 function editRow(i){
   let r = data[i];
+
   name.value = r.name;
+  date.value = r.date;
   status.value = r.status;
   in.value = r.in;
   out.value = r.out;
+  break.value = r.break;
+
   editIndex = i;
 }
 
-// DELETE
+/* DELETE */
 function deleteRow(i){
   if(confirm("Delete?")){
     data.splice(i,1);
@@ -220,7 +252,7 @@ function deleteRow(i){
   }
 }
 
-// RENDER
+/* RENDER */
 function render(){
   let tbody = document.querySelector("#tbl tbody");
   tbody.innerHTML = "";
@@ -229,9 +261,11 @@ function render(){
     tbody.innerHTML += `
     <tr>
       <td>${r.name}</td>
+      <td>${r.date}</td>
       <td>${r.status}</td>
       <td>${r.in}</td>
       <td>${r.out}</td>
+      <td>${r.break}</td>
       <td>${r.total}</td>
       <td>${r.late}</td>
       <td>${r.ot}</td>
@@ -245,6 +279,7 @@ function render(){
 
 function goPage(p){window.location.href=p;}
 
+loadEmployees();
 render();
 </script>
 
