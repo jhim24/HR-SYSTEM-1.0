@@ -28,6 +28,8 @@ body::before{
   width:220px;
   background:rgba(0,0,0,0.7);
   padding:20px;
+  display:flex;
+  flex-direction:column;
 }
 
 .menu{list-style:none;padding:0;}
@@ -40,22 +42,39 @@ body::before{
   background:rgba(255,255,255,0.2);
 }
 
-/* MAIN */
-.main{flex:1;display:flex;}
-.left{flex:3;padding:20px;}
-.right{width:300px;padding:20px;}
+/* 🔴 LOGOUT BOTTOM */
+.logout{
+  margin-top:auto;
+  background:#e74c3c;
+  padding:10px;
+  text-align:center;
+  border-radius:6px;
+  cursor:pointer;
+}
 
+/* MAIN */
+.main{
+  flex:1;
+  display:flex;
+}
+
+/* LEFT */
+.left{
+  flex:3;
+  padding:20px;
+}
+
+/* RIGHT */
+.right{
+  width:280px;
+  padding:20px;
+}
+
+/* HEADER */
 .header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-}
-
-.logout{
-  background:#e74c3c;
-  padding:8px 15px;
-  border-radius:6px;
-  cursor:pointer;
 }
 
 /* 🍉 WELCOME */
@@ -87,8 +106,9 @@ body::before{
   box-shadow:0 0 10px #FFD700;
 }
 
-/* 🎂 BIRTHDAY */
+/* 🎂 BIRTHDAY (ALIGNED TOP) */
 .birthday{
+  margin-top:65px; /* 🔥 align with welcome */
   background: rgba(242,0,60,0.2);
   padding:20px;
   border-radius:15px;
@@ -120,6 +140,7 @@ if(localStorage.getItem("loggedIn")!=="true"){
 <!-- SIDEBAR -->
 <div class="sidebar">
 <h3>HR SYSTEM</h3>
+
 <ul class="menu">
 <li onclick="goPage('employee.html')">Employee</li>
 <li onclick="goPage('attendance.html')">Attendance</li>
@@ -128,9 +149,13 @@ if(localStorage.getItem("loggedIn")!=="true"){
 
 <li onclick="goPage('admin-requests.html')">
 📋 Requests <span id="reqBadge" class="badge"></span>
-  <li onclick="goPage('settings.html')">⚙️ Settings</li>
 </li>
+
+<li onclick="goPage('settings.html')">⚙️ Settings</li>
 </ul>
+
+<!-- 🔴 LOGOUT -->
+<div class="logout" onclick="logout()">Logout</div>
 </div>
 
 <!-- MAIN -->
@@ -140,7 +165,6 @@ if(localStorage.getItem("loggedIn")!=="true"){
 
 <div class="header">
 <h2>Dashboard</h2>
-<div class="logout" onclick="logout()">Logout</div>
 </div>
 
 <!-- 🍉 WELCOME -->
@@ -169,37 +193,12 @@ if(localStorage.getItem("loggedIn")!=="true"){
 
 <div class="right">
 
+<!-- 🎂 BIRTHDAY -->
 <div class="birthday">
 <h3>🎂 Birthday Today</h3>
 <div id="bdayList"></div>
 </div>
 
-</div>
-
-</div>
-
-<!-- 👤 POPUP -->
-<div id="empPopup" style="
-display:none;
-position:fixed;
-top:0;left:0;
-width:100%;height:100%;
-background:rgba(0,0,0,0.7);
-justify-content:center;
-align-items:center;
-">
-
-<div style="
-background:rgba(255,255,255,0.1);
-padding:20px;
-border-radius:15px;
-backdrop-filter:blur(10px);
-box-shadow:0 0 20px #00c6ff;
-width:320px;
-">
-<h3>Employee Info</h3>
-<div id="empDetails"></div>
-<button onclick="closeEmp()">Close</button>
 </div>
 
 </div>
@@ -213,7 +212,7 @@ function logout(){
 
 function goPage(p){window.location.href=p;}
 
-/* 🔍 SEARCH */
+/* SEARCH */
 function searchEmployee(){
 
   let keyword = searchEmp.value.toLowerCase();
@@ -234,34 +233,13 @@ function searchEmployee(){
   });
 }
 
-/* 👤 SHOW + FULL INFO */
 function showEmp(fname,lname){
-
   let emp = JSON.parse(localStorage.getItem("employees"))||[];
   let e = emp.find(x=>x.fname===fname && x.lname===lname);
 
   if(!e) return;
 
-  empDetails.innerHTML=`
-  <p><b>Name:</b> ${e.fname} ${e.lname}</p>
-  <p><b>Position:</b> ${e.position||""}</p>
-  <p><b>Employee ID:</b> ${e.empId||""}</p>
-
-  <p><b>Birthday:</b> ${e.birthdate || "-"}</p>
-  <p><b>SSS:</b> ${e.sss || "-"}</p>
-  <p><b>PhilHealth:</b> ${e.philhealth || "-"}</p>
-  <p><b>Pag-IBIG:</b> ${e.pagibig || "-"}</p>
-  `;
-
-  empPopup.style.display="flex";
-
-  /* CLEAR SEARCH */
-  searchEmp.value="";
-  searchResult.innerHTML="";
-}
-
-function closeEmp(){
-  empPopup.style.display="none";
+  alert(e.fname + " " + e.lname);
 }
 
 /* ANNOUNCE */
@@ -283,7 +261,7 @@ function loadAnnouncements(){
   });
 }
 
-/* 🎂 BIRTHDAY */
+/* BIRTHDAY */
 function loadBirthday(){
   let emp = JSON.parse(localStorage.getItem("employees"))||[];
   let today = new Date().toISOString().slice(5,10);
@@ -293,7 +271,7 @@ function loadBirthday(){
   bdayList.innerHTML = b.length ? b.map(e=>e.fname+" "+e.lname).join("<br>") : "No birthday";
 }
 
-/* 🔔 BADGE */
+/* BADGE */
 function loadRequestBadge(){
   let r = JSON.parse(localStorage.getItem("requests"))||[];
   let p = r.filter(x=>x.status==="Pending").length;
