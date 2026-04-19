@@ -84,10 +84,19 @@ button{
 <script>
 
 function login(){
+function login(){
 
   let u = document.getElementById("username").value;
   let p = document.getElementById("password").value;
 
+  /* 🔥 ADMIN LOGIN */
+  if(u === "admin" && p === "1234"){
+    localStorage.setItem("loggedIn","true");
+    window.location.href = "index.html";
+    return;
+  }
+
+  /* 👤 EMPLOYEE LOGIN */
   let users = JSON.parse(localStorage.getItem("users")) || [];
 
   let found = users.find(x => x.username === u && x.password === p);
