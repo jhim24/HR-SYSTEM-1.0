@@ -73,7 +73,7 @@ body::before{
   overflow:auto;
 }
 
-/* TOP ROW */
+/* TOP */
 .top-row{
   display:flex;
   gap:20px;
@@ -108,7 +108,7 @@ body::before{
   margin-top:15px;
 }
 
-/* ANNOUNCE */
+/* ANNOUNCEMENT */
 .announce{
   margin-top:20px;
   background: rgba(255,215,0,0.15);
@@ -116,8 +116,6 @@ body::before{
   border-radius:10px;
   border:1px solid #FFD700;
   box-shadow:0 0 10px #FFD700;
-
-  overflow:visible; /* 🔥 IMPORTANT */
 }
 
 .announce-item{
@@ -130,15 +128,15 @@ body::before{
   font-size:18px;
   font-weight:bold;
 
-  padding-right:20px;
+  padding-bottom:45px; /* 🔥 space for buttons */
+  padding-right:90px;
 }
 
-/* 🔥 BUTTONS OUTSIDE */
+/* 🔥 BUTTONS INSIDE BOTTOM RIGHT */
 .announce-actions{
   position:absolute;
-  top:50%;
-  right:-90px;
-  transform:translateY(-50%);
+  bottom:10px;
+  right:10px;
 }
 
 .announce-actions button{
@@ -173,14 +171,6 @@ body::before{
   backdrop-filter:blur(10px);
   box-shadow:0 0 20px #00c6ff;
   width:320px;
-}
-
-/* BADGE */
-.badge{
-  background:red;
-  padding:2px 6px;
-  border-radius:10px;
-  font-size:12px;
 }
 </style>
 
@@ -314,11 +304,11 @@ function loadAnnouncements(){
   announcements.forEach((a,i)=>{
     announceList.innerHTML+=`
     <div class="announce-item">
+      ${a.text}
       <div class="announce-actions">
         <button class="edit-btn" onclick="editAnnouncement(${i})">Edit</button>
         <button class="delete-btn" onclick="deleteAnnouncement(${i})">Delete</button>
       </div>
-      ${a.text}
     </div>`;
   });
 }
