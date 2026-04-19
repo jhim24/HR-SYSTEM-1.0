@@ -1,299 +1,141 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Employee Masterlist</title>
+<title>Employee Masterlist</title>
 
 <style>
-* {
-  box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-body {
-  margin: 0;
-  background: url('bg.jpg') no-repeat center center fixed;
-  background-size: cover;
-  color: white;
-}
-
-/* OVERLAY */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: -1;
-}
-
-/* WRAPPER */
-.wrapper {
-  display: flex;
-  height: 100vh;
-}
-
-/* SIDEBAR */
-.sidebar {
-  width: 240px;
-  background: rgba(0,0,0,0.6);
-  padding: 20px;
-}
-
-.sidebar h3 {
-  margin-bottom: 20px;
-}
-
-.menu {
-  list-style: none;
-  padding: 0;
-}
-
-.menu li {
-  padding: 10px;
-  margin-bottom: 8px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.menu li:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-/* MAIN */
-.main {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
+body{
+  font-family:Arial;
+  background:#0f2027;
+  color:white;
+  padding:20px;
 }
 
 /* FORM */
-.form-box {
-  background: rgba(255,255,255,0.1);
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 20px;
+.box{
+  background:rgba(255,255,255,0.1);
+  padding:20px;
+  border-radius:10px;
 }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
-  gap: 8px;
-}
-
-input, select {
-  padding: 6px;
-  border-radius: 6px;
-  border: none;
-  font-size: 12px;
+/* INPUT */
+input,select{
+  width:100%;
+  padding:8px;
+  margin-top:8px;
+  border:none;
+  border-radius:5px;
 }
 
 /* BUTTON */
-.add-btn {
-  margin-top: 10px;
-  padding: 8px;
-  background: #2ecc71;
-  border: none;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* TABLE BOX */
-.table-box {
-  background: #eaf4ff;
-  padding: 10px;
-  border-radius: 12px;
-  overflow: auto;
+button{
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:6px;
+  background:#00c6ff;
+  color:white;
+  cursor:pointer;
 }
 
 /* TABLE */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-  min-width: 1400px;
-  color: #2c3e50;
+table{
+  width:100%;
+  margin-top:20px;
+  border-collapse:collapse;
+  background:#e6f2ff;
+  color:black;
 }
 
-/* GRID + NO WRAP */
-th, td {
-  padding: 6px;
-  border: 1px solid rgba(0,0,0,0.1);
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* HEADER */
-th {
-  background: #cfe4ff;
-}
-
-/* HOVER */
-tr:hover {
-  background: rgba(0,0,0,0.05);
-}
-
-/* BUTTON */
-.btn {
-  padding: 3px 6px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.delete {
-  background: #e74c3c;
-  color: white;
-}
-
-/* LOGOUT */
-.logout {
-  margin-top: 20px;
-  background: #e74c3c;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
-  cursor: pointer;
-}
-
-/* SEARCH BAR */
-.search-box {
-  margin-bottom: 10px;
+th,td{
+  border:1px solid #999;
+  padding:6px;
+  text-align:center;
+  white-space:nowrap;
 }
 </style>
 
-<script>
-if(localStorage.getItem("loggedIn") !== "true") {
-  window.location.href = "login.html";
-}
-</script>
+<!-- 🔥 FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
 
 </head>
+
 <body>
-
-<div class="wrapper">
-
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <h3>HR System</h3>
-
-  <ul class="menu">
-    <li onclick="goPage('index.html')">🏠 Dashboard</li>
-    <li onclick="goPage('employee.html')">👨‍💼 Employees</li>
-    <li onclick="goPage('attendance.html')">🕒 Attendance</li>
-    <li onclick="goPage('payroll.html')">💰 Payroll</li>
-    <li onclick="goPage('payslip.html')">🧾 Payslips</li>
-    <li onclick="goPage('payroll-history.html')">📄 History</li>
-  </ul>
-
-  <div class="logout" onclick="logout()">Logout</div>
-</div>
-
-<!-- MAIN -->
-<div class="main">
 
 <h2>Employee Masterlist</h2>
 
-<!-- FORM -->
-<div class="form-box">
-  <div class="form-grid">
+<div class="box">
 
-    <input id="fname" placeholder="First Name">
-    <input id="mname" placeholder="Middle Name">
-    <input id="lname" placeholder="Last Name">
+<input id="fname" placeholder="First Name">
+<input id="mname" placeholder="Middle Name">
+<input id="lname" placeholder="Last Name">
 
-    <input type="date" id="birthdate" onchange="calcAge()">
-    <input id="age" placeholder="Age" readonly>
+<input id="birthdate" type="date">
+<input id="age" placeholder="Age">
 
-    <input id="address" placeholder="Address">
+<input id="address" placeholder="Address">
 
-    <select id="bank">
-      <option>Bank Name</option>
-      <option>BPI</option>
-      <option>BDO</option>
-      <option>Metrobank</option>
-      <option>Landbank</option>
-    </select>
+<select id="bank">
+<option>BDO</option>
+<option>BPI</option>
+<option>Metrobank</option>
+</select>
 
-    <input id="bankAcc" placeholder="Bank Account">
-    <input id="empId" placeholder="Employee ID">
+<input id="bankAccount" placeholder="Bank Account">
+<input id="empid" placeholder="Employee ID">
 
-    <select id="govId">
-      <option>Government ID</option>
-      <option>Passport</option>
-      <option>Driver License</option>
-      <option>National ID</option>
-    </select>
+<select id="govType">
+<option>UMID</option>
+<option>Passport</option>
+</select>
 
-    <input id="sss" placeholder="SSS">
-    <input id="philhealth" placeholder="PhilHealth">
-    <input id="pagibig" placeholder="Pag-IBIG">
-    <input id="healthcard" placeholder="Health Card">
+<input id="sss" placeholder="SSS">
+<input id="philhealth" placeholder="PhilHealth">
+<input id="pagibig" placeholder="Pag-IBIG">
 
-    <select id="position">
-      <option>Position</option>
-      <option>Admin</option>
-      <option>Cashier</option>
-      <option>Waiter</option>
-      <option>Waitress</option>
-      <option>Manager</option>
-      <option>Supervisor</option>
-    </select>
+<select id="position">
+<option>Admin</option>
+<option>Cashier</option>
+<option>Waiter</option>
+<option>Waitress</option>
+<option>Manager</option>
+<option>Supervisor</option>
+</select>
 
-  </div>
-
-  <button class="add-btn" onclick="addEmployee()">Save / Update</button>
-</div>
-
-<!-- SEARCH + TOTAL -->
-<div class="search-box">
-  <input type="text" id="search" placeholder="🔍 Search..." onkeyup="searchEmp()">
-  <span id="total"></span>
-</div>
-
-<!-- TABLE -->
-<div class="table-box">
-  <table id="empTable">
-    <thead>
-      <tr>
-        <th>First</th>
-        <th>Middle</th>
-        <th>Last</th>
-        <th>Birthdate</th>
-        <th>Age</th>
-        <th>Address</th>
-        <th>Bank</th>
-        <th>Account</th>
-        <th>Emp ID</th>
-        <th>Gov ID</th>
-        <th>SSS</th>
-        <th>PhilHealth</th>
-        <th>Pag-IBIG</th>
-        <th>Health Card</th>
-        <th>Position</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</div>
+<button onclick="saveEmployee()">Save Employee</button>
 
 </div>
-</div>
+
+<table>
+<thead>
+<tr>
+<th>First</th>
+<th>Middle</th>
+<th>Last</th>
+<th>Position</th>
+<th>SSS</th>
+<th>PhilHealth</th>
+<th>Pag-IBIG</th>
+</tr>
+</thead>
+<tbody id="empTable"></tbody>
+</table>
 
 <script>
-let employees = JSON.parse(localStorage.getItem("employees")) || [];
-let editIndex = -1;
 
-function calcAge() {
-  let birth = new Date(birthdate.value);
-  let today = new Date();
-  age.value = today.getFullYear() - birth.getFullYear();
-}
+/* 🔥 FIREBASE CONFIG (PALITAN MO) */
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+};
 
-function addEmployee() {
-  let idVal = empId.value || "EMP-" + Date.now();
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+/* SAVE */
+function saveEmployee(){
 
   let emp = {
     fname: fname.value,
@@ -303,110 +145,51 @@ function addEmployee() {
     age: age.value,
     address: address.value,
     bank: bank.value,
-    account: bankAcc.value,
-    empId: idVal,
-    govId: govId.value,
+    bankAccount: bankAccount.value,
+    empid: empid.value,
+    govType: govType.value,
     sss: sss.value,
     philhealth: philhealth.value,
     pagibig: pagibig.value,
-    healthcard: healthcard.value,
     position: position.value
   };
 
-  if(editIndex === -1){
-    employees.push(emp);
-  } else {
-    employees[editIndex] = emp;
-    editIndex = -1;
-  }
-
-  localStorage.setItem("employees", JSON.stringify(employees));
-  clearForm();
-  renderTable();
-}
-
-function editEmp(i){
-  let e = employees[i];
-  fname.value = e.fname;
-  mname.value = e.mname;
-  lname.value = e.lname;
-  birthdate.value = e.birthdate;
-  age.value = e.age;
-  address.value = e.address;
-  bank.value = e.bank;
-  bankAcc.value = e.account;
-  empId.value = e.empId;
-  govId.value = e.govId;
-  sss.value = e.sss;
-  philhealth.value = e.philhealth;
-  pagibig.value = e.pagibig;
-  healthcard.value = e.healthcard;
-  position.value = e.position;
-
-  editIndex = i;
-}
-
-function deleteEmp(i){
-  if(confirm("Delete this employee?")){
-    employees.splice(i,1);
-    localStorage.setItem("employees", JSON.stringify(employees));
-    renderTable();
-  }
-}
-
-function searchEmp(){
-  let val = search.value.toLowerCase();
-  document.querySelectorAll("#empTable tbody tr").forEach(row=>{
-    row.style.display = row.innerText.toLowerCase().includes(val) ? "" : "none";
-  });
-}
-
-function clearForm(){
-  document.querySelectorAll("input, select").forEach(el=>{
-    if(el.type !== "button") el.value = "";
-  });
-}
-
-function renderTable(){
-  let tbody = document.querySelector("#empTable tbody");
-  tbody.innerHTML = "";
-
-  employees.forEach((e,i)=>{
-    tbody.innerHTML += `
-    <tr>
-      <td>${e.fname}</td>
-      <td>${e.mname}</td>
-      <td>${e.lname}</td>
-      <td>${e.birthdate}</td>
-      <td>${e.age}</td>
-      <td>${e.address}</td>
-      <td>${e.bank}</td>
-      <td>${e.account}</td>
-      <td>${e.empId}</td>
-      <td>${e.govId}</td>
-      <td>${e.sss}</td>
-      <td>${e.philhealth}</td>
-      <td>${e.pagibig}</td>
-      <td>${e.healthcard}</td>
-      <td>${e.position}</td>
-      <td>
-        <button class="btn" onclick="editEmp(${i})">Edit</button>
-        <button class="btn delete" onclick="deleteEmp(${i})">Delete</button>
-      </td>
-    </tr>`;
+  db.collection("employees").add(emp).then(()=>{
+    alert("Saved to Firebase!");
+    loadEmployees();
   });
 
-  total.innerText = "Total: " + employees.length;
 }
 
-function goPage(p){ window.location.href = p; }
+/* LOAD */
+function loadEmployees(){
 
-function logout(){
-  localStorage.removeItem("loggedIn");
-  window.location.href = "login.html";
+  empTable.innerHTML="";
+
+  db.collection("employees").get().then(snapshot=>{
+
+    snapshot.forEach(doc=>{
+      let e = doc.data();
+
+      empTable.innerHTML += `
+      <tr>
+        <td>${e.fname}</td>
+        <td>${e.mname}</td>
+        <td>${e.lname}</td>
+        <td>${e.position}</td>
+        <td>${e.sss}</td>
+        <td>${e.philhealth}</td>
+        <td>${e.pagibig}</td>
+      </tr>`;
+    });
+
+  });
+
 }
 
-renderTable();
+/* AUTO LOAD */
+loadEmployees();
+
 </script>
 
 </body>
