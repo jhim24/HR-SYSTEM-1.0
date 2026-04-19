@@ -13,20 +13,59 @@ body{
   color:white;
 }
 
-.container{max-width:900px;margin:auto;}
+/* CONTAINER */
+.container{
+  max-width:900px;
+  margin:auto;
+}
 
+/* 🔥 BIG MESSAGE */
+.message-box{
+  margin-bottom:20px;
+  padding:25px;
+  border-radius:15px;
+
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+
+  background: rgba(255,215,0,0.2);
+  border:1px solid #FFD700;
+
+  box-shadow:
+    0 0 10px #FFD700,
+    0 0 20px rgba(255,215,0,0.6);
+
+  animation: glowPulse 2s infinite alternate;
+}
+
+@keyframes glowPulse{
+  from{ box-shadow:0 0 10px #FFD700; }
+  to{ box-shadow:0 0 25px #FFD700, 0 0 40px rgba(255,215,0,0.7); }
+}
+
+/* FLOATING CARD */
 .box{
   background:rgba(255,255,255,0.1);
   backdrop-filter:blur(15px);
   padding:20px;
   margin-bottom:20px;
   border-radius:15px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+  animation:fadeIn 0.5s ease;
 }
 
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;}
+}
+
+/* HEADER */
 .logout{
   float:right;
   background:#ff4d4d;
-  padding:6px;
+  padding:6px 10px;
+  border-radius:6px;
   cursor:pointer;
 }
 
@@ -37,6 +76,7 @@ input,select,textarea{
   margin-top:8px;
   border:none;
   border-radius:8px;
+  outline:none;
 }
 
 /* BUTTON */
@@ -46,8 +86,15 @@ button{
   margin-top:10px;
   border:none;
   border-radius:8px;
-  background:#00c6ff;
+  background:linear-gradient(45deg,#00c6ff,#0072ff);
   color:white;
+  cursor:pointer;
+  font-weight:bold;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.05);
 }
 
 /* TABLE */
@@ -55,23 +102,36 @@ table{
   width:100%;
   border-collapse:collapse;
   margin-top:10px;
+  font-size:12px;
+  background:rgba(255,255,255,0.1);
 }
 
 th,td{
-  border:1px solid rgba(255,255,255,0.3);
   padding:8px;
   text-align:center;
+  border:1px solid rgba(255,255,255,0.2);
 }
 
+th{
+  background:rgba(0,0,0,0.4);
+}
+
+/* STATUS */
 .pending{color:yellow;}
 .approved{color:#00ffcc;}
 .rejected{color:#ff6b6b;}
+
 </style>
 </head>
 
 <body>
 
 <div class="container">
+
+<!-- 🔥 ANNOUNCEMENT -->
+<div class="message-box" id="portalMessage">
+📢 Welcome to Employee Portal
+</div>
 
 <!-- USER -->
 <div class="box">
@@ -80,27 +140,21 @@ th,td{
 <div id="userInfo"></div>
 </div>
 
-<!-- 📢 ANNOUNCEMENT -->
-<div class="box">
-<h3>📢 Announcements</h3>
-<div id="announceList"></div>
-</div>
-
 <!-- FORM -->
 <div class="box">
-<h3>Request</h3>
+<h3>Request Leave / Day Off</h3>
 
 <select id="type">
-<option>Leave</option>
-<option>Day Off</option>
-<option>Birthday Leave</option>
-<option>Vacation Leave</option>
+  <option value="Leave">Leave</option>
+  <option value="Day Off">Day Off</option>
+  <option value="Birthday Leave">Birthday Leave</option>
+  <option value="Vacation Leave">Vacation Leave</option>
 </select>
 
 <input type="date" id="date">
-<textarea id="reason"></textarea>
+<textarea id="reason" placeholder="Enter reason..."></textarea>
 
-<button onclick="submitRequest()">Submit</button>
+<button onclick="submitRequest()">Submit Request</button>
 </div>
 
 <!-- TABLE -->
@@ -116,6 +170,7 @@ th,td{
 <th>Status</th>
 </tr>
 </thead>
+
 <tbody id="reqTable"></tbody>
 </table>
 
@@ -125,67 +180,81 @@ th,td{
 
 <script>
 
-let user=JSON.parse(localStorage.getItem("empSession"));
-if(!user){window.location.href="login.html";}
+/* SESSION */
+let user = JSON.parse(localStorage.getItem("empSession"));
 
-userInfo.innerHTML=user.fname+" "+user.lname;
+if(!user){
+  window.location.href="login.html";
+}
 
-let requests=JSON.parse(localStorage.getItem("requests"))||[];
+document.getElementById("userInfo").innerHTML =
+  `<b>${user.name || ""}</b>`;
+
+/* 🔥 LOAD ANNOUNCEMENT */
+function loadPortalMessage(){
+  let announcements = JSON.parse(localStorage.getItem("announcements")) || [];
+
+  if(announcements.length > 0){
+    portalMessage.innerText = announcements[announcements.length - 1].text;
+  }
+}
+
+loadPortalMessage();
+
+/* STORAGE */
+let requests = JSON.parse(localStorage.getItem("requests")) || [];
 
 /* SUBMIT */
 function submitRequest(){
-  let r={
-    name:user.fname+" "+user.lname,
-    type:type.value,
-    date:date.value,
-    reason:reason.value,
-    status:"Pending"
+
+  if(!date.value){
+    alert("Select date");
+    return;
+  }
+
+  let r = {
+    name: user.name,
+    type: type.value,
+    date: date.value,
+    reason: reason.value,
+    status: "Pending"
   };
 
   requests.push(r);
-  localStorage.setItem("requests",JSON.stringify(requests));
+  localStorage.setItem("requests", JSON.stringify(requests));
+
+  reason.value="";
   loadRequests();
 }
 
-/* LOAD REQUEST */
+/* LOAD */
 function loadRequests(){
-  let tbody=reqTable;
-  tbody.innerHTML="";
 
-  requests.filter(r=>r.name===user.fname+" "+user.lname)
-  .forEach(r=>{
-    tbody.innerHTML+=`
-    <tr>
-    <td>${r.type}</td>
-    <td>${r.date}</td>
-    <td>${r.reason}</td>
-    <td class="${r.status.toLowerCase()}">${r.status}</td>
-    </tr>`;
-  });
+  reqTable.innerHTML="";
+
+  requests
+    .filter(r => r.name === user.name)
+    .forEach(r => {
+
+      let statusClass = r.status.toLowerCase();
+
+      reqTable.innerHTML += `
+      <tr>
+        <td>${r.type}</td>
+        <td>${r.date}</td>
+        <td>${r.reason}</td>
+        <td class="${statusClass}">${r.status}</td>
+      </tr>`;
+    });
 }
 
-/* ANNOUNCEMENT */
-function loadAnnouncements(){
-  let announcements=JSON.parse(localStorage.getItem("announcements"))||[];
-  let box=document.getElementById("announceList");
-
-  box.innerHTML="";
-  announcements.slice().reverse().forEach(a=>{
-    box.innerHTML+=`
-    <div style="margin-bottom:5px;padding:6px;background:rgba(255,255,255,0.1);border-radius:6px;">
-      📢 ${a.text}<br>
-      <small>${a.date}</small>
-    </div>`;
-  });
-}
-
+/* LOGOUT */
 function logout(){
   localStorage.removeItem("empSession");
   window.location.href="login.html";
 }
 
 loadRequests();
-loadAnnouncements();
 
 </script>
 
