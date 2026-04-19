@@ -4,50 +4,64 @@
 <title>Employee Masterlist</title>
 
 <style>
+*{box-sizing:border-box;font-family:Arial;}
+
 body{
-  font-family:Arial;
-  background:#0f2027;
-  color:white;
+  margin:0;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
   padding:20px;
+  color:white;
 }
 
+/* FORM BOX */
 .box{
   background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(10px);
   padding:20px;
-  border-radius:10px;
+  border-radius:15px;
+  margin-bottom:20px;
 }
 
+/* INPUT */
 input,select{
   width:100%;
-  padding:8px;
+  padding:10px;
   margin-top:8px;
   border:none;
-  border-radius:5px;
+  border-radius:8px;
+  outline:none;
 }
 
+/* BUTTON */
 button{
   margin-top:10px;
-  padding:10px;
+  padding:10px 15px;
   border:none;
-  border-radius:6px;
+  border-radius:8px;
   background:#00c6ff;
   color:white;
   cursor:pointer;
+  font-weight:bold;
 }
 
+/* TABLE */
 table{
   width:100%;
-  margin-top:20px;
   border-collapse:collapse;
+  margin-top:10px;
   background:#e6f2ff;
   color:black;
 }
 
 th,td{
   border:1px solid #999;
-  padding:6px;
+  padding:8px;
   text-align:center;
   white-space:nowrap;
+}
+
+th{
+  background:#cce0ff;
 }
 </style>
 
@@ -111,6 +125,7 @@ th,td{
 <th>Pag-IBIG</th>
 </tr>
 </thead>
+
 <tbody id="empTable"></tbody>
 </table>
 
@@ -143,6 +158,7 @@ function saveEmployee(){
 
   localStorage.setItem("employees", JSON.stringify(employees));
 
+  clearForm();
   loadEmployees();
 }
 
@@ -165,6 +181,24 @@ function loadEmployees(){
     </tr>`;
   });
 
+}
+
+/* CLEAR */
+function clearForm(){
+  fname.value="";
+  mname.value="";
+  lname.value="";
+  birthdate.value="";
+  age.value="";
+  address.value="";
+  bank.value="BDO";
+  bankAccount.value="";
+  empid.value="";
+  govType.value="UMID";
+  sss.value="";
+  philhealth.value="";
+  pagibig.value="";
+  position.value="Admin";
 }
 
 /* AUTO LOAD */
