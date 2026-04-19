@@ -194,6 +194,39 @@ body::before{
   border-radius:10px;
   font-size:12px;
 }
+  /* 🔥 FULL SCREEN RUNNING BORDER */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  padding:2px;
+
+  background: linear-gradient(
+    270deg,
+    #ff0040,
+    #ff7300,
+    #00ffff,
+    #00ff99,
+    #ff0040
+  );
+
+  background-size:600% 600%;
+  animation: borderMove 8s linear infinite;
+
+  /* border effect only */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+}
+
+/* ANIMATION */
+@keyframes borderMove{
+  0%{background-position:0% 50%;}
+  100%{background-position:100% 50%;}
+}
 </style>
 
 <script>
