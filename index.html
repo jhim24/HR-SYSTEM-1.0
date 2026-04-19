@@ -42,7 +42,7 @@ body::before{
   background:rgba(255,255,255,0.2);
 }
 
-/* 🔴 LOGOUT BOTTOM */
+/* LOGOUT */
 .logout{
   margin-top:auto;
   background:#e74c3c;
@@ -55,19 +55,8 @@ body::before{
 /* MAIN */
 .main{
   flex:1;
-  display:flex;
-}
-
-/* LEFT */
-.left{
-  flex:3;
   padding:20px;
-}
-
-/* RIGHT */
-.right{
-  width:280px;
-  padding:20px;
+  overflow:auto;
 }
 
 /* HEADER */
@@ -77,9 +66,16 @@ body::before{
   align-items:center;
 }
 
+/* 🔥 TOP ROW ALIGN */
+.top-row{
+  display:flex;
+  gap:20px;
+  margin-top:15px;
+}
+
 /* 🍉 WELCOME */
 .welcome-box{
-  margin-top:15px;
+  flex:2;
   padding:20px;
   border-radius:15px;
   background: rgba(238,32,78,0.2);
@@ -87,16 +83,27 @@ body::before{
   box-shadow:0 0 20px #EE204E;
 }
 
-/* 🔍 SEARCH */
+/* 🎂 BIRTHDAY */
+.birthday{
+  flex:1;
+  padding:20px;
+  border-radius:15px;
+  text-align:center;
+  background: rgba(242,0,60,0.2);
+  border:1px solid #F2003C;
+  box-shadow:0 0 15px #F2003C;
+}
+
+/* SEARCH */
 .search-box input{
   width:100%;
   padding:10px;
   border-radius:8px;
   border:none;
-  margin-top:10px;
+  margin-top:15px;
 }
 
-/* 📢 ANNOUNCE */
+/* ANNOUNCE */
 .announce{
   margin-top:20px;
   background: rgba(255,215,0,0.15);
@@ -104,17 +111,6 @@ body::before{
   border-radius:10px;
   border:1px solid #FFD700;
   box-shadow:0 0 10px #FFD700;
-}
-
-/* 🎂 BIRTHDAY (ALIGNED TOP) */
-.birthday{
-  margin-top:65px; /* 🔥 align with welcome */
-  background: rgba(242,0,60,0.2);
-  padding:20px;
-  border-radius:15px;
-  text-align:center;
-  border:1px solid #F2003C;
-  box-shadow:0 0 15px #F2003C;
 }
 
 /* BADGE */
@@ -154,32 +150,38 @@ if(localStorage.getItem("loggedIn")!=="true"){
 <li onclick="goPage('settings.html')">⚙️ Settings</li>
 </ul>
 
-<!-- 🔴 LOGOUT -->
 <div class="logout" onclick="logout()">Logout</div>
 </div>
 
 <!-- MAIN -->
 <div class="main">
 
-<div class="left">
-
 <div class="header">
 <h2>Dashboard</h2>
 </div>
 
-<!-- 🍉 WELCOME -->
+<!-- 🔥 ALIGNED ROW -->
+<div class="top-row">
+
 <div class="welcome-box">
 <h2>Hi, Welcome 👋</h2>
 <p>Have a nice day!</p>
 </div>
 
-<!-- 🔍 SEARCH -->
+<div class="birthday">
+<h3>🎂 Birthday Today</h3>
+<div id="bdayList"></div>
+</div>
+
+</div>
+
+<!-- SEARCH -->
 <div class="search-box">
 <input id="searchEmp" placeholder="Search employee..." onkeyup="searchEmployee()">
 <div id="searchResult"></div>
 </div>
 
-<!-- 📢 ANNOUNCE -->
+<!-- ANNOUNCE -->
 <div class="announce">
 <h3>📢 Announcements</h3>
 
@@ -187,18 +189,6 @@ if(localStorage.getItem("loggedIn")!=="true"){
 <button onclick="addAnnouncement()">Post</button>
 
 <div id="announceList"></div>
-</div>
-
-</div>
-
-<div class="right">
-
-<!-- 🎂 BIRTHDAY -->
-<div class="birthday">
-<h3>🎂 Birthday Today</h3>
-<div id="bdayList"></div>
-</div>
-
 </div>
 
 </div>
