@@ -41,24 +41,10 @@ body::before{
 }
 
 /* MAIN */
-.main{
-  flex:1;
-  display:flex;
-}
+.main{flex:1;display:flex;}
+.left{flex:3;padding:20px;}
+.right{width:300px;padding:20px;}
 
-/* LEFT */
-.left{
-  flex:3;
-  padding:20px;
-}
-
-/* RIGHT */
-.right{
-  width:300px;
-  padding:20px;
-}
-
-/* HEADER */
 .header{
   display:flex;
   justify-content:space-between;
@@ -82,30 +68,33 @@ body::before{
   box-shadow:0 0 20px #EE204E;
 }
 
-/* 📢 ANNOUNCEMENT (GOLD) */
+/* 🔍 SEARCH */
+.search-box input{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  margin-top:10px;
+}
+
+/* 📢 ANNOUNCE */
 .announce{
   margin-top:20px;
   background: rgba(255,215,0,0.15);
   padding:15px;
   border-radius:10px;
   border:1px solid #FFD700;
-
-  box-shadow:
-    0 0 10px #FFD700,
-    0 0 20px #FFD700;
+  box-shadow:0 0 10px #FFD700;
 }
 
-/* 🎂 BIRTHDAY (LIPSTICK RED) */
+/* 🎂 BIRTHDAY */
 .birthday{
   background: rgba(242,0,60,0.2);
   padding:20px;
   border-radius:15px;
   text-align:center;
   border:1px solid #F2003C;
-
-  box-shadow:
-    0 0 10px #F2003C,
-    0 0 25px #F2003C;
+  box-shadow:0 0 15px #F2003C;
 }
 
 /* BADGE */
@@ -146,7 +135,6 @@ if(localStorage.getItem("loggedIn")!=="true"){
 <!-- MAIN -->
 <div class="main">
 
-<!-- LEFT -->
 <div class="left">
 
 <div class="header">
@@ -156,15 +144,21 @@ if(localStorage.getItem("loggedIn")!=="true"){
 
 <!-- 🍉 WELCOME -->
 <div class="welcome-box">
-  <h2>Hi, Welcome 👋</h2>
-  <p>Have a nice day!</p>
+<h2>Hi, Welcome 👋</h2>
+<p>Have a nice day!</p>
 </div>
 
-<!-- 📢 ANNOUNCEMENT -->
+<!-- 🔍 SEARCH -->
+<div class="search-box">
+<input id="searchEmp" placeholder="Search employee..." onkeyup="searchEmployee()">
+<div id="searchResult"></div>
+</div>
+
+<!-- 📢 ANNOUNCE -->
 <div class="announce">
 <h3>📢 Announcements</h3>
 
-<input id="announceInput" placeholder="Enter..." style="width:100%;padding:8px;border-radius:6px;border:none;">
+<input id="announceInput" placeholder="Enter...">
 <button onclick="addAnnouncement()">Post</button>
 
 <div id="announceList"></div>
@@ -172,15 +166,39 @@ if(localStorage.getItem("loggedIn")!=="true"){
 
 </div>
 
-<!-- RIGHT -->
 <div class="right">
 
-<!-- 🎂 BIRTHDAY -->
 <div class="birthday">
 <h3>🎂 Birthday Today</h3>
 <div id="bdayList"></div>
 </div>
 
+</div>
+
+</div>
+
+<!-- 👤 POPUP -->
+<div id="empPopup" style="
+display:none;
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:rgba(0,0,0,0.7);
+justify-content:center;
+align-items:center;
+">
+
+<div style="
+background:rgba(255,255,255,0.1);
+padding:20px;
+border-radius:15px;
+backdrop-filter:blur(10px);
+box-shadow:0 0 20px #00c6ff;
+width:300px;
+">
+<h3>Employee Info</h3>
+<div id="empDetails"></div>
+<button onclick="closeEmp()">Close</button>
 </div>
 
 </div>
@@ -194,57 +212,76 @@ function logout(){
 
 function goPage(p){window.location.href=p;}
 
-/* ANNOUNCEMENT */
+/* 🔍 SEARCH */
+function searchEmployee(){
+
+  let keyword = searchEmp.value.toLowerCase();
+  let emp = JSON.parse(localStorage.getItem("employees")) || [];
+
+  let result = emp.filter(e =>
+    (e.fname+" "+e.lname).toLowerCase().includes(keyword)
+  );
+
+  searchResult.innerHTML="";
+
+  result.forEach(e=>{
+    searchResult.innerHTML+=`
+    <div onclick="showEmp('${e.fname}','${e.lname}')"
+    style="padding:5px;background:#333;margin-top:5px;cursor:pointer;">
+    ${e.fname} ${e.lname}
+    </div>`;
+  });
+}
+
+/* SHOW */
+function showEmp(fname,lname){
+  let emp = JSON.parse(localStorage.getItem("employees"))||[];
+  let e = emp.find(x=>x.fname===fname && x.lname===lname);
+
+  empDetails.innerHTML=`
+  Name: ${e.fname} ${e.lname}<br>
+  Position: ${e.position}<br>
+  ID: ${e.empId}
+  `;
+
+  empPopup.style.display="flex";
+}
+
+function closeEmp(){
+  empPopup.style.display="none";
+}
+
+/* ANNOUNCE */
 let announcements = JSON.parse(localStorage.getItem("announcements"))||[];
 
 function addAnnouncement(){
-  if(!announceInput.value) return;
-
-  announcements.push({
-    text:announceInput.value,
-    date:new Date().toLocaleString()
-  });
-
+  announcements.push({text:announceInput.value});
   localStorage.setItem("announcements",JSON.stringify(announcements));
-  announceInput.value="";
   loadAnnouncements();
 }
 
 function loadAnnouncements(){
   announceList.innerHTML="";
-  announcements.slice().reverse().forEach(a=>{
-    announceList.innerHTML+=`
-    <div>📢 ${a.text}<br><small>${a.date}</small></div>`;
+  announcements.forEach(a=>{
+    announceList.innerHTML+=`<div>${a.text}</div>`;
   });
 }
 
-/* 🎂 BIRTHDAY */
+/* BIRTHDAY */
 function loadBirthday(){
   let emp = JSON.parse(localStorage.getItem("employees"))||[];
   let today = new Date().toISOString().slice(5,10);
 
-  let celebrants = emp.filter(e=>{
-    if(!e.birthdate) return false;
-    return e.birthdate.slice(5,10)===today;
-  });
+  let b = emp.filter(e=>e.birthdate && e.birthdate.slice(5,10)===today);
 
-  if(celebrants.length===0){
-    bdayList.innerHTML="No birthday today";
-  }else{
-    bdayList.innerHTML = celebrants.map(e=>`🎉 ${e.fname} ${e.lname}`).join("<br>");
-  }
+  bdayList.innerHTML = b.length ? b.map(e=>e.fname).join("<br>") : "No birthday";
 }
 
 /* BADGE */
 function loadRequestBadge(){
-  let requests = JSON.parse(localStorage.getItem("requests")) || [];
-  let pending = requests.filter(r => r.status === "Pending").length;
-
-  if(pending>0){
-    reqBadge.innerText = pending;
-  }else{
-    reqBadge.innerText = "";
-  }
+  let r = JSON.parse(localStorage.getItem("requests"))||[];
+  let p = r.filter(x=>x.status==="Pending").length;
+  reqBadge.innerText = p>0?p:"";
 }
 
 loadAnnouncements();
