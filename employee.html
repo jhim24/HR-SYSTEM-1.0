@@ -13,31 +13,35 @@ body{
   color:white;
 }
 
-/* FORM BOX */
+/* FORM BOX (SCROLLABLE) */
 .box{
   background:rgba(255,255,255,0.1);
   backdrop-filter:blur(10px);
-  padding:20px;
+  padding:15px;
   border-radius:15px;
   margin-bottom:20px;
+
+  max-height:300px;       /* 🔥 SCROLL */
+  overflow-y:auto;
 }
 
-/* INPUT */
+/* SMALL INPUT */
 input,select{
   width:100%;
-  padding:10px;
-  margin-top:8px;
+  padding:6px;            /* 🔥 maliit */
+  margin-top:6px;
   border:none;
-  border-radius:8px;
+  border-radius:6px;
   outline:none;
+  font-size:13px;
 }
 
 /* BUTTON */
 button{
   margin-top:10px;
-  padding:10px 15px;
+  padding:8px 12px;
   border:none;
-  border-radius:8px;
+  border-radius:6px;
   background:#00c6ff;
   color:white;
   cursor:pointer;
@@ -55,9 +59,10 @@ table{
 
 th,td{
   border:1px solid #999;
-  padding:8px;
+  padding:6px;
   text-align:center;
-  white-space:nowrap;
+  white-space:nowrap; /* 🔥 NO WRAP */
+  font-size:12px;
 }
 
 th{
@@ -168,7 +173,6 @@ function loadEmployees(){
   empTable.innerHTML="";
 
   employees.forEach(e=>{
-
     empTable.innerHTML += `
     <tr>
       <td>${e.fname}</td>
