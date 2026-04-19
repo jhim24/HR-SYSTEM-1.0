@@ -72,28 +72,6 @@ body::before{
   cursor:pointer;
 }
 
-/* CARDS */
-.container{
-  margin-top:20px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:20px;
-}
-
-.card{
-  background:rgba(255,255,255,0.1);
-  backdrop-filter:blur(12px);
-  padding:30px;
-  border-radius:15px;
-  text-align:center;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-.card:hover{
-  transform:translateY(-5px);
-}
-
 /* ANNOUNCE */
 .announce{
   margin-top:20px;
@@ -110,7 +88,7 @@ body::before{
   text-align:center;
 }
 
-/* 🔔 BADGE STYLE (ADDED LANG) */
+/* BADGE */
 .badge{
   background:red;
   padding:2px 6px;
@@ -139,11 +117,9 @@ if(localStorage.getItem("loggedIn")!=="true"){
 <li onclick="goPage('payroll.html')">Payroll</li>
 <li onclick="goPage('payslip.html')">Payslip</li>
 
-<!-- 🔥 UPDATED (WITH BADGE) -->
 <li onclick="goPage('admin-requests.html')">
 📋 Requests <span id="reqBadge" class="badge"></span>
 </li>
-
 </ul>
 </div>
 
@@ -158,12 +134,7 @@ if(localStorage.getItem("loggedIn")!=="true"){
 <div class="logout" onclick="logout()">Logout</div>
 </div>
 
-<div class="container">
-<div class="card" onclick="goPage('employee.html')">👨‍💼 Employee</div>
-<div class="card" onclick="goPage('attendance.html')">🕒 Attendance</div>
-<div class="card" onclick="goPage('payroll.html')">💰 Payroll</div>
-<div class="card" onclick="goPage('payslip.html')">🧾 Payslip</div>
-</div>
+<!-- ❌ CARDS REMOVED (ETO LANG BINAGO) -->
 
 <!-- ANNOUNCEMENT -->
 <div class="announce">
@@ -239,21 +210,15 @@ function loadBirthday(){
   }
 }
 
-/* 🔔 BADGE LOGIC (ADDED LANG) */
+/* BADGE */
 function loadRequestBadge(){
-
   let requests = JSON.parse(localStorage.getItem("requests")) || [];
-
   let pending = requests.filter(r => r.status === "Pending").length;
 
-  let badge = document.getElementById("reqBadge");
-
-  if(!badge) return;
-
-  if(pending > 0){
-    badge.innerText = pending;
+  if(pending>0){
+    reqBadge.innerText = pending;
   }else{
-    badge.innerText = "";
+    reqBadge.innerText = "";
   }
 }
 
