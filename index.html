@@ -15,7 +15,6 @@ body{
   color:white;
 }
 
-/* OVERLAY */
 body::before{
   content:"";
   position:fixed;
@@ -47,13 +46,13 @@ body::before{
   display:flex;
 }
 
-/* LEFT CONTENT */
+/* LEFT */
 .left{
   flex:3;
   padding:20px;
 }
 
-/* RIGHT BOX */
+/* RIGHT */
 .right{
   width:300px;
   padding:20px;
@@ -95,11 +94,7 @@ body::before{
   transform:translateY(-5px);
 }
 
-.icon{
-  font-size:30px;
-}
-
-/* ANNOUNCEMENT */
+/* ANNOUNCE */
 .announce{
   margin-top:20px;
   background:rgba(255,255,255,0.1);
@@ -107,7 +102,7 @@ body::before{
   border-radius:10px;
 }
 
-/* BIRTHDAY BOX */
+/* BIRTHDAY */
 .birthday{
   background:rgba(255,255,255,0.1);
   padding:20px;
@@ -115,6 +110,14 @@ body::before{
   text-align:center;
 }
 
+/* 🔔 BADGE STYLE (ADDED LANG) */
+.badge{
+  background:red;
+  padding:2px 6px;
+  border-radius:10px;
+  font-size:12px;
+  margin-left:5px;
+}
 </style>
 
 <script>
@@ -135,7 +138,12 @@ if(localStorage.getItem("loggedIn")!=="true"){
 <li onclick="goPage('attendance.html')">Attendance</li>
 <li onclick="goPage('payroll.html')">Payroll</li>
 <li onclick="goPage('payslip.html')">Payslip</li>
-<li onclick="goPage('admin-requests.html')">Requests</li>
+
+<!-- 🔥 UPDATED (WITH BADGE) -->
+<li onclick="goPage('admin-requests.html')">
+📋 Requests <span id="reqBadge" class="badge"></span>
+</li>
+
 </ul>
 </div>
 
@@ -150,7 +158,6 @@ if(localStorage.getItem("loggedIn")!=="true"){
 <div class="logout" onclick="logout()">Logout</div>
 </div>
 
-<!-- CARDS -->
 <div class="container">
 <div class="card" onclick="goPage('employee.html')">👨‍💼 Employee</div>
 <div class="card" onclick="goPage('attendance.html')">🕒 Attendance</div>
@@ -158,7 +165,7 @@ if(localStorage.getItem("loggedIn")!=="true"){
 <div class="card" onclick="goPage('payslip.html')">🧾 Payslip</div>
 </div>
 
-<!-- 📢 ANNOUNCEMENT -->
+<!-- ANNOUNCEMENT -->
 <div class="announce">
 <h3>📢 Announcements</h3>
 
@@ -170,10 +177,9 @@ if(localStorage.getItem("loggedIn")!=="true"){
 
 </div>
 
-<!-- RIGHT SIDE -->
+<!-- RIGHT -->
 <div class="right">
 
-<!-- 🎂 BIRTHDAY -->
 <div class="birthday">
 <h3>🎂 Birthday Today</h3>
 <div id="bdayList"></div>
@@ -216,9 +222,8 @@ function loadAnnouncements(){
   });
 }
 
-/* 🎂 BIRTHDAY SYSTEM */
+/* BIRTHDAY */
 function loadBirthday(){
-
   let emp = JSON.parse(localStorage.getItem("employees"))||[];
   let today = new Date().toISOString().slice(5,10);
 
@@ -230,14 +235,31 @@ function loadBirthday(){
   if(celebrants.length===0){
     bdayList.innerHTML="No birthday today";
   }else{
-    bdayList.innerHTML = celebrants.map(e=>
-      `🎉 ${e.fname} ${e.lname}`
-    ).join("<br>");
+    bdayList.innerHTML = celebrants.map(e=>`🎉 ${e.fname} ${e.lname}`).join("<br>");
+  }
+}
+
+/* 🔔 BADGE LOGIC (ADDED LANG) */
+function loadRequestBadge(){
+
+  let requests = JSON.parse(localStorage.getItem("requests")) || [];
+
+  let pending = requests.filter(r => r.status === "Pending").length;
+
+  let badge = document.getElementById("reqBadge");
+
+  if(!badge) return;
+
+  if(pending > 0){
+    badge.innerText = pending;
+  }else{
+    badge.innerText = "";
   }
 }
 
 loadAnnouncements();
 loadBirthday();
+loadRequestBadge();
 
 </script>
 
