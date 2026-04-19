@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>HR System Dashboard By: JHIM LOZADA</title>
+<title>HR System Dashboard</title>
 
 <style>
 *{box-sizing:border-box;font-family:Arial;}
@@ -30,7 +30,6 @@ body::before{
   display:flex;
   flex-direction:column;
 
-  /* 🔥 NEW BACKGROUND */
   background: linear-gradient(
     180deg,
     rgba(20,20,40,0.9),
@@ -39,7 +38,6 @@ body::before{
 
   backdrop-filter: blur(10px);
 
-  /* GLOW EDGE */
   box-shadow:
     0 0 20px rgba(255,0,80,0.4),
     inset 0 0 10px rgba(255,0,80,0.2);
@@ -47,10 +45,6 @@ body::before{
   border-right:1px solid rgba(255,0,80,0.3);
 }
 
-  /* 🔥 ADD GLOW */
-  box-shadow: 0 0 15px rgba(255,0,80,0.4);
-  border-right:1px solid rgba(255,0,80,0.3);
-}
 .menu{list-style:none;padding:0;}
 .menu li{
   padding:10px;
@@ -59,16 +53,10 @@ body::before{
 }
 .menu li:hover{
   background:rgba(255,255,255,0.2);
-
-  /* 🔥 GLOW EFFECT */
-  box-shadow:
-    0 0 10px rgba(255,0,80,0.5),
-    inset 0 0 5px rgba(255,0,80,0.3);
-
+  box-shadow:0 0 10px rgba(255,0,80,0.5);
   transform:translateX(5px);
 }
 
-/* LOGOUT */
 .logout{
   margin-top:auto;
   background:#e74c3c;
@@ -83,12 +71,6 @@ body::before{
   flex:1;
   padding:20px;
   overflow:auto;
-}
-
-/* HEADER */
-.header{
-  display:flex;
-  justify-content:space-between;
 }
 
 /* TOP ROW */
@@ -134,6 +116,8 @@ body::before{
   border-radius:10px;
   border:1px solid #FFD700;
   box-shadow:0 0 10px #FFD700;
+
+  overflow:visible; /* 🔥 IMPORTANT */
 }
 
 .announce-item{
@@ -145,20 +129,25 @@ body::before{
   position:relative;
   font-size:18px;
   font-weight:bold;
+
+  padding-right:20px;
 }
 
+/* 🔥 BUTTONS OUTSIDE */
 .announce-actions{
   position:absolute;
-  top:8px;     /* 🔥 top alignment */
-  right:10px;  /* keep sa right */
-  transform:none;
+  top:50%;
+  right:-90px;
+  transform:translateY(-50%);
 }
 
 .announce-actions button{
-  margin-left:5px;
+  display:block;
+  margin:4px 0;
+  width:70px;
   border:none;
   border-radius:5px;
-  padding:4px 6px;
+  padding:4px;
   cursor:pointer;
   font-size:11px;
 }
@@ -170,8 +159,7 @@ body::before{
 #empPopup{
   display:none;
   position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
+  inset:0;
   background:rgba(0,0,0,0.7);
   justify-content:center;
   align-items:center;
@@ -194,53 +182,6 @@ body::before{
   border-radius:10px;
   font-size:12px;
 }
-  /* 🔥 FULL SCREEN RUNNING BORDER */
-/* 🔥 CLEAN OUTER RUNNING BORDER */
-body::after{
-  content:"";
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  pointer-events:none;
-  z-index:9999;
-
-  border:3px solid transparent;
-
-  border-image: linear-gradient(
-    270deg,
-    #ff0040,
-    #ff7300,
-    #00ffff,
-    #00ff99,
-    #ff0040
-  ) 1;
-
-  animation: borderMove 6s linear infinite;
-}
-
-/* ANIMATION */
-@keyframes borderMove{
-  0%{
-    border-image-source: linear-gradient(
-      0deg,
-      #ff0040,
-      #ff7300,
-      #00ffff,
-      #00ff99
-    );
-  }
-  100%{
-    border-image-source: linear-gradient(
-      360deg,
-      #ff0040,
-      #ff7300,
-      #00ffff,
-      #00ff99
-    );
-  }
-}
 </style>
 
 <script>
@@ -261,11 +202,7 @@ if(localStorage.getItem("loggedIn")!=="true"){
 <li onclick="goPage('attendance.html')">Attendance</li>
 <li onclick="goPage('payroll.html')">Payroll</li>
 <li onclick="goPage('payslip.html')">Payslip</li>
-
-<li onclick="goPage('admin-requests.html')">
-📋 Requests <span id="reqBadge" class="badge"></span>
-</li>
-
+<li onclick="goPage('admin-requests.html')">📋 Requests</li>
 <li onclick="goPage('settings.html')">⚙️ Settings</li>
 </ul>
 
@@ -274,9 +211,7 @@ if(localStorage.getItem("loggedIn")!=="true"){
 
 <div class="main">
 
-<div class="header">
-<h2>Dashboard BY: JHIM LOZADA</h2>
-</div>
+<h2>Dashboard</h2>
 
 <div class="top-row">
 <div class="welcome-box">
@@ -317,20 +252,18 @@ if(localStorage.getItem("loggedIn")!=="true"){
 
 <script>
 
-/* NAV */
 function goPage(p){window.location.href=p;}
 function logout(){
   localStorage.removeItem("loggedIn");
   window.location.href="login.html";
 }
 
-/* SEARCH + POPUP */
+/* SEARCH */
 function searchEmployee(){
   let keyword = searchEmp.value.toLowerCase();
-  let emp = JSON.parse(localStorage.getItem("employees")) || [];
+  let emp = JSON.parse(localStorage.getItem("employees"))||[];
 
   searchResult.innerHTML="";
-
   emp.forEach(e=>{
     if((e.fname+" "+e.lname).toLowerCase().includes(keyword)){
       searchResult.innerHTML+=`
@@ -345,8 +278,7 @@ function searchEmployee(){
 function showEmp(fname,lname){
   let emp = JSON.parse(localStorage.getItem("employees"))||[];
   let e = emp.find(x=>x.fname===fname && x.lname===lname);
-
-  if(!e) return;
+  if(!e)return;
 
   empDetails.innerHTML=`
   <p><b>Name:</b> ${e.fname} ${e.lname}</p>
@@ -359,20 +291,17 @@ function showEmp(fname,lname){
   `;
 
   empPopup.style.display="flex";
-
-  searchEmp.value="";
-  searchResult.innerHTML="";
 }
 
 function closeEmp(){
   empPopup.style.display="none";
 }
 
-/* ANNOUNCE */
+/* ANNOUNCEMENT */
 let announcements = JSON.parse(localStorage.getItem("announcements"))||[];
 
 function addAnnouncement(){
-  if(!announceInput.value) return;
+  if(!announceInput.value)return;
 
   announcements.push({text:announceInput.value});
   localStorage.setItem("announcements",JSON.stringify(announcements));
@@ -395,7 +324,7 @@ function loadAnnouncements(){
 }
 
 function editAnnouncement(i){
-  let t = prompt("Edit:",announcements[i].text);
+  let t=prompt("Edit:",announcements[i].text);
   if(t){
     announcements[i].text=t;
     localStorage.setItem("announcements",JSON.stringify(announcements));
@@ -420,15 +349,8 @@ function loadBirthday(){
   bdayList.innerHTML = b.length ? b.map(e=>e.fname+" "+e.lname).join("<br>") : "No birthday";
 }
 
-/* BADGE */
-function loadRequestBadge(){
-  let r = JSON.parse(localStorage.getItem("requests"))||[];
-  reqBadge.innerText = r.filter(x=>x.status==="Pending").length || "";
-}
-
 loadAnnouncements();
 loadBirthday();
-loadRequestBadge();
 
 </script>
 
