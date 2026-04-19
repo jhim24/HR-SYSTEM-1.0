@@ -6,11 +6,10 @@
 <style>
 *{box-sizing:border-box;font-family:'Segoe UI';}
 
-/* 🔥 BACKGROUND (DIFFERENT NA) */
 body{
   margin:0;
   background:linear-gradient(135deg,#1e3c72,#2a5298);
-  padding:30px;
+  padding:20px;
   color:white;
 }
 
@@ -20,27 +19,30 @@ body{
   margin:auto;
 }
 
-/* 🔥 FLOATING BOX */
+/* FLOAT BOX */
 .box{
-  background:rgba(255,255,255,0.15);
-  backdrop-filter:blur(20px);
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(15px);
   padding:20px;
   border-radius:15px;
-
-  /* SHADOW = FLOAT EFFECT */
-  box-shadow:0 15px 40px rgba(0,0,0,0.5);
-
-  animation:fadeIn 0.5s ease;
+  margin-bottom:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
 }
 
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(20px);}
-  to{opacity:1;}
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-/* TITLE */
-h2{
-  margin-top:0;
+/* 🔙 BACK BUTTON */
+.back{
+  background:#00c6ff;
+  padding:6px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:13px;
 }
 
 /* TABLE */
@@ -48,15 +50,11 @@ table{
   width:100%;
   border-collapse:collapse;
   margin-top:10px;
-  font-size:13px;
   background:rgba(255,255,255,0.1);
-  border-radius:10px;
-  overflow:hidden;
 }
 
-/* 🔥 GRID LINES */
 th,td{
-  padding:10px;
+  padding:8px;
   text-align:center;
   border:1px solid rgba(255,255,255,0.2);
 }
@@ -65,49 +63,38 @@ th{
   background:rgba(0,0,0,0.4);
 }
 
-/* ROW HOVER */
-tr:hover{
-  background:rgba(255,255,255,0.1);
-}
-
 /* STATUS */
 .pending{color:yellow;}
 .approved{color:#00ffcc;}
-.rejected{color:#ff4d4d;}
+.rejected{color:#ff6b6b;}
 
 /* BUTTON */
 .btn{
-  padding:6px 10px;
+  padding:5px 8px;
   border:none;
   border-radius:6px;
   cursor:pointer;
   margin:2px;
-  color:white;
-  font-size:12px;
-  transition:0.3s;
 }
 
-.approve{
-  background:linear-gradient(45deg,#00c853,#00e676);
-}
-
-.reject{
-  background:linear-gradient(45deg,#ff1744,#ff5252);
-}
-
-.btn:hover{
-  transform:scale(1.1);
-}
+.approve{background:#2ecc71;color:white;}
+.reject{background:#e74c3c;color:white;}
 </style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-<div class="box">
+<!-- HEADER -->
+<div class="box header">
+  <h2>Admin Request Panel</h2>
+  <div class="back" onclick="goBack()">⬅ Back</div>
+</div>
 
-<h2>📋 Employee Requests</h2>
+<!-- TABLE -->
+<div class="box">
 
 <table>
 <thead>
@@ -122,7 +109,6 @@ tr:hover{
 </thead>
 
 <tbody id="reqTable"></tbody>
-
 </table>
 
 </div>
@@ -131,18 +117,18 @@ tr:hover{
 
 <script>
 
+/* LOAD REQUESTS */
 let requests = JSON.parse(localStorage.getItem("requests")) || [];
 
-/* LOAD */
-function load(){
-  let tbody = document.getElementById("reqTable");
-  tbody.innerHTML = "";
+function loadRequests(){
+
+  reqTable.innerHTML="";
 
   requests.forEach((r,i)=>{
 
     let statusClass = r.status.toLowerCase();
 
-    tbody.innerHTML += `
+    reqTable.innerHTML += `
     <tr>
       <td>${r.name}</td>
       <td>${r.type}</td>
@@ -150,28 +136,26 @@ function load(){
       <td>${r.reason}</td>
       <td class="${statusClass}">${r.status}</td>
       <td>
-        <button class="btn approve" onclick="approve(${i})">Approve</button>
-        <button class="btn reject" onclick="reject(${i})">Reject</button>
+        <button class="btn approve" onclick="updateStatus(${i},'Approved')">Approve</button>
+        <button class="btn reject" onclick="updateStatus(${i},'Rejected')">Reject</button>
       </td>
     </tr>`;
   });
+
 }
 
-/* APPROVE */
-function approve(i){
-  requests[i].status = "Approved";
+function updateStatus(i,status){
+  requests[i].status = status;
   localStorage.setItem("requests", JSON.stringify(requests));
-  load();
+  loadRequests();
 }
 
-/* REJECT */
-function reject(i){
-  requests[i].status = "Rejected";
-  localStorage.setItem("requests", JSON.stringify(requests));
-  load();
+/* 🔙 BACK FUNCTION */
+function goBack(){
+  window.location.href = "index.html";
 }
 
-load();
+loadRequests();
 
 </script>
 
