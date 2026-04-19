@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Settings - Employee Login</title>
+
+<style>
+body{
+  font-family:Arial;
+  background:#1e1e2f;
+  color:white;
+  padding:20px;
+}
+
+.box{
+  max-width:500px;
+  margin:auto;
+  background:#2c2c3e;
+  padding:20px;
+  border-radius:10px;
+}
+
+input,select{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border:none;
+  border-radius:6px;
+}
+
+button{
+  margin-top:10px;
+  padding:10px;
+  width:100%;
+  border:none;
+  border-radius:6px;
+  background:#00c6ff;
+  color:white;
+}
+
+table{
+  width:100%;
+  margin-top:15px;
+  border-collapse:collapse;
+}
+
+td,th{
+  border:1px solid #555;
+  padding:8px;
+  text-align:center;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>🔐 Employee Login Settings</h2>
+
+<select id="empSelect"></select>
+
+<input id="username" placeholder="Username">
+<input id="password" placeholder="Password">
+
+<button onclick="saveUser()">Save Account</button>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Username</th>
+</tr>
+</thead>
+<tbody id="userTable"></tbody>
+</table>
+
+</div>
+
+<script>
+
+/* LOAD EMPLOYEES */
+let employees = JSON.parse(localStorage.getItem("employees")) || [];
+
+employees.forEach(e=>{
+  empSelect.innerHTML += `<option>${e.fname} ${e.lname}</option>`;
+});
+
+/* LOAD USERS */
+let users = JSON.parse(localStorage.getItem("users")) || [];
+
+function saveUser(){
+
+  let name = empSelect.value;
+
+  let user = {
+    name:name,
+    username:username.value,
+    password:password.value
+  };
+
+  users.push(user);
+
+  localStorage.setItem("users",JSON.stringify(users));
+
+  loadUsers();
+}
+
+function loadUsers(){
+
+  userTable.innerHTML="";
+
+  users.forEach(u=>{
+    userTable.innerHTML+=`
+    <tr>
+      <td>${u.name}</td>
+      <td>${u.username}</td>
+    </tr>`;
+  });
+}
+
+loadUsers();
+
+</script>
+
+</body>
+</html>
