@@ -12,7 +12,7 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  background:linear-gradient(135deg,#1e0010,#330015,#0f0010);
+  background:linear-gradient(135deg,#1e0033,#3a0066,#001f3f);
 }
 
 /* CONTAINER */
@@ -22,24 +22,19 @@ body{
   display:flex;
   border-radius:20px;
   overflow:hidden;
-
-  /* 🔥 MAROON GLOW */
-  box-shadow:
-    0 0 20px #800000,
-    0 0 40px rgba(128,0,0,0.6),
-    inset 0 0 20px rgba(128,0,0,0.4);
+  box-shadow:0 0 40px rgba(0,255,255,0.2);
 
   animation:float 4s ease-in-out infinite;
 }
 
-/* FLOAT */
+/* FLOAT EFFECT */
 @keyframes float{
   0%{transform:translateY(0);}
   50%{transform:translateY(-10px);}
   100%{transform:translateY(0);}
 }
 
-/* LEFT IMAGE */
+/* LEFT SIDE (IMAGE) */
 .left{
   flex:1;
   position:relative;
@@ -58,29 +53,29 @@ body{
   padding:20px;
 }
 
-/* OVERLAY */
+/* DARK OVERLAY */
 .left::before{
   content:"";
   position:absolute;
   inset:0;
   background:linear-gradient(
     135deg,
-    rgba(128,0,0,0.6),
-    rgba(0,0,0,0.5)
+    rgba(0,0,0,0.6),
+    rgba(0,0,0,0.3)
   );
 }
 
-/* TEXT */
+/* TEXT ABOVE IMAGE */
 .left span{
   position:relative;
   z-index:1;
-  text-shadow:0 0 15px rgba(255,0,80,0.8);
+  text-shadow:0 0 15px rgba(255,255,255,0.8);
 }
 
-/* RIGHT */
+/* RIGHT SIDE */
 .right{
   flex:1;
-  background:rgba(255,255,255,0.05);
+  background:rgba(255,255,255,0.1);
   backdrop-filter:blur(15px);
   padding:30px;
   color:white;
@@ -90,7 +85,6 @@ body{
 .right h2{
   text-align:center;
   margin-bottom:20px;
-  text-shadow:0 0 10px #ff0040;
 }
 
 /* INPUT */
@@ -100,13 +94,9 @@ input,select{
   margin-top:10px;
   border:none;
   border-radius:8px;
-  outline:none;
-
-  background:rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.2);
   color:white;
-
-  /* 🔥 GLOW INPUT */
-  box-shadow:0 0 8px rgba(255,0,80,0.3);
+  outline:none;
 }
 
 input::placeholder{
@@ -120,23 +110,16 @@ button{
   margin-top:15px;
   border:none;
   border-radius:8px;
-
-  background:linear-gradient(45deg,#800000,#ff0040);
+  background:linear-gradient(45deg,#00c6ff,#0072ff);
   color:white;
   font-weight:bold;
   cursor:pointer;
-
   transition:0.3s;
-
-  /* 🔥 BUTTON GLOW */
-  box-shadow:0 0 10px #ff0040;
 }
 
 button:hover{
   transform:scale(1.05);
-  box-shadow:
-    0 0 20px #ff0040,
-    0 0 40px rgba(255,0,80,0.6);
+  box-shadow:0 0 15px #00c6ff;
 }
 
 </style>
@@ -147,12 +130,12 @@ button:hover{
 
 <div class="container">
 
-<!-- LEFT -->
+<!-- LEFT IMAGE -->
 <div class="left">
   <span>HR SYSTEM<br>WELCOME</span>
 </div>
 
-<!-- RIGHT -->
+<!-- RIGHT LOGIN -->
 <div class="right">
 
 <h2>LOGIN</h2>
@@ -179,7 +162,7 @@ function login(){
   let p = document.getElementById("password").value;
   let mode = document.getElementById("mode").value;
 
-  /* ADMIN */
+  /* ADMIN LOGIN */
   if(mode==="admin"){
     if(u==="admin" && p==="1234"){
       localStorage.setItem("loggedIn","true");
@@ -189,7 +172,7 @@ function login(){
     }
   }
 
-  /* EMPLOYEE */
+  /* EMPLOYEE LOGIN */
   if(mode==="employee"){
     let emp = JSON.parse(localStorage.getItem("employees")) || [];
 
