@@ -26,20 +26,10 @@ body{
 
 h2{
   color:white;
-  margin-bottom:10px;
-}
-
-/* SELECT */
-select{
-  width:100%;
-  padding:8px;
-  border-radius:5px;
-  border:none;
-  margin-bottom:5px;
 }
 
 /* INPUT */
-input{
+input,select{
   width:100%;
   padding:10px;
   margin-top:10px;
@@ -74,7 +64,7 @@ button{
   <option value="employee">Employee Login</option>
 </select>
 
-<input id="username" placeholder="Username / Last Name">
+<input id="username" placeholder="Username">
 <input id="password" type="password" placeholder="Password">
 
 <button onclick="login()">Login</button>
@@ -84,52 +74,40 @@ button{
 <script>
 
 function login(){
-function login(){
 
-  let u = document.getElementById("username").value;
-  let p = document.getElementById("password").value;
+  let mode = document.getElementById("mode").value;
+  let u = document.getElementById("username").value.trim();
+  let p = document.getElementById("password").value.trim();
 
   /* 🔥 ADMIN LOGIN */
-  if(u === "admin" && p === "1234"){
-    localStorage.setItem("loggedIn","true");
-    window.location.href = "index.html";
+  if(mode === "admin"){
+
+    if(u === "admin" && p === "1234"){
+      localStorage.setItem("loggedIn","true");
+      window.location.href = "index.html";
+    }else{
+      alert("Invalid admin login");
+    }
+
     return;
   }
 
-  /* 👤 EMPLOYEE LOGIN */
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-
-  let found = users.find(x => x.username === u && x.password === p);
-
-  if(found){
-
-    localStorage.setItem("empSession", JSON.stringify({
-      name: found.name
-    }));
-
-    window.location.href = "employee-portal.html";
-
-  }else{
-    alert("Invalid login");
-  }
-}
-  /* EMPLOYEE LOGIN */
+  /* 👤 EMPLOYEE LOGIN (FROM SETTINGS) */
   if(mode === "employee"){
 
-    let emp = JSON.parse(localStorage.getItem("employees")) || [];
+    let users = JSON.parse(localStorage.getItem("users")) || [];
 
-    let found = emp.find(e =>
-      (e.lname || "").toLowerCase() === user &&
-      pass === "1234"
-    );
+    let found = users.find(x => x.username === u && x.password === p);
 
     if(found){
+
       localStorage.setItem("empSession", JSON.stringify(found));
+
       window.location.href = "employee-portal.html";
+
     }else{
       alert("Invalid employee login");
     }
-
   }
 
 }
