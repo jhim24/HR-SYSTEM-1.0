@@ -63,7 +63,6 @@ body::before{
 .header{
   display:flex;
   justify-content:space-between;
-  align-items:center;
 }
 
 /* TOP ROW */
@@ -111,7 +110,6 @@ body::before{
   box-shadow:0 0 10px #FFD700;
 }
 
-/* 🔥 NEW ANNOUNCE STYLE */
 .announce-item{
   margin-top:10px;
   padding:20px;
@@ -123,7 +121,6 @@ body::before{
   font-weight:bold;
 }
 
-/* ACTION BUTTONS */
 .announce-actions{
   position:absolute;
   top:5px;
@@ -139,14 +136,28 @@ body::before{
   font-size:11px;
 }
 
-.edit-btn{
-  background:#3498db;
-  color:white;
+.edit-btn{background:#3498db;color:white;}
+.delete-btn{background:#e74c3c;color:white;}
+
+/* POPUP */
+#empPopup{
+  display:none;
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.7);
+  justify-content:center;
+  align-items:center;
+  z-index:999;
 }
 
-.delete-btn{
-  background:#e74c3c;
-  color:white;
+.popup-box{
+  background:rgba(255,255,255,0.1);
+  padding:20px;
+  border-radius:15px;
+  backdrop-filter:blur(10px);
+  box-shadow:0 0 20px #00c6ff;
+  width:320px;
 }
 
 /* BADGE */
@@ -155,7 +166,6 @@ body::before{
   padding:2px 6px;
   border-radius:10px;
   font-size:12px;
-  margin-left:5px;
 }
 </style>
 
@@ -211,7 +221,6 @@ if(localStorage.getItem("loggedIn")!=="true"){
 <div id="searchResult"></div>
 </div>
 
-<!-- ANNOUNCE -->
 <div class="announce">
 <h3>📢 Announcements</h3>
 
@@ -223,43 +232,69 @@ if(localStorage.getItem("loggedIn")!=="true"){
 
 </div>
 
+<!-- POPUP -->
+<div id="empPopup">
+<div class="popup-box">
+<h3>Employee Info</h3>
+<div id="empDetails"></div>
+<button onclick="closeEmp()">Close</button>
+</div>
+</div>
+
 <script>
 
+/* NAV */
+function goPage(p){window.location.href=p;}
 function logout(){
   localStorage.removeItem("loggedIn");
   window.location.href="login.html";
 }
 
-function goPage(p){window.location.href=p;}
-
-/* SEARCH */
+/* SEARCH + POPUP */
 function searchEmployee(){
   let keyword = searchEmp.value.toLowerCase();
   let emp = JSON.parse(localStorage.getItem("employees")) || [];
 
-  let result = emp.filter(e =>
-    (e.fname+" "+e.lname).toLowerCase().includes(keyword)
-  );
-
   searchResult.innerHTML="";
 
-  result.forEach(e=>{
-    searchResult.innerHTML+=`
-    <div onclick="showEmp('${e.fname}','${e.lname}')"
-    style="padding:5px;background:#333;margin-top:5px;cursor:pointer;">
-    ${e.fname} ${e.lname}
-    </div>`;
+  emp.forEach(e=>{
+    if((e.fname+" "+e.lname).toLowerCase().includes(keyword)){
+      searchResult.innerHTML+=`
+      <div onclick="showEmp('${e.fname}','${e.lname}')"
+      style="padding:5px;background:#333;margin-top:5px;cursor:pointer;">
+      ${e.fname} ${e.lname}
+      </div>`;
+    }
   });
 }
 
 function showEmp(fname,lname){
   let emp = JSON.parse(localStorage.getItem("employees"))||[];
   let e = emp.find(x=>x.fname===fname && x.lname===lname);
+
   if(!e) return;
-  alert(e.fname + " " + e.lname);
+
+  empDetails.innerHTML=`
+  <p><b>Name:</b> ${e.fname} ${e.lname}</p>
+  <p><b>Position:</b> ${e.position||""}</p>
+  <p><b>ID:</b> ${e.empId||""}</p>
+  <p><b>Birthday:</b> ${e.birthdate||"-"}</p>
+  <p><b>SSS:</b> ${e.sss||"-"}</p>
+  <p><b>PhilHealth:</b> ${e.philhealth||"-"}</p>
+  <p><b>Pag-IBIG:</b> ${e.pagibig||"-"}</p>
+  `;
+
+  empPopup.style.display="flex";
+
+  searchEmp.value="";
+  searchResult.innerHTML="";
 }
 
-/* 🔥 ANNOUNCEMENT SYSTEM */
+function closeEmp(){
+  empPopup.style.display="none";
+}
+
+/* ANNOUNCE */
 let announcements = JSON.parse(localStorage.getItem("announcements"))||[];
 
 function addAnnouncement(){
@@ -267,14 +302,12 @@ function addAnnouncement(){
 
   announcements.push({text:announceInput.value});
   localStorage.setItem("announcements",JSON.stringify(announcements));
-
   announceInput.value="";
   loadAnnouncements();
 }
 
 function loadAnnouncements(){
   announceList.innerHTML="";
-
   announcements.forEach((a,i)=>{
     announceList.innerHTML+=`
     <div class="announce-item">
@@ -288,18 +321,18 @@ function loadAnnouncements(){
 }
 
 function editAnnouncement(i){
-  let newText = prompt("Edit announcement:", announcements[i].text);
-  if(newText){
-    announcements[i].text = newText;
-    localStorage.setItem("announcements", JSON.stringify(announcements));
+  let t = prompt("Edit:",announcements[i].text);
+  if(t){
+    announcements[i].text=t;
+    localStorage.setItem("announcements",JSON.stringify(announcements));
     loadAnnouncements();
   }
 }
 
 function deleteAnnouncement(i){
-  if(confirm("Delete this announcement?")){
+  if(confirm("Delete?")){
     announcements.splice(i,1);
-    localStorage.setItem("announcements", JSON.stringify(announcements));
+    localStorage.setItem("announcements",JSON.stringify(announcements));
     loadAnnouncements();
   }
 }
@@ -316,8 +349,7 @@ function loadBirthday(){
 /* BADGE */
 function loadRequestBadge(){
   let r = JSON.parse(localStorage.getItem("requests"))||[];
-  let p = r.filter(x=>x.status==="Pending").length;
-  reqBadge.innerText = p>0?p:"";
+  reqBadge.innerText = r.filter(x=>x.status==="Pending").length || "";
 }
 
 loadAnnouncements();
