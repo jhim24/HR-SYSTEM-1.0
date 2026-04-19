@@ -4,28 +4,54 @@
 <title>HR System Login</title>
 
 <style>
+*{box-sizing:border-box;font-family:'Segoe UI';}
+
 body{
   margin:0;
-  font-family:Arial;
-  background:linear-gradient(135deg,#00c6ff,#0072ff);
   height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
+  background:linear-gradient(135deg,#1e0033,#3a0066,#001f3f);
 }
 
-/* LOGIN BOX */
-.box{
-  background:rgba(255,255,255,0.2);
-  padding:30px;
-  border-radius:15px;
-  width:280px;
-  text-align:center;
-  backdrop-filter:blur(10px);
+/* MAIN CONTAINER */
+.container{
+  width:750px;
+  height:420px;
+  display:flex;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(0,255,255,0.2);
 }
 
-h2{
+/* LEFT SIDE */
+.left{
+  flex:1;
+  background:linear-gradient(135deg,#7b2ff7,#f107a3);
+  display:flex;
+  justify-content:center;
+  align-items:center;
   color:white;
+  font-size:22px;
+  font-weight:bold;
+  text-align:center;
+  padding:20px;
+}
+
+/* RIGHT SIDE */
+.right{
+  flex:1;
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(15px);
+  padding:30px;
+  color:white;
+}
+
+/* TITLE */
+.right h2{
+  text-align:center;
+  margin-bottom:20px;
 }
 
 /* INPUT */
@@ -34,20 +60,44 @@ input,select{
   padding:10px;
   margin-top:10px;
   border:none;
-  border-radius:5px;
+  border-radius:8px;
+  background:rgba(255,255,255,0.2);
+  color:white;
+  outline:none;
+}
+
+input::placeholder{
+  color:#ddd;
 }
 
 /* BUTTON */
 button{
   width:100%;
   padding:10px;
-  margin-top:10px;
+  margin-top:15px;
   border:none;
-  border-radius:5px;
-  background:#2ecc71;
+  border-radius:8px;
+  background:linear-gradient(45deg,#00c6ff,#0072ff);
   color:white;
-  cursor:pointer;
   font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 15px #00c6ff;
+}
+
+/* FLOAT EFFECT */
+.container{
+  animation:float 4s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
+  100%{transform:translateY(0);}
 }
 </style>
 
@@ -55,19 +105,29 @@ button{
 
 <body>
 
-<div class="box">
+<div class="container">
 
-<h2>HR SYSTEM</h2>
+<!-- LEFT DESIGN -->
+<div class="left">
+HR SYSTEM<br>WELCOME
+</div>
+
+<!-- RIGHT LOGIN -->
+<div class="right">
+
+<h2>LOGIN</h2>
 
 <select id="mode">
   <option value="admin">Admin Login</option>
   <option value="employee">Employee Login</option>
 </select>
 
-<input id="username" placeholder="Username">
+<input id="username" placeholder="Username / Last Name">
 <input id="password" type="password" placeholder="Password">
 
-<button onclick="login()">Login</button>
+<button onclick="login()">LOGIN</button>
+
+</div>
 
 </div>
 
@@ -75,43 +135,38 @@ button{
 
 function login(){
 
+  let u = document.getElementById("username").value.toLowerCase();
+  let p = document.getElementById("password").value;
   let mode = document.getElementById("mode").value;
-  let u = document.getElementById("username").value.trim();
-  let p = document.getElementById("password").value.trim();
 
-  /* 🔥 ADMIN LOGIN */
-  if(mode === "admin"){
-
-    if(u === "admin" && p === "1234"){
+  /* ADMIN */
+  if(mode==="admin"){
+    if(u==="admin" && p==="1234"){
       localStorage.setItem("loggedIn","true");
-      window.location.href = "index.html";
+      window.location.href="index.html";
     }else{
       alert("Invalid admin login");
     }
-
-    return;
   }
 
-  /* 👤 EMPLOYEE LOGIN (FROM SETTINGS) */
-  if(mode === "employee"){
+  /* EMPLOYEE */
+  if(mode==="employee"){
+    let emp = JSON.parse(localStorage.getItem("employees")) || [];
 
-    let users = JSON.parse(localStorage.getItem("users")) || [];
-
-    let found = users.find(x => x.username === u && x.password === p);
+    let found = emp.find(e =>
+      (e.lname || "").toLowerCase() === u &&
+      p === "1234"
+    );
 
     if(found){
-
       localStorage.setItem("empSession", JSON.stringify(found));
-
-      window.location.href = "employee-portal.html";
-
+      window.location.href="employee-portal.html";
     }else{
       alert("Invalid employee login");
     }
   }
 
 }
-
 </script>
 
 </body>
