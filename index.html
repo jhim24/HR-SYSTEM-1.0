@@ -72,6 +72,32 @@ body::before{
   cursor:pointer;
 }
 
+/* 🍉 WELCOME BOX */
+.welcome-box{
+  margin-top:15px;
+  padding:20px;
+  border-radius:15px;
+  background: rgba(238,32,78,0.2);
+  backdrop-filter: blur(10px);
+  border:1px solid #EE204E;
+
+  box-shadow:
+    0 0 10px #EE204E,
+    0 0 20px #EE204E,
+    0 0 40px rgba(238,32,78,0.5);
+
+  animation: glowPulse 2s infinite alternate;
+}
+
+@keyframes glowPulse{
+  from{
+    box-shadow:0 0 5px #EE204E;
+  }
+  to{
+    box-shadow:0 0 25px #EE204E;
+  }
+}
+
 /* ANNOUNCE */
 .announce{
   margin-top:20px;
@@ -134,9 +160,13 @@ if(localStorage.getItem("loggedIn")!=="true"){
 <div class="logout" onclick="logout()">Logout</div>
 </div>
 
-<!-- ❌ CARDS REMOVED (ETO LANG BINAGO) -->
+<!-- 🍉 WELCOME -->
+<div class="welcome-box">
+  <h2>Hi, Welcome 👋</h2>
+  <p>Have a nice day!</p>
+</div>
 
-<!-- ANNOUNCEMENT -->
+<!-- 📢 ANNOUNCEMENT -->
 <div class="announce">
 <h3>📢 Announcements</h3>
 
@@ -193,7 +223,7 @@ function loadAnnouncements(){
   });
 }
 
-/* BIRTHDAY */
+/* 🎂 BIRTHDAY */
 function loadBirthday(){
   let emp = JSON.parse(localStorage.getItem("employees"))||[];
   let today = new Date().toISOString().slice(5,10);
@@ -210,7 +240,7 @@ function loadBirthday(){
   }
 }
 
-/* BADGE */
+/* 🔔 BADGE */
 function loadRequestBadge(){
   let requests = JSON.parse(localStorage.getItem("requests")) || [];
   let pending = requests.filter(r => r.status === "Pending").length;
