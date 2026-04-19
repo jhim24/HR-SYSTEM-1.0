@@ -15,7 +15,7 @@ body{
   background:linear-gradient(135deg,#1e0033,#3a0066,#001f3f);
 }
 
-/* MAIN CONTAINER */
+/* CONTAINER */
 .container{
   width:750px;
   height:420px;
@@ -23,20 +23,53 @@ body{
   border-radius:20px;
   overflow:hidden;
   box-shadow:0 0 40px rgba(0,255,255,0.2);
+
+  animation:float 4s ease-in-out infinite;
 }
 
-/* LEFT SIDE */
+/* FLOAT EFFECT */
+@keyframes float{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
+  100%{transform:translateY(0);}
+}
+
+/* LEFT SIDE (IMAGE) */
 .left{
   flex:1;
-  background:linear-gradient(135deg,#7b2ff7,#f107a3);
+  position:relative;
+
+  background:url('hr-bg.jpg') no-repeat center center;
+  background-size:cover;
+
   display:flex;
   justify-content:center;
   align-items:center;
+
   color:white;
   font-size:22px;
   font-weight:bold;
   text-align:center;
   padding:20px;
+}
+
+/* DARK OVERLAY */
+.left::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    135deg,
+    rgba(0,0,0,0.6),
+    rgba(0,0,0,0.3)
+  );
+}
+
+/* TEXT ABOVE IMAGE */
+.left span{
+  position:relative;
+  z-index:1;
+  text-shadow:0 0 15px rgba(255,255,255,0.8);
 }
 
 /* RIGHT SIDE */
@@ -89,16 +122,6 @@ button:hover{
   box-shadow:0 0 15px #00c6ff;
 }
 
-/* FLOAT EFFECT */
-.container{
-  animation:float 4s ease-in-out infinite;
-}
-
-@keyframes float{
-  0%{transform:translateY(0);}
-  50%{transform:translateY(-10px);}
-  100%{transform:translateY(0);}
-}
 </style>
 
 </head>
@@ -107,9 +130,9 @@ button:hover{
 
 <div class="container">
 
-<!-- LEFT DESIGN -->
+<!-- LEFT IMAGE -->
 <div class="left">
-HR SYSTEM<br>WELCOME
+  <span>HR SYSTEM<br>WELCOME</span>
 </div>
 
 <!-- RIGHT LOGIN -->
@@ -139,7 +162,7 @@ function login(){
   let p = document.getElementById("password").value;
   let mode = document.getElementById("mode").value;
 
-  /* ADMIN */
+  /* ADMIN LOGIN */
   if(mode==="admin"){
     if(u==="admin" && p==="1234"){
       localStorage.setItem("loggedIn","true");
@@ -149,7 +172,7 @@ function login(){
     }
   }
 
-  /* EMPLOYEE */
+  /* EMPLOYEE LOGIN */
   if(mode==="employee"){
     let emp = JSON.parse(localStorage.getItem("employees")) || [];
 
@@ -167,6 +190,7 @@ function login(){
   }
 
 }
+
 </script>
 
 </body>
