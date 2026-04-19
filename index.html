@@ -194,7 +194,7 @@ padding:20px;
 border-radius:15px;
 backdrop-filter:blur(10px);
 box-shadow:0 0 20px #00c6ff;
-width:300px;
+width:320px;
 ">
 <h3>Employee Info</h3>
 <div id="empDetails"></div>
@@ -233,7 +233,7 @@ function searchEmployee(){
   });
 }
 
-/* 👤 SHOW + CLEAR SEARCH */
+/* 👤 SHOW + FULL INFO */
 function showEmp(fname,lname){
 
   let emp = JSON.parse(localStorage.getItem("employees"))||[];
@@ -242,16 +242,21 @@ function showEmp(fname,lname){
   if(!e) return;
 
   empDetails.innerHTML=`
-  Name: ${e.fname} ${e.lname}<br>
-  Position: ${e.position||""}<br>
-  ID: ${e.empId||""}
+  <p><b>Name:</b> ${e.fname} ${e.lname}</p>
+  <p><b>Position:</b> ${e.position||""}</p>
+  <p><b>Employee ID:</b> ${e.empId||""}</p>
+
+  <p><b>Birthday:</b> ${e.birthdate || "-"}</p>
+  <p><b>SSS:</b> ${e.sss || "-"}</p>
+  <p><b>PhilHealth:</b> ${e.philhealth || "-"}</p>
+  <p><b>Pag-IBIG:</b> ${e.pagibig || "-"}</p>
   `;
 
   empPopup.style.display="flex";
 
-  /* 🔥 CLEAR SEARCH */
-  document.getElementById("searchEmp").value="";
-  document.getElementById("searchResult").innerHTML="";
+  /* CLEAR SEARCH */
+  searchEmp.value="";
+  searchResult.innerHTML="";
 }
 
 function closeEmp(){
@@ -284,7 +289,7 @@ function loadBirthday(){
 
   let b = emp.filter(e=>e.birthdate && e.birthdate.slice(5,10)===today);
 
-  bdayList.innerHTML = b.length ? b.map(e=>e.fname).join("<br>") : "No birthday";
+  bdayList.innerHTML = b.length ? b.map(e=>e.fname+" "+e.lname).join("<br>") : "No birthday";
 }
 
 /* 🔔 BADGE */
