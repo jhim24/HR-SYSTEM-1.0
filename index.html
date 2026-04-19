@@ -30,8 +30,11 @@ body::before{
   padding:20px;
   display:flex;
   flex-direction:column;
-}
 
+  /* 🔥 ADD GLOW */
+  box-shadow: 0 0 15px rgba(255,0,80,0.4);
+  border-right:1px solid rgba(255,0,80,0.3);
+}
 .menu{list-style:none;padding:0;}
 .menu li{
   padding:10px;
@@ -40,6 +43,13 @@ body::before{
 }
 .menu li:hover{
   background:rgba(255,255,255,0.2);
+
+  /* 🔥 GLOW EFFECT */
+  box-shadow:
+    0 0 10px rgba(255,0,80,0.5),
+    inset 0 0 5px rgba(255,0,80,0.3);
+
+  transform:translateX(5px);
 }
 
 /* LOGOUT */
