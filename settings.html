@@ -11,35 +11,43 @@ body{
   padding:20px;
 }
 
+/* BOX */
 .box{
   max-width:500px;
   margin:auto;
   background:#2c2c3e;
-  padding:20px;
-  border-radius:10px;
+  padding:25px;
+  border-radius:12px;
 }
 
-input,select{
+/* INPUT + SELECT (SAME SIZE) */
+input, select{
   width:100%;
   padding:10px;
   margin-top:10px;
   border:none;
   border-radius:6px;
+  font-size:14px;
 }
 
+/* BUTTON (SMALL) */
 button{
-  margin-top:10px;
-  padding:10px;
-  width:100%;
+  margin-top:15px;
+  padding:8px 20px;
   border:none;
   border-radius:6px;
   background:#00c6ff;
   color:white;
+  cursor:pointer;
+  font-weight:bold;
+  display:block;
+  margin-left:auto; /* align right */
 }
 
+/* TABLE */
 table{
   width:100%;
-  margin-top:15px;
+  margin-top:20px;
   border-collapse:collapse;
 }
 
@@ -63,7 +71,7 @@ td,th{
 <input id="username" placeholder="Username">
 <input id="password" placeholder="Password">
 
-<button onclick="saveUser()">Save Account</button>
+<button onclick="saveUser()">Save</button>
 
 <table>
 <thead>
@@ -102,6 +110,9 @@ function saveUser(){
   users.push(user);
 
   localStorage.setItem("users",JSON.stringify(users));
+
+  username.value="";
+  password.value="";
 
   loadUsers();
 }
