@@ -26,10 +26,26 @@ body::before{
 /* SIDEBAR */
 .sidebar{
   width:220px;
-  background:rgba(0,0,0,0.7);
   padding:20px;
   display:flex;
   flex-direction:column;
+
+  /* 🔥 NEW BACKGROUND */
+  background: linear-gradient(
+    180deg,
+    rgba(20,20,40,0.9),
+    rgba(60,0,30,0.9)
+  );
+
+  backdrop-filter: blur(10px);
+
+  /* GLOW EDGE */
+  box-shadow:
+    0 0 20px rgba(255,0,80,0.4),
+    inset 0 0 10px rgba(255,0,80,0.2);
+
+  border-right:1px solid rgba(255,0,80,0.3);
+}
 
   /* 🔥 ADD GLOW */
   box-shadow: 0 0 15px rgba(255,0,80,0.4);
