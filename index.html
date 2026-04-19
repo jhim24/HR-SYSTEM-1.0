@@ -233,18 +233,25 @@ function searchEmployee(){
   });
 }
 
-/* SHOW */
+/* 👤 SHOW + CLEAR SEARCH */
 function showEmp(fname,lname){
+
   let emp = JSON.parse(localStorage.getItem("employees"))||[];
   let e = emp.find(x=>x.fname===fname && x.lname===lname);
 
+  if(!e) return;
+
   empDetails.innerHTML=`
   Name: ${e.fname} ${e.lname}<br>
-  Position: ${e.position}<br>
-  ID: ${e.empId}
+  Position: ${e.position||""}<br>
+  ID: ${e.empId||""}
   `;
 
   empPopup.style.display="flex";
+
+  /* 🔥 CLEAR SEARCH */
+  document.getElementById("searchEmp").value="";
+  document.getElementById("searchResult").innerHTML="";
 }
 
 function closeEmp(){
@@ -255,8 +262,11 @@ function closeEmp(){
 let announcements = JSON.parse(localStorage.getItem("announcements"))||[];
 
 function addAnnouncement(){
+  if(!announceInput.value) return;
+
   announcements.push({text:announceInput.value});
   localStorage.setItem("announcements",JSON.stringify(announcements));
+  announceInput.value="";
   loadAnnouncements();
 }
 
@@ -267,7 +277,7 @@ function loadAnnouncements(){
   });
 }
 
-/* BIRTHDAY */
+/* 🎂 BIRTHDAY */
 function loadBirthday(){
   let emp = JSON.parse(localStorage.getItem("employees"))||[];
   let today = new Date().toISOString().slice(5,10);
@@ -277,7 +287,7 @@ function loadBirthday(){
   bdayList.innerHTML = b.length ? b.map(e=>e.fname).join("<br>") : "No birthday";
 }
 
-/* BADGE */
+/* 🔔 BADGE */
 function loadRequestBadge(){
   let r = JSON.parse(localStorage.getItem("requests"))||[];
   let p = r.filter(x=>x.status==="Pending").length;
