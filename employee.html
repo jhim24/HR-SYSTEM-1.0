@@ -240,7 +240,7 @@ if(localStorage.getItem("loggedIn") !== "true") {
     </select>
 
     <input id="bankAcc" placeholder="Bank Account">
-    <input id="empId" placeholder="Employee ID">
+    <input id="empid" placeholder="Employee ID">
 
     <select id="govId">
       <option>Government ID</option>
@@ -314,7 +314,7 @@ function calcAge() {
 }
 
 function addEmployee() {
-  let idVal = empId.value || "EMP-" + Date.now();
+ let idVal = empid.value || "EMP-" + Date.now();
 
   let emp = {
     fname: fname.value,
@@ -325,7 +325,7 @@ function addEmployee() {
     address: address.value,
     bank: bank.value,
     account: bankAcc.value,
-    empId: idVal,
+    empid: idVal,
     govId: govId.value,
     sss: sss.value,
     philhealth: philhealth.value,
@@ -356,7 +356,7 @@ function editEmp(i){
   address.value = e.address;
   bank.value = e.bank;
   bankAcc.value = e.account;
-  empId.value = e.empId;
+  empid.value = e.empid;
   govId.value = e.govId;
   sss.value = e.sss;
   philhealth.value = e.philhealth;
@@ -403,7 +403,7 @@ function renderTable(){
       <td>${e.address}</td>
       <td>${e.bank}</td>
       <td>${e.account}</td>
-      <td>${e.empId}</td>
+      <td>${e.empid}</td>
       <td>${e.govId}</td>
       <td>${e.sss}</td>
       <td>${e.philhealth}</td>
