@@ -1,425 +1,434 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Employee Masterlist</title>
+<title>Employee Masterlist</title>
 
 <style>
-* {
-  box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
+
+*{
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
 }
 
-body {
-  margin: 0;
-  background: url('bg.jpg') no-repeat center center fixed;
-  background-size: cover;
-  color: white;
+body{
+  margin:0;
+  background:url('bg.jpg') no-repeat center center fixed;
+  background-size:cover;
+  color:white;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: -1;
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  z-index:-1;
 }
 
 /* WRAPPER */
-.wrapper {
-  display: flex;
-  height: 100vh;
+
+.wrapper{
+  display:flex;
+  height:100vh;
 }
 
 /* SIDEBAR */
-.sidebar {
-  width: 240px;
-  background: rgba(0,0,0,0.6);
-  padding: 20px;
+
+.sidebar{
+  width:240px;
+  background:rgba(0,0,0,0.6);
+  padding:20px;
 }
 
-.sidebar h3 {
-  margin-bottom: 20px;
+.sidebar h3{
+  margin-bottom:20px;
 }
 
-.menu {
-  list-style: none;
-  padding: 0;
+.menu{
+  list-style:none;
+  padding:0;
 }
 
-.menu li {
-  padding: 10px;
-  margin-bottom: 8px;
-  border-radius: 6px;
-  cursor: pointer;
+.menu li{
+  padding:10px;
+  margin-bottom:8px;
+  border-radius:6px;
+  cursor:pointer;
 }
 
-.menu li:hover {
-  background: rgba(255,255,255,0.2);
+.menu li:hover{
+  background:rgba(255,255,255,0.2);
 }
 
 /* MAIN */
-.main {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
+
+.main{
+  flex:1;
+  padding:20px;
+  overflow-y:auto;
 }
 
 /* FORM */
-.form-box {
-  background: rgba(255,255,255,0.1);
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 20px;
 
-  box-shadow: 0 0 15px rgba(255,0,80,0.2);
+.form-box{
+  background:rgba(255,255,255,0.1);
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:20px;
+  box-shadow:0 0 15px rgba(255,0,80,0.2);
 }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
-  gap: 8px;
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:8px;
 }
 
-/* 🔥 MAROON INPUT */
-input, select {
-  padding: 6px;
-  border-radius: 6px;
-  border: none;
-  font-size: 12px;
+/* INPUT */
 
-  background: rgba(128,0,32,0.7);
-  color: white;
+input,select{
+  padding:8px;
+  border-radius:6px;
+  border:none;
+  font-size:12px;
 
-  box-shadow: 0 0 6px rgba(255,0,80,0.4);
-  transition: 0.3s;
+  background:rgba(128,0,32,0.7);
+  color:white;
+
+  box-shadow:0 0 6px rgba(255,0,80,0.4);
 }
 
-input::placeholder {
-  color: #ffd6e0;
+input::placeholder{
+  color:#ffd6e0;
 }
 
-input:focus, select:focus {
-  outline: none;
-  background: rgba(128,0,32,0.9);
+input:focus,
+select:focus{
+  outline:none;
+
+  background:rgba(128,0,32,0.9);
 
   box-shadow:
-    0 0 10px #ff3366,
-    0 0 20px rgba(255,0,80,0.6);
+  0 0 10px #ff3366,
+  0 0 20px rgba(255,0,80,0.6);
 }
 
 /* BUTTON */
-.add-btn {
-  margin-top: 10px;
-  padding: 8px;
-  background: #2ecc71;
-  border: none;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
+
+.add-btn{
+  margin-top:10px;
+  padding:10px;
+  background:#2ecc71;
+  border:none;
+  color:white;
+  border-radius:6px;
+  cursor:pointer;
 }
 
-/* TABLE BOX */
-.table-box {
-  background: #eaf4ff;
-  padding: 10px;
-  border-radius: 12px;
-  overflow: auto;
+.btn{
+  padding:5px 10px;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+}
+
+.delete{
+  background:#e74c3c;
+  color:white;
 }
 
 /* TABLE */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-  min-width: 1400px;
-  color: #2c3e50;
+
+.table-box{
+  background:#eaf4ff;
+  padding:10px;
+  border-radius:12px;
+  overflow:auto;
 }
 
-/* 🔥 GLOW GRID */
-th, td {
-  padding: 6px;
-  border: 1px solid rgba(0,150,255,0.3);
-
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  box-shadow: inset 0 0 5px rgba(0,150,255,0.2);
+table{
+  width:100%;
+  min-width:1400px;
+  border-collapse:collapse;
+  font-size:12px;
+  color:#2c3e50;
 }
 
-th {
-  background: #cfe4ff;
-  box-shadow: 0 0 8px rgba(0,150,255,0.4);
+th,td{
+  padding:6px;
+  border:1px solid rgba(0,150,255,0.3);
+
+  text-align:left;
+  white-space:nowrap;
+
+  box-shadow:
+  inset 0 0 5px rgba(0,150,255,0.2);
 }
 
-tr:hover {
-  background: rgba(0,150,255,0.1);
-  box-shadow: 0 0 10px rgba(0,150,255,0.3);
-}
-
-/* BUTTON */
-.btn {
-  padding: 3px 6px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.delete {
-  background: #e74c3c;
-  color: white;
-}
-
-/* LOGOUT */
-.logout {
-  margin-top: 20px;
-  background: #e74c3c;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
-  cursor: pointer;
+th{
+  background:#cfe4ff;
 }
 
 /* SEARCH */
-.search-box {
-  margin-bottom: 10px;
+
+.search-box{
+  margin-bottom:10px;
 }
+
+/* LOGOUT */
+
+.logout{
+  margin-top:20px;
+  background:#e74c3c;
+  padding:10px;
+  border-radius:8px;
+  text-align:center;
+  cursor:pointer;
+}
+
 </style>
 
 <script>
-if(localStorage.getItem("loggedIn") !== "true") {
+
+if(localStorage.getItem("loggedIn") !== "true"){
+
   window.location.href = "login.html";
+
 }
+
 </script>
 
 </head>
+
 <body>
 
 <div class="wrapper">
 
 <!-- SIDEBAR -->
+
 <div class="sidebar">
-  <h3>HR System</h3>
 
-  <ul class="menu">
-    <li onclick="goPage('index.html')">🏠 Dashboard</li>
-    <li onclick="goPage('employee.html')">👨‍💼 Employees</li>
-    <li onclick="goPage('attendance.html')">🕒 Attendance</li>
-    <li onclick="goPage('payroll.html')">💰 Payroll</li>
-    <li onclick="goPage('payslip.html')">🧾 Payslips</li>
-    <li onclick="goPage('payroll-history.html')">📄 History</li>
-  </ul>
+<h3>HR System</h3>
 
-  <div class="logout" onclick="logout()">Logout</div>
+<ul class="menu">
+
+<li onclick="goPage('index.html')">
+🏠 Dashboard
+</li>
+
+<li onclick="goPage('employee.html')">
+👨‍💼 Employees
+</li>
+
+<li onclick="goPage('attendance.html')">
+🕒 Attendance
+</li>
+
+<li onclick="goPage('payroll.html')">
+💰 Payroll
+</li>
+
+<li onclick="goPage('payslip.html')">
+🧾 Payslips
+</li>
+
+<li onclick="goPage('payroll-history.html')">
+📄 History
+</li>
+
+</ul>
+
+<div class="logout" onclick="logout()">
+
+Logout
+
+</div>
+
 </div>
 
 <!-- MAIN -->
+
 <div class="main">
 
 <h2>Employee Masterlist</h2>
 
+<!-- FORM -->
+
 <div class="form-box">
-  <div class="form-grid">
 
-    <input id="fname" placeholder="First Name">
-    <input id="mname" placeholder="Middle Name">
-    <input id="lname" placeholder="Last Name">
+<div class="form-grid">
 
-    <input type="date" id="birthdate" onchange="calcAge()">
-    <input id="age" placeholder="Age" readonly>
+<input id="fname" placeholder="First Name">
 
-    <input id="address" placeholder="Address">
+<input id="mname" placeholder="Middle Name">
 
-    <select id="bank">
-      <option>Bank Name</option>
-      <option>BPI</option>
-      <option>BDO</option>
-      <option>Metrobank</option>
-      <option>Landbank</option>
-    </select>
+<input id="lname" placeholder="Last Name">
 
-    <input id="bankAcc" placeholder="Bank Account">
-    <input id="empid" placeholder="Employee ID">
+<input type="date"
+id="birthdate"
+onchange="calcAge()">
 
-    <select id="govId">
-      <option>Government ID</option>
-      <option>Passport</option>
-      <option>Driver License</option>
-      <option>National ID</option>
-    </select>
+<input id="age"
+placeholder="Age"
+readonly>
 
-    <input id="sss" placeholder="SSS">
-    <input id="philhealth" placeholder="PhilHealth">
-    <input id="pagibig" placeholder="Pag-IBIG">
-    <input id="healthcard" placeholder="Health Card">
+<input id="address"
+placeholder="Address">
 
-    <select id="position">
-      <option>Position</option>
-      <option>Admin</option>
-      <option>Cashier</option>
-      <option>Waiter</option>
-      <option>Waitress</option>
-      <option>Manager</option>
-      <option>Supervisor</option>
-    </select>
+<select id="bank">
 
-  </div>
+<option>Bank Name</option>
 
-  <button class="add-btn" onclick="addEmployee()">Save / Update</button>
+<option>BPI</option>
+<option>BDO</option>
+<option>Metrobank</option>
+<option>Landbank</option>
+
+</select>
+
+<input id="bankAcc"
+placeholder="Bank Account">
+
+<input id="empid"
+placeholder="Employee ID">
+
+<select id="govId">
+
+<option>Government ID</option>
+
+<option>Passport</option>
+<option>Driver License</option>
+<option>National ID</option>
+
+</select>
+
+<input id="sss"
+placeholder="SSS">
+
+<input id="philhealth"
+placeholder="PhilHealth">
+
+<input id="pagibig"
+placeholder="Pag-IBIG">
+
+<input id="healthcard"
+placeholder="Health Card">
+
+<select id="position">
+
+<option>Position</option>
+
+<option>Admin</option>
+<option>Cashier</option>
+<option>Waiter</option>
+<option>Waitress</option>
+<option>Manager</option>
+<option>Supervisor</option>
+
+</select>
+
 </div>
+
+<button class="add-btn"
+onclick="addEmployee()">
+
+Save Employee
+
+</button>
+
+</div>
+
+<!-- SEARCH -->
 
 <div class="search-box">
-  <input type="text" id="search" placeholder="🔍 Search..." onkeyup="searchEmp()">
-  <span id="total"></span>
+
+<input type="text"
+id="search"
+placeholder="🔍 Search..."
+onkeyup="searchEmp()">
+
+<span id="total"></span>
+
 </div>
+
+<!-- TABLE -->
 
 <div class="table-box">
-  <table id="empTable">
-    <thead>
-      <tr>
-        <th>First</th>
-        <th>Middle</th>
-        <th>Last</th>
-        <th>Birthdate</th>
-        <th>Age</th>
-        <th>Address</th>
-        <th>Bank</th>
-        <th>Account</th>
-        <th>Emp ID</th>
-        <th>Gov ID</th>
-        <th>SSS</th>
-        <th>PhilHealth</th>
-        <th>Pag-IBIG</th>
-        <th>Health Card</th>
-        <th>Position</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+
+<table id="empTable">
+
+<thead>
+
+<tr>
+
+<th>First</th>
+<th>Middle</th>
+<th>Last</th>
+<th>Birthdate</th>
+<th>Age</th>
+<th>Address</th>
+<th>Bank</th>
+<th>Account</th>
+<th>Emp ID</th>
+<th>Gov ID</th>
+<th>SSS</th>
+<th>PhilHealth</th>
+<th>Pag-IBIG</th>
+<th>Health Card</th>
+<th>Position</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+</div>
+
 </div>
 
 </div>
-</div>
 
-<script>
+<!-- FIREBASE -->
 
-function editEmp(i){
-  let e = employees[i];
-  fname.value = e.fname;
-  mname.value = e.mname;
-  lname.value = e.lname;
-  birthdate.value = e.birthdate;
-  age.value = e.age;
-  address.value = e.address;
-  bank.value = e.bank;
-  bankAcc.value = e.account;
-  empid.value = e.empid;
-  govId.value = e.govId;
-  sss.value = e.sss;
-  philhealth.value = e.philhealth;
-  pagibig.value = e.pagibig;
-  healthcard.value = e.healthcard;
-  position.value = e.position;
-
-  editIndex = i;
-}
-
-function deleteEmp(i){
-  if(confirm("Delete this employee?")){
-    employees.splice(i,1);
-    localStorage.setItem("employees", JSON.stringify(employees));
-    renderTable();
-  }
-}
-
-function searchEmp(){
-  let val = search.value.toLowerCase();
-  document.querySelectorAll("#empTable tbody tr").forEach(row=>{
-    row.style.display = row.innerText.toLowerCase().includes(val) ? "" : "none";
-  });
-}
-
-function clearForm(){
-  document.querySelectorAll("input, select").forEach(el=>{
-    if(el.type !== "button") el.value = "";
-  });
-}
-
-function renderTable(){
-  let tbody = document.querySelector("#empTable tbody");
-  tbody.innerHTML = "";
-
-  employees.forEach((e,i)=>{
-    tbody.innerHTML += `
-    <tr>
-      <td>${e.fname}</td>
-      <td>${e.mname}</td>
-      <td>${e.lname}</td>
-      <td>${e.birthdate}</td>
-      <td>${e.age}</td>
-      <td>${e.address}</td>
-      <td>${e.bank}</td>
-      <td>${e.account}</td>
-      <td>${e.empid}</td>
-      <td>${e.govId}</td>
-      <td>${e.sss}</td>
-      <td>${e.philhealth}</td>
-      <td>${e.pagibig}</td>
-      <td>${e.healthcard}</td>
-      <td>${e.position}</td>
-      <td>
-        <button class="btn" onclick="editEmp(${i})">Edit</button>
-        <button class="btn delete" onclick="deleteEmp(${i})">Delete</button>
-      </td>
-    </tr>`;
-  });
-
-  total.innerText = "Total: " + employees.length;
-}
-
-function goPage(p){ window.location.href = p; }
-
-function logout(){
-  localStorage.removeItem("loggedIn");
-  window.location.href = "login.html";
-}
-
-renderTable();
-</script>
 <script type="module">
 
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
+
 getFirestore,
 collection,
 addDoc,
 getDocs,
 deleteDoc,
 doc
+
 }
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* FIREBASE CONFIG */
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyClEtSTjrvf52exf2Qtdzb2MMLLlSfwhVg",
+apiKey: "AIzaSyClEtSTjrvf52exf2Qtdzb2MMLLlSfwhVg",
 
-  authDomain: "pappritohr.firebaseapp.com",
+authDomain: "pappritohr.firebaseapp.com",
 
-  projectId: "pappritohr",
+projectId: "pappritohr",
 
-  storageBucket: "pappritohr.firebasestorage.app",
+storageBucket: "pappritohr.firebasestorage.app",
 
-  messagingSenderId: "559428820611",
+messagingSenderId: "559428820611",
 
-  appId: "1:559428820611:web:09344b59fe1b21a5e2c5b6",
+appId: "1:559428820611:web:09344b59fe1b21a5e2c5b6",
 
-  measurementId: "G-1CEQ4P5XW8"
+measurementId: "G-1CEQ4P5XW8"
 
 };
 
@@ -431,9 +440,28 @@ initializeApp(firebaseConfig);
 const db =
 getFirestore(app);
 
-/* =====================================
+/* ======================================
+   AGE
+====================================== */
+
+window.calcAge = function(){
+
+  let birth =
+  new Date(birthdate.value);
+
+  let today =
+  new Date();
+
+  let years =
+  today.getFullYear() -
+  birth.getFullYear();
+
+  age.value = years;
+}
+
+/* ======================================
    ADD EMPLOYEE
-===================================== */
+====================================== */
 
 window.addEmployee = async function(){
 
@@ -442,8 +470,11 @@ window.addEmployee = async function(){
     fname: fname.value,
     mname: mname.value,
     lname: lname.value,
+
     birthdate: birthdate.value,
+
     age: age.value,
+
     address: address.value,
 
     bank: bank.value,
@@ -478,9 +509,9 @@ window.addEmployee = async function(){
   loadEmployees();
 }
 
-/* =====================================
+/* ======================================
    LOAD EMPLOYEES
-===================================== */
+====================================== */
 
 window.loadEmployees = async function(){
 
@@ -494,7 +525,11 @@ window.loadEmployees = async function(){
     collection(db,"employees")
   );
 
+  let count = 0;
+
   querySnapshot.forEach((d)=>{
+
+    count++;
 
     let e = d.data();
 
@@ -503,24 +538,40 @@ window.loadEmployees = async function(){
     <tr>
 
       <td>${e.fname || ''}</td>
+
       <td>${e.mname || ''}</td>
+
       <td>${e.lname || ''}</td>
+
       <td>${e.birthdate || ''}</td>
+
       <td>${e.age || ''}</td>
+
       <td>${e.address || ''}</td>
+
       <td>${e.bank || ''}</td>
+
       <td>${e.account || ''}</td>
+
       <td>${e.empid || ''}</td>
+
       <td>${e.govId || ''}</td>
+
       <td>${e.sss || ''}</td>
+
       <td>${e.philhealth || ''}</td>
+
       <td>${e.pagibig || ''}</td>
+
       <td>${e.healthcard || ''}</td>
+
       <td>${e.position || ''}</td>
 
       <td>
 
-      <button onclick="deleteEmployee('${d.id}')">
+      <button class="btn delete"
+
+      onclick="deleteEmployee('${d.id}')">
 
       Delete
 
@@ -531,18 +582,22 @@ window.loadEmployees = async function(){
     </tr>
 
     `;
-
   });
 
+  total.innerHTML =
+  "Total : " + count;
 }
 
-/* =====================================
+/* ======================================
    DELETE
-===================================== */
+====================================== */
 
 window.deleteEmployee = async function(id){
 
-  if(!confirm("Delete employee?")){
+  let confirmDelete =
+  confirm("Delete Employee?");
+
+  if(!confirmDelete){
     return;
   }
 
@@ -553,12 +608,80 @@ window.deleteEmployee = async function(id){
   loadEmployees();
 }
 
-/* =====================================
+/* ======================================
+   SEARCH
+====================================== */
+
+window.searchEmp = function(){
+
+  let val =
+  search.value.toLowerCase();
+
+  document
+  .querySelectorAll("#empTable tbody tr")
+
+  .forEach(row=>{
+
+    row.style.display =
+    row.innerText
+    .toLowerCase()
+    .includes(val)
+
+    ? ""
+
+    : "none";
+
+  });
+}
+
+/* ======================================
+   CLEAR FORM
+====================================== */
+
+window.clearForm = function(){
+
+  document
+  .querySelectorAll("input, select")
+
+  .forEach(el=>{
+
+    if(el.type !== "button"){
+
+      el.value = "";
+
+    }
+
+  });
+}
+
+/* ======================================
+   PAGE
+====================================== */
+
+window.goPage = function(p){
+
+  window.location.href = p;
+}
+
+/* ======================================
+   LOGOUT
+====================================== */
+
+window.logout = function(){
+
+  localStorage.removeItem("loggedIn");
+
+  window.location.href =
+  "login.html";
+}
+
+/* ======================================
    START
-===================================== */
+====================================== */
 
 loadEmployees();
 
 </script>
+
 </body>
 </html>
