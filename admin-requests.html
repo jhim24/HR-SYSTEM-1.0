@@ -4,10 +4,14 @@
 
 <title>Admin Requests</title>
 
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <!-- FONT AWESOME -->
 
 <link rel="stylesheet"
-
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
@@ -19,28 +23,44 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 body{
   margin:0;
-  background:linear-gradient(135deg,#1e3c72,#2a5298);
+  background:
+  linear-gradient(
+    135deg,
+    #7b0000,
+    #c1121f,
+    #ffb703
+  );
+
   padding:20px;
+
   color:white;
+
   min-height:100vh;
 }
 
 /* CONTAINER */
 
 .container{
-  max-width:1100px;
+  max-width:1300px;
   margin:auto;
 }
 
-/* FLOAT BOX */
+/* BOX */
 
 .box{
-  background:rgba(255,255,255,0.1);
+  background:
+  rgba(255,255,255,0.1);
+
   backdrop-filter:blur(15px);
+
   padding:20px;
-  border-radius:15px;
+
+  border-radius:20px;
+
   margin-bottom:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,0.3);
 }
 
 /* HEADER */
@@ -58,55 +78,109 @@ body{
 .title{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:12px;
 }
 
-/* BACK BUTTON */
+/* NOTIFICATION */
+
+.notify{
+  background:#ff0000;
+  color:white;
+  font-size:12px;
+  padding:6px 10px;
+  border-radius:30px;
+  font-weight:bold;
+
+  animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+
+  0%{
+    transform:scale(1);
+  }
+
+  50%{
+    transform:scale(1.1);
+  }
+
+  100%{
+    transform:scale(1);
+  }
+
+}
+
+/* BACK */
 
 .back{
   background:#00c6ff;
+
   padding:10px 16px;
-  border-radius:8px;
+
+  border-radius:10px;
+
   cursor:pointer;
-  font-size:14px;
+
   font-weight:bold;
-  transition:0.2s;
+
+  transition:0.3s;
 }
 
 .back:hover{
   transform:scale(1.05);
-  background:#00a8e8;
 }
 
-/* TABLE WRAPPER */
+/* SEARCH */
 
-.table-wrap{
-  overflow-x:auto;
+.search-box{
+  display:grid;
+
+  grid-template-columns:
+  repeat(auto-fit,minmax(220px,1fr));
+
+  gap:12px;
+}
+
+/* INPUT */
+
+input,
+select{
+
+  width:100%;
+
+  padding:12px;
+
+  border:none;
+
+  border-radius:12px;
+
+  outline:none;
+
+  font-size:14px;
 }
 
 /* TABLE */
 
+.table-wrap{
+  overflow:auto;
+}
+
 table{
   width:100%;
-  min-width:900px;
+  min-width:1100px;
   border-collapse:collapse;
   margin-top:10px;
-  background:rgba(255,255,255,0.08);
 }
 
 th,td{
-  padding:10px;
+  padding:12px;
   text-align:center;
-  border:1px solid rgba(255,255,255,0.2);
+  border:1px solid rgba(255,255,255,0.15);
 }
 
 th{
-  background:rgba(0,0,0,0.4);
-  font-size:14px;
-}
-
-td{
-  font-size:13px;
+  background:
+  rgba(0,0,0,0.4);
 }
 
 /* STATUS */
@@ -129,13 +203,19 @@ td{
 /* BUTTON */
 
 .btn{
-  padding:6px 10px;
   border:none;
-  border-radius:6px;
-  cursor:pointer;
-  margin:2px;
+
+  padding:8px 12px;
+
+  border-radius:10px;
+
   color:white;
-  transition:0.2s;
+
+  cursor:pointer;
+
+  margin:2px;
+
+  transition:0.3s;
 }
 
 .btn:hover{
@@ -143,23 +223,71 @@ td{
 }
 
 .approve{
-  background:#2ecc71;
+  background:#00c853;
 }
 
 .reject{
-  background:#e74c3c;
+  background:#ff1744;
 }
 
 .delete{
-  background:#555;
+  background:#455a64;
 }
 
 /* EMPTY */
 
 .empty{
   text-align:center;
-  padding:20px;
+  padding:30px;
   opacity:0.8;
+}
+
+/* STATS */
+
+.stats{
+  display:grid;
+
+  grid-template-columns:
+  repeat(auto-fit,minmax(220px,1fr));
+
+  gap:15px;
+
+  margin-bottom:20px;
+}
+
+.card{
+  background:
+  rgba(255,255,255,0.1);
+
+  backdrop-filter:blur(15px);
+
+  padding:20px;
+
+  border-radius:20px;
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,0.3);
+}
+
+.card h3{
+  margin:0;
+  font-size:15px;
+}
+
+.card .value{
+  font-size:32px;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  body{
+    padding:12px;
+  }
+
 }
 
 </style>
@@ -174,26 +302,161 @@ td{
 
 <div class="box header">
 
-  <div class="title">
+<div class="title">
 
-    <h2>
+<h2>
 
-    <i class="fa-solid fa-clipboard-list"></i>
+<i class="fa-solid fa-clipboard-list"></i>
 
-    Admin Request Panel
+Admin Request Panel
 
-    </h2>
+</h2>
 
-  </div>
+<div class="notify"
+id="notifyBadge">
 
-  <div class="back"
-  onclick="goBack()">
+0 New
 
-  <i class="fa-solid fa-arrow-left"></i>
+</div>
 
-  Back
+</div>
 
-  </div>
+<div class="back"
+onclick="goBack()">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+Back
+
+</div>
+
+</div>
+
+<!-- STATS -->
+
+<div class="stats">
+
+<div class="card">
+
+<h3>
+
+<i class="fa-solid fa-paper-plane"></i>
+
+Total Requests
+
+</h3>
+
+<div class="value"
+id="totalRequests">
+
+0
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+<i class="fa-solid fa-clock"></i>
+
+Pending
+
+</h3>
+
+<div class="value"
+id="pendingCount">
+
+0
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+<i class="fa-solid fa-check"></i>
+
+Approved
+
+</h3>
+
+<div class="value"
+id="approvedCount">
+
+0
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+<i class="fa-solid fa-xmark"></i>
+
+Rejected
+
+</h3>
+
+<div class="value"
+id="rejectedCount">
+
+0
+
+</div>
+
+</div>
+
+</div>
+
+<!-- FILTER -->
+
+<div class="box">
+
+<div class="search-box">
+
+<input
+type="text"
+id="search"
+placeholder="Search Employee..."
+onkeyup="loadRequests()">
+
+<select
+id="statusFilter"
+onchange="loadRequests()">
+
+<option value="">
+
+All Status
+
+</option>
+
+<option value="Pending">
+
+Pending
+
+</option>
+
+<option value="Approved">
+
+Approved
+
+</option>
+
+<option value="Rejected">
+
+Rejected
+
+</option>
+
+</select>
+
+</div>
 
 </div>
 
@@ -208,6 +471,8 @@ td{
 <thead>
 
 <tr>
+
+<th>Employee ID</th>
 
 <th>Employee Name</th>
 
@@ -235,27 +500,117 @@ td{
 
 </div>
 
-<script>
+<!-- FIREBASE -->
+
+<script type="module">
+
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+
+getFirestore,
+collection,
+getDocs,
+updateDoc,
+deleteDoc,
+doc,
+onSnapshot
+
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* FIREBASE */
+
+const firebaseConfig = {
+
+apiKey:
+"AIzaSyClEtSTjrvf52exf2Qtdzb2MMLLlSfwhVg",
+
+authDomain:
+"pappritohr.firebaseapp.com",
+
+projectId:
+"pappritohr",
+
+storageBucket:
+"pappritohr.firebasestorage.app",
+
+messagingSenderId:
+"559428820611",
+
+appId:
+"1:559428820611:web:09344b59fe1b21a5e2c5b6",
+
+measurementId:
+"G-1CEQ4P5XW8"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
+
+/* DATA */
+
+let requests = [];
+
+let lastRequestCount = 0;
 
 /* =====================================
    LOAD REQUESTS
 ===================================== */
 
-let requests =
+window.loadRequests = async function(){
 
-JSON.parse(
-localStorage.getItem("requests")
-)
-
-|| [];
-
-/* =====================================
-   LOAD TABLE
-===================================== */
-
-function loadRequests(){
+  requests = [];
 
   reqTable.innerHTML = "";
+
+  const querySnapshot =
+
+  await getDocs(
+    collection(db,"requests")
+  );
+
+  querySnapshot.forEach((d)=>{
+
+    let r = d.data();
+
+    r.docId = d.id;
+
+    requests.push(r);
+  });
+
+  /* SEARCH */
+
+  let search =
+
+  document.getElementById(
+    "search"
+  )
+
+  .value
+
+  .toLowerCase();
+
+  let statusFilter =
+
+  document.getElementById(
+    "statusFilter"
+  )
+
+  .value;
+
+  /* COUNTS */
+
+  let pending = 0;
+  let approved = 0;
+  let rejected = 0;
 
   if(requests.length === 0){
 
@@ -263,7 +618,7 @@ function loadRequests(){
 
     <tr>
 
-      <td colspan="6"
+      <td colspan="7"
       class="empty">
 
       No requests found
@@ -273,123 +628,223 @@ function loadRequests(){
     </tr>
 
     `;
-
-    return;
   }
 
-  requests.forEach((r,i)=>{
+  requests.forEach((r)=>{
 
-    let statusClass =
+    let matchSearch =
 
-    (r.status || "Pending")
-    .toLowerCase();
+    (r.name || "")
+    .toLowerCase()
+    .includes(search);
 
-    reqTable.innerHTML += `
+    let matchStatus =
 
-    <tr>
+    !statusFilter ||
 
-      <td>
+    r.status === statusFilter;
 
-      ${r.name || "-"}
+    if(r.status === "Pending"){
+      pending++;
+    }
 
-      </td>
+    if(r.status === "Approved"){
+      approved++;
+    }
 
-      <td>
+    if(r.status === "Rejected"){
+      rejected++;
+    }
 
-      ${r.type || "-"}
+    if(
 
-      </td>
+      matchSearch &&
+      matchStatus
 
-      <td>
+    ){
 
-      ${r.date || "-"}
+      let statusClass =
 
-      </td>
+      (r.status || "Pending")
+      .toLowerCase();
 
-      <td>
+      reqTable.innerHTML += `
 
-      ${r.reason || "-"}
+      <tr>
 
-      </td>
+        <td>
 
-      <td class="${statusClass}">
+        ${r.empid || "-"}
 
-      ${r.status || "Pending"}
+        </td>
 
-      </td>
+        <td>
 
-      <td>
+        ${r.name || "-"}
 
-        <button
+        </td>
 
-        class="btn approve"
+        <td>
 
-        onclick="updateStatus(
+        ${r.type || "-"}
 
-        ${i},
+        </td>
 
-        'Approved'
+        <td>
 
-        )">
+        ${r.date || "-"}
 
-        <i class="fa-solid fa-check"></i>
+        </td>
 
-        Approve
+        <td>
 
-        </button>
+        ${r.reason || "-"}
 
-        <button
+        </td>
 
-        class="btn reject"
+        <td class="${statusClass}">
 
-        onclick="updateStatus(
+        ${r.status || "Pending"}
 
-        ${i},
+        </td>
 
-        'Rejected'
+        <td>
 
-        )">
+          <button
 
-        <i class="fa-solid fa-xmark"></i>
+          class="btn approve"
 
-        Reject
+          onclick="updateStatus(
 
-        </button>
+          '${r.docId}',
 
-        <button
+          'Approved'
 
-        class="btn delete"
+          )">
 
-        onclick="deleteRequest(${i})">
+          <i class="fa-solid fa-check"></i>
 
-        <i class="fa-solid fa-trash"></i>
+          Approve
 
-        Delete
+          </button>
 
-        </button>
+          <button
 
-      </td>
+          class="btn reject"
 
-    </tr>
+          onclick="updateStatus(
 
-    `;
+          '${r.docId}',
+
+          'Rejected'
+
+          )">
+
+          <i class="fa-solid fa-xmark"></i>
+
+          Reject
+
+          </button>
+
+          <button
+
+          class="btn delete"
+
+          onclick="deleteRequest(
+
+          '${r.docId}'
+
+          )">
+
+          <i class="fa-solid fa-trash"></i>
+
+          Delete
+
+          </button>
+
+        </td>
+
+      </tr>
+
+      `;
+    }
+
   });
 
+  /* STATS */
+
+  totalRequests.innerText =
+  requests.length;
+
+  pendingCount.innerText =
+  pending;
+
+  approvedCount.innerText =
+  approved;
+
+  rejectedCount.innerText =
+  rejected;
+
+  notifyBadge.innerText =
+
+  pending +
+
+  " Pending";
 }
+
+/* =====================================
+   REALTIME NOTIFICATION
+===================================== */
+
+onSnapshot(
+
+  collection(db,"requests"),
+
+  (snapshot)=>{
+
+    if(
+
+      snapshot.size >
+      lastRequestCount
+
+    ){
+
+      if(lastRequestCount !== 0){
+
+        alert(
+          "🔔 New Employee Request Received"
+        );
+      }
+
+      lastRequestCount =
+      snapshot.size;
+    }
+
+    loadRequests();
+  }
+
+);
 
 /* =====================================
    UPDATE STATUS
 ===================================== */
 
-function updateStatus(i,status){
+window.updateStatus = async function(
 
-  requests[i].status = status;
+  id,
+  status
 
-  localStorage.setItem(
+){
 
-    "requests",
+  await updateDoc(
 
-    JSON.stringify(requests)
+    doc(db,"requests",id),
+
+    {
+
+      status:status
+
+    }
 
   );
 
@@ -397,28 +852,24 @@ function updateStatus(i,status){
 }
 
 /* =====================================
-   DELETE REQUEST
+   DELETE
 ===================================== */
 
-function deleteRequest(i){
+window.deleteRequest = async function(id){
 
   let confirmDelete =
 
   confirm(
-    "Delete this request?"
+    "Delete request?"
   );
 
   if(!confirmDelete){
     return;
   }
 
-  requests.splice(i,1);
+  await deleteDoc(
 
-  localStorage.setItem(
-
-    "requests",
-
-    JSON.stringify(requests)
+    doc(db,"requests",id)
 
   );
 
@@ -429,15 +880,13 @@ function deleteRequest(i){
    BACK
 ===================================== */
 
-function goBack(){
+window.goBack = function(){
 
   window.location.href =
   "index.html";
 }
 
-/* =====================================
-   START
-===================================== */
+/* START */
 
 loadRequests();
 
