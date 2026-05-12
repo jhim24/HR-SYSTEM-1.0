@@ -20,11 +20,11 @@ body{
     padding:15px;
 }
 
-/* MAIN CONTAINER */
+/* CONTAINER */
 
 .container{
     width:100%;
-    max-width:1000px;
+    max-width:1100px;
     margin:auto;
     background:white;
     border-radius:10px;
@@ -53,7 +53,7 @@ body{
 }
 
 select{
-    width:300px;
+    width:320px;
     padding:10px;
     border:none;
     border-radius:5px;
@@ -64,7 +64,7 @@ select{
 
 .emp-box{
     margin-top:15px;
-    line-height:1.7;
+    line-height:1.8;
     font-size:16px;
     font-weight:bold;
 }
@@ -73,7 +73,7 @@ select{
 
 .clock{
     margin-top:10px;
-    font-size:28px;
+    font-size:30px;
     font-weight:bold;
 }
 
@@ -93,7 +93,7 @@ select{
 }
 
 .btn{
-    width:160px;
+    width:170px;
     padding:12px;
     border:none;
     border-radius:5px;
@@ -120,7 +120,7 @@ select{
 
 table{
     width:100%;
-    min-width:950px;
+    min-width:1050px;
     border-collapse:collapse;
 }
 
@@ -244,9 +244,27 @@ td{
 
 <script>
 
-/* ======================================
-   EMPLOYEE MASTER LIST
-====================================== */
+/* =========================================
+   AUTO FIX OLD BROKEN DATA
+========================================= */
+
+let oldAttendance =
+JSON.parse(localStorage.getItem("attendance")) || [];
+
+oldAttendance = oldAttendance.filter(r =>
+    r &&
+    r.empid &&
+    r.name
+);
+
+localStorage.setItem(
+    "attendance",
+    JSON.stringify(oldAttendance)
+);
+
+/* =========================================
+   SAMPLE EMPLOYEE MASTER LIST
+========================================= */
 
 if(!localStorage.getItem("employees")){
 
@@ -268,6 +286,12 @@ if(!localStorage.getItem("employees")){
             empid:"PP80199",
             fname:"Mark",
             lname:"SANTOS"
+        },
+
+        {
+            empid:"PP80210",
+            fname:"Kenneth",
+            lname:"QUIRUBIN"
         }
 
     ];
@@ -278,9 +302,9 @@ if(!localStorage.getItem("employees")){
     );
 }
 
-/* ======================================
+/* =========================================
    VARIABLES
-====================================== */
+========================================= */
 
 let employees =
 JSON.parse(localStorage.getItem("employees")) || [];
@@ -291,9 +315,9 @@ JSON.parse(localStorage.getItem("attendance")) || [];
 let currentEmployee =
 employees[0];
 
-/* ======================================
+/* =========================================
    LOAD DROPDOWN
-====================================== */
+========================================= */
 
 function loadDropdown(){
 
@@ -318,9 +342,9 @@ function loadDropdown(){
     });
 }
 
-/* ======================================
+/* =========================================
    CHANGE EMPLOYEE
-====================================== */
+========================================= */
 
 function changeEmployee(){
 
@@ -335,15 +359,15 @@ function changeEmployee(){
     render();
 }
 
-/* ======================================
-   EMPLOYEE INFO
-====================================== */
+/* =========================================
+   LOAD EMPLOYEE INFO
+========================================= */
 
 function loadEmployeeInfo(){
 
     document.getElementById("empid").innerHTML =
     "EMPLOYEE ID : " +
-    currentEmployee.empid;
+    (currentEmployee.empid || "-");
 
     document.getElementById("empname").innerHTML =
     "EMPLOYEE NAME : " +
@@ -352,9 +376,9 @@ function loadEmployeeInfo(){
     currentEmployee.fname;
 }
 
-/* ======================================
+/* =========================================
    LIVE CLOCK
-====================================== */
+========================================= */
 
 function updateClock(){
 
@@ -371,9 +395,9 @@ setInterval(updateClock,1000);
 
 updateClock();
 
-/* ======================================
+/* =========================================
    TIME IN
-====================================== */
+========================================= */
 
 function timeIn(){
 
@@ -385,24 +409,38 @@ function timeIn(){
     let date =
     now.toLocaleDateString();
 
-    /* CHECK EXISTING */
+    /* CHECK ONLY CURRENT EMPLOYEE */
 
     let existing = attendance.find(r =>
 
-        r.empid === currentEmployee.empid &&
-        r.date === date &&
-        r.timeout === ""
+        String(r.empid).trim() ===
+        String(currentEmployee.empid).trim()
+
+        &&
+
+        r.date === date
+
+        &&
+
+        (
+            r.timeout === "" ||
+            r.timeout === null ||
+            r.timeout === undefined
+        )
 
     );
 
     if(existing){
 
-        alert("Already TIME IN");
+        alert(
+            currentEmployee.lname +
+            " already TIME IN"
+        );
 
         return;
     }
 
-    /* LATE */
+    /* LATE COMPUTATION */
 
     let lateMinutes = 0;
 
@@ -426,7 +464,8 @@ function timeIn(){
 
         date:date,
 
-        empid:currentEmployee.empid,
+        empid:
+        currentEmployee.empid,
 
         name:
         currentEmployee.lname +
@@ -456,12 +495,15 @@ function timeIn(){
 
     render();
 
-    alert("TIME IN SUCCESS");
+    alert(
+        currentEmployee.lname +
+        " TIME IN SUCCESS"
+    );
 }
 
-/* ======================================
+/* =========================================
    TIME OUT
-====================================== */
+========================================= */
 
 function timeOut(){
 
@@ -473,14 +515,25 @@ function timeOut(){
     .reverse()
     .find(r =>
 
-        r.empid === currentEmployee.empid &&
-        r.timeout === ""
+        String(r.empid).trim() ===
+        String(currentEmployee.empid).trim()
+
+        &&
+
+        (
+            r.timeout === "" ||
+            r.timeout === null ||
+            r.timeout === undefined
+        )
 
     );
 
     if(!row){
 
-        alert("No active TIME IN");
+        alert(
+            currentEmployee.lname +
+            " has no active TIME IN"
+        );
 
         return;
     }
@@ -490,7 +543,7 @@ function timeOut(){
     row.timeout =
     now.toLocaleTimeString();
 
-    /* BREAK TIME */
+    /* BREAK */
 
     let breakMinutes =
     prompt(
@@ -504,7 +557,7 @@ function timeOut(){
     row.breaktime =
     breakMinutes;
 
-    /* TOTAL HOURS */
+    /* COMPUTE HOURS */
 
     let start =
     new Date(
@@ -517,14 +570,22 @@ function timeOut(){
     );
 
     let hrs =
-    (end - start) / 1000 / 60 / 60;
+    (end-start)/1000/60/60;
+
+    /* OVERNIGHT FIX */
 
     if(hrs < 0){
         hrs += 24;
     }
 
+    /* LESS BREAK */
+
     hrs =
-    hrs - (breakMinutes / 60);
+    hrs - (breakMinutes/60);
+
+    if(hrs < 0){
+        hrs = 0;
+    }
 
     row.total =
     hrs.toFixed(2);
@@ -536,12 +597,15 @@ function timeOut(){
 
     render();
 
-    alert("TIME OUT SUCCESS");
+    alert(
+        currentEmployee.lname +
+        " TIME OUT SUCCESS"
+    );
 }
 
-/* ======================================
+/* =========================================
    RENDER TABLE
-====================================== */
+========================================= */
 
 function render(){
 
@@ -556,7 +620,8 @@ function render(){
     attendance
     .filter(r =>
 
-        r.empid === currentEmployee.empid
+        String(r.empid).trim() ===
+        String(currentEmployee.empid).trim()
 
     )
     .reverse()
@@ -566,22 +631,22 @@ function render(){
 
         <tr>
 
-            <td>${r.date}</td>
+            <td>${r.date || '-'}</td>
 
-            <td>${r.empid}</td>
+            <td>${r.empid || '-'}</td>
 
-            <td>${r.name}</td>
+            <td>${r.name || '-'}</td>
 
-            <td>${r.timein}</td>
+            <td>${r.timein || '-'}</td>
 
-            <td>${r.breaktime} mins</td>
+            <td>${r.breaktime || 0} mins</td>
 
-            <td>${r.timeout}</td>
+            <td>${r.timeout || '-'}</td>
 
-            <td>${r.total}</td>
+            <td>${r.total || 0}</td>
 
             <td class="late">
-                ${r.late}
+                ${r.late || '0 mins'}
             </td>
 
             <td class="
@@ -589,7 +654,7 @@ function render(){
                 ? 'late'
                 : 'ontime'}
             ">
-                ${r.status}
+                ${r.status || 'ON TIME'}
             </td>
 
         </tr>
@@ -598,9 +663,9 @@ function render(){
     });
 }
 
-/* ======================================
+/* =========================================
    START
-====================================== */
+========================================= */
 
 loadDropdown();
 
