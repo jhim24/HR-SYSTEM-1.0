@@ -668,7 +668,9 @@ window.timeIn = async function(){
 
     await loadAttendance();
 
-    alert("TIME IN SUCCESS");
+    speak("Time In Successful");
+
+alert("TIME IN SUCCESS");
 }
 
 /* =========================================
@@ -720,7 +722,9 @@ window.breakOut = async function(){
 
     await loadAttendance();
 
-    alert("BREAK OUT SUCCESS");
+    speak("Break Out Successful");
+
+alert("BREAK OUT SUCCESS");
 }
 
 /* =========================================
@@ -772,7 +776,9 @@ window.breakIn = async function(){
 
     await loadAttendance();
 
-    alert("BREAK IN SUCCESS");
+    speak("Break In Successful");
+
+alert("BREAK IN SUCCESS");
 }
 
 /* =========================================
@@ -854,7 +860,9 @@ window.timeOut = async function(){
 
     await loadAttendance();
 
-    alert("TIME OUT SUCCESS");
+    speak("Time Out Successful");
+
+alert("TIME OUT SUCCESS");
 }
 
 /* =========================================
@@ -982,7 +990,29 @@ function render(){
         `;
     });
 }
+/* =========================================
+   AI VOICE
+========================================= */
 
+function speak(text){
+
+    let speech =
+    new SpeechSynthesisUtterance();
+
+    speech.text = text;
+
+    speech.lang = "en-US";
+
+    speech.rate = 1;
+
+    speech.pitch = 1;
+
+    speech.volume = 1;
+
+    window.speechSynthesis.speak(
+        speech
+    );
+}
 /* START */
 
 loadEmployees();
