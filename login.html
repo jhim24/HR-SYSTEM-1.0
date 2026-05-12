@@ -38,9 +38,11 @@ body{
   );
 
   overflow:hidden;
+
+  position:relative;
 }
 
-/* ANIMATION */
+/* BACKGROUND CIRCLES */
 
 body::before{
 
@@ -51,13 +53,13 @@ body::before{
   width:500px;
   height:500px;
 
+  border-radius:50%;
+
   background:
   rgba(255,255,255,0.08);
 
-  border-radius:50%;
-
-  top:-120px;
-  left:-120px;
+  top:-150px;
+  left:-150px;
 }
 
 body::after{
@@ -69,13 +71,13 @@ body::after{
   width:400px;
   height:400px;
 
-  background:
-  rgba(255,255,255,0.05);
-
   border-radius:50%;
 
-  bottom:-100px;
-  right:-100px;
+  background:
+  rgba(255,255,255,0.06);
+
+  bottom:-120px;
+  right:-120px;
 }
 
 /* CONTAINER */
@@ -84,28 +86,28 @@ body::after{
 
   width:950px;
 
-  min-height:560px;
+  min-height:580px;
 
   display:flex;
 
-  border-radius:25px;
+  border-radius:30px;
 
   overflow:hidden;
 
   background:
   rgba(255,255,255,0.08);
 
-  backdrop-filter:blur(20px);
+  backdrop-filter:blur(25px);
 
   box-shadow:
-  0 0 40px rgba(0,0,0,0.3);
+  0 0 40px rgba(0,0,0,0.35);
 
   position:relative;
 
   z-index:10;
 }
 
-/* LEFT */
+/* LEFT SIDE */
 
 .left{
 
@@ -119,17 +121,15 @@ body::after{
 
   padding:40px;
 
-  position:relative;
-
   background:
   linear-gradient(
     180deg,
     rgba(255,0,0,0.15),
-    rgba(255,193,7,0.1)
+    rgba(255,193,7,0.08)
   );
 }
 
-/* LEFT CONTENT */
+/* CONTENT */
 
 .left-content{
 
@@ -140,19 +140,30 @@ body::after{
 
 .logo{
 
-  width:180px;
+  width:190px;
 
-  height:180px;
+  height:190px;
 
-  object-fit:contain;
+  object-fit:cover;
 
   margin:auto;
 
   display:block;
 
+  border-radius:50%;
+
+  border:6px solid #ffd60a;
+
+  background:white;
+
+  padding:8px;
+
+  box-shadow:
+  0 0 35px rgba(255,214,10,0.9);
+
   filter:
   drop-shadow(
-    0 0 25px rgba(255,255,255,0.6)
+    0 0 20px rgba(255,255,255,0.6)
   );
 }
 
@@ -160,31 +171,33 @@ body::after{
 
 .brand{
 
-  margin-top:20px;
+  margin-top:25px;
 
-  font-size:48px;
+  font-size:52px;
 
   font-weight:900;
 
-  letter-spacing:3px;
+  letter-spacing:4px;
 
   color:#ffd60a;
 
   text-shadow:
-  0 0 20px rgba(255,214,10,0.8);
+  0 0 25px rgba(255,214,10,0.8);
 }
 
-/* SUB */
+/* SUBTITLE */
 
 .sub{
 
-  margin-top:10px;
+  margin-top:12px;
 
-  font-size:18px;
+  font-size:19px;
 
   color:white;
 
-  line-height:1.6;
+  letter-spacing:2px;
+
+  line-height:1.8;
 }
 
 /* RIGHT */
@@ -207,7 +220,7 @@ body::after{
   color:white;
 }
 
-/* TITLE */
+/* LOGIN TITLE */
 
 .right h2{
 
@@ -215,12 +228,12 @@ body::after{
 
   margin-bottom:30px;
 
-  font-size:36px;
+  font-size:38px;
 
   color:#ffd60a;
 
   text-shadow:
-  0 0 15px rgba(255,214,10,0.6);
+  0 0 15px rgba(255,214,10,0.7);
 }
 
 /* INPUTS */
@@ -230,36 +243,90 @@ select{
 
   width:100%;
 
-  padding:14px;
+  padding:16px 18px;
 
-  margin-top:14px;
+  margin-top:16px;
 
-  border:none;
+  border-radius:16px;
 
-  border-radius:12px;
+  border:2px solid rgba(255,255,255,0.15);
 
   background:
-  rgba(255,255,255,0.15);
+  linear-gradient(
+    135deg,
+    rgba(255,255,255,0.18),
+    rgba(255,255,255,0.08)
+  );
 
   color:white;
 
   font-size:15px;
 
+  font-weight:500;
+
   outline:none;
 
-  backdrop-filter:blur(10px);
+  transition:0.35s ease;
+
+  backdrop-filter:blur(12px);
+
+  box-shadow:
+  0 8px 20px rgba(0,0,0,0.15);
 }
 
 /* PLACEHOLDER */
 
 input::placeholder{
 
-  color:#f1f1f1;
+  color:#ffe8a3;
+
+  letter-spacing:1px;
+}
+
+/* SELECT */
+
+select{
+
+  appearance:none;
+
+  cursor:pointer;
 }
 
 select option{
 
   color:black;
+
+  background:white;
+}
+
+/* FOCUS */
+
+input:focus,
+select:focus{
+
+  border:2px solid #ffd60a;
+
+  background:
+  linear-gradient(
+    135deg,
+    rgba(255,214,10,0.18),
+    rgba(255,255,255,0.12)
+  );
+
+  transform:translateY(-2px);
+
+  box-shadow:
+  0 0 20px rgba(255,214,10,0.5),
+  0 10px 25px rgba(0,0,0,0.25);
+}
+
+/* HOVER */
+
+input:hover,
+select:hover{
+
+  border-color:
+  rgba(255,214,10,0.4);
 }
 
 /* BUTTON */
@@ -268,13 +335,13 @@ button{
 
   width:100%;
 
-  padding:14px;
+  padding:16px;
 
-  margin-top:22px;
+  margin-top:24px;
 
   border:none;
 
-  border-radius:12px;
+  border-radius:16px;
 
   background:
   linear-gradient(
@@ -291,15 +358,17 @@ button{
 
   cursor:pointer;
 
-  transition:0.3s;
+  transition:0.35s;
 }
+
+/* BUTTON HOVER */
 
 button:hover{
 
   transform:translateY(-2px);
 
   box-shadow:
-  0 0 20px rgba(255,190,11,0.7);
+  0 0 25px rgba(255,190,11,0.7);
 }
 
 /* MOBILE */
@@ -312,9 +381,9 @@ button:hover{
 
   .container{
 
-    flex-direction:column;
-
     width:100%;
+
+    flex-direction:column;
   }
 
   .left{
@@ -324,7 +393,13 @@ button:hover{
 
   .brand{
 
-    font-size:38px;
+    font-size:40px;
+  }
+
+  .logo{
+
+    width:150px;
+    height:150px;
   }
 
 }
@@ -374,7 +449,7 @@ LOGIN
 
 </h2>
 
-<!-- MODE -->
+<!-- LOGIN MODE -->
 
 <select id="mode">
 
@@ -406,7 +481,7 @@ type="password"
 id="password"
 placeholder="Enter Password">
 
-<!-- LOGIN -->
+<!-- BUTTON -->
 
 <button onclick="login()">
 
@@ -438,7 +513,7 @@ getDocs
 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* FIREBASE */
+/* FIREBASE CONFIG */
 
 const firebaseConfig = {
 
@@ -465,13 +540,15 @@ measurementId:
 
 };
 
+/* INIT */
+
 const app =
 initializeApp(firebaseConfig);
 
 const db =
 getFirestore(app);
 
-/* ADMIN */
+/* DEFAULT ADMIN */
 
 if(!localStorage.getItem("admin")){
 
@@ -523,7 +600,7 @@ window.login = async function(){
 
   .value;
 
-  /* ADMIN */
+  /* ADMIN LOGIN */
 
   if(mode === "admin"){
 
@@ -566,7 +643,7 @@ window.login = async function(){
     }
   }
 
-  /* EMPLOYEE */
+  /* EMPLOYEE LOGIN */
 
   if(mode === "employee"){
 
@@ -607,6 +684,8 @@ window.login = async function(){
       }
     });
 
+    /* INVALID */
+
     if(!foundUser){
 
       alert(
@@ -615,6 +694,8 @@ window.login = async function(){
 
       return;
     }
+
+    /* FIND EMPLOYEE */
 
     const querySnapshot =
 
@@ -645,6 +726,8 @@ window.login = async function(){
         employee = e;
       }
     });
+
+    /* SUCCESS */
 
     if(employee){
 
