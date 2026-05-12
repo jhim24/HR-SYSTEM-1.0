@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
 <title>HR System Login</title>
+
+<!-- FONT AWESOME -->
+
+<link rel="stylesheet"
+
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
 
@@ -22,7 +30,12 @@ body{
   align-items:center;
 
   background:
-  linear-gradient(135deg,#1e0033,#3a0066,#001f3f);
+  linear-gradient(
+    135deg,
+    #1e0033,
+    #3a0066,
+    #001f3f
+  );
 
   overflow:hidden;
 }
@@ -31,8 +44,9 @@ body{
 
 .container{
 
-  width:750px;
-  height:420px;
+  width:850px;
+
+  min-height:500px;
 
   display:flex;
 
@@ -65,7 +79,7 @@ body{
 
 }
 
-/* LEFT SIDE */
+/* LEFT */
 
 .left{
 
@@ -90,10 +104,9 @@ body{
   text-align:center;
 
   padding:20px;
-
 }
 
-/* DARK OVERLAY */
+/* OVERLAY */
 
 .left::before{
 
@@ -109,18 +122,44 @@ body{
     rgba(0,0,0,0.7),
     rgba(0,0,0,0.3)
   );
+}
 
+/* LEFT CONTENT */
+
+.left-content{
+
+  position:relative;
+
+  z-index:1;
+}
+
+/* LOGO */
+
+.logo{
+
+  width:110px;
+
+  height:110px;
+
+  object-fit:contain;
+
+  border-radius:50%;
+
+  background:white;
+
+  padding:8px;
+
+  margin-bottom:15px;
+
+  box-shadow:
+  0 0 20px rgba(255,255,255,0.7);
 }
 
 /* TEXT */
 
 .left span{
 
-  position:relative;
-
-  z-index:1;
-
-  font-size:28px;
+  font-size:30px;
 
   font-weight:bold;
 
@@ -131,7 +170,7 @@ body{
 
 }
 
-/* RIGHT SIDE */
+/* RIGHT */
 
 .right{
 
@@ -146,6 +185,11 @@ body{
 
   color:white;
 
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:center;
 }
 
 /* TITLE */
@@ -156,8 +200,7 @@ body{
 
   margin-bottom:25px;
 
-  font-size:30px;
-
+  font-size:32px;
 }
 
 /* INPUTS */
@@ -167,7 +210,7 @@ select{
 
   width:100%;
 
-  padding:12px;
+  padding:13px;
 
   margin-top:12px;
 
@@ -183,19 +226,16 @@ select{
   outline:none;
 
   font-size:15px;
-
 }
 
 input::placeholder{
 
   color:#ddd;
-
 }
 
 select option{
 
   color:black;
-
 }
 
 /* BUTTON */
@@ -204,7 +244,7 @@ button{
 
   width:100%;
 
-  padding:12px;
+  padding:13px;
 
   margin-top:18px;
 
@@ -228,7 +268,6 @@ button{
   cursor:pointer;
 
   transition:0.3s;
-
 }
 
 button:hover{
@@ -237,10 +276,9 @@ button:hover{
 
   box-shadow:
   0 0 15px #00c6ff;
-
 }
 
-/* LOGIN INFO */
+/* INFO */
 
 .info{
 
@@ -256,32 +294,34 @@ button:hover{
   font-size:13px;
 
   line-height:1.6;
-
 }
 
 /* MOBILE */
 
-@media(max-width:800px){
+@media(max-width:850px){
+
+  body{
+    padding:15px;
+  }
 
   .container{
 
-    width:95%;
-
-    height:auto;
+    width:100%;
 
     flex-direction:column;
 
+    min-height:auto;
   }
 
   .left{
 
-    height:220px;
-
+    height:250px;
   }
 
 }
 
 </style>
+
 </head>
 
 <body>
@@ -292,11 +332,26 @@ button:hover{
 
   <div class="left">
 
-    <span>
-      PAPPRITO<br>
-      HR MANAGEMENT<br>
-      SYSTEM
-    </span>
+    <div class="left-content">
+
+      <!-- LOGO -->
+
+      <img src="logo.png"
+      class="logo">
+
+      <!-- TITLE -->
+
+      <span>
+
+        PAPPRITO<br>
+
+        HR MANAGEMENT<br>
+
+        SYSTEM
+
+      </span>
+
+    </div>
 
   </div>
 
@@ -304,18 +359,28 @@ button:hover{
 
   <div class="right">
 
-    <h2>LOGIN</h2>
+    <h2>
+
+    <i class="fa-solid fa-user-lock"></i>
+
+    LOGIN
+
+    </h2>
 
     <!-- MODE -->
 
     <select id="mode">
 
       <option value="admin">
+
         Admin Login
+
       </option>
 
       <option value="employee">
+
         Employee Login
+
       </option>
 
     </select>
@@ -323,20 +388,28 @@ button:hover{
     <!-- USERNAME -->
 
     <input
+
     type="text"
+
     id="username"
+
     placeholder="Username / Last Name">
 
     <!-- PASSWORD -->
 
     <input
+
     type="password"
+
     id="password"
+
     placeholder="Password">
 
     <!-- BUTTON -->
 
     <button onclick="login()">
+
+      <i class="fa-solid fa-right-to-bracket"></i>
 
       LOGIN
 
@@ -346,9 +419,19 @@ button:hover{
 
     <div class="info">
 
-      <b>Default Admin</b><br>
+      <b>
 
-      Username: admin<br>
+      <i class="fa-solid fa-user-shield"></i>
+
+      Default Admin
+
+      </b>
+
+      <br><br>
+
+      Username: admin
+
+      <br>
 
       Password: 123
 
@@ -358,11 +441,60 @@ button:hover{
 
 </div>
 
-<script>
+<!-- FIREBASE -->
 
-/* =========================
+<script type="module">
+
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+
+getFirestore,
+collection,
+getDocs
+
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* FIREBASE */
+
+const firebaseConfig = {
+
+apiKey:
+"AIzaSyClEtSTjrvf52exf2Qtdzb2MMLLlSfwhVg",
+
+authDomain:
+"pappritohr.firebaseapp.com",
+
+projectId:
+"pappritohr",
+
+storageBucket:
+"pappritohr.firebasestorage.app",
+
+messagingSenderId:
+"559428820611",
+
+appId:
+"1:559428820611:web:09344b59fe1b21a5e2c5b6",
+
+measurementId:
+"G-1CEQ4P5XW8"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
+
+/* =====================================
    DEFAULT ADMIN
-========================= */
+===================================== */
 
 if(!localStorage.getItem("admin")){
 
@@ -378,68 +510,52 @@ if(!localStorage.getItem("admin")){
     "admin",
     JSON.stringify(admin)
   );
-
 }
 
-/* =========================
-   SAMPLE EMPLOYEES
-========================= */
+/* =====================================
+   LOGIN
+===================================== */
 
-if(!localStorage.getItem("employees")){
-
-  let sampleEmployees = [
-
-    {
-      id:"PP80050",
-      fname:"Rusty",
-      lname:"DEGAMHON",
-      position:"Cook"
-    },
-
-    {
-      id:"PP80134",
-      fname:"Joemarie",
-      lname:"MACALALAD",
-      position:"Supervisor"
-    }
-
-  ];
-
-  localStorage.setItem(
-    "employees",
-    JSON.stringify(sampleEmployees)
-  );
-
-}
-
-/* =========================
-   LOGIN FUNCTION
-========================= */
-
-function login(){
+window.login = async function(){
 
   let username =
-  document.getElementById("username")
+
+  document.getElementById(
+    "username"
+  )
+
   .value
+
   .trim()
+
   .toLowerCase();
 
   let password =
-  document.getElementById("password")
+
+  document.getElementById(
+    "password"
+  )
+
   .value
+
   .trim();
 
   let mode =
-  document.getElementById("mode")
+
+  document.getElementById(
+    "mode"
+  )
+
   .value;
 
-  /* =====================
+  /* =========================
      ADMIN LOGIN
-  ===================== */
+  ========================= */
 
-  if(mode==="admin"){
+  if(mode === "admin"){
 
     let admin =
+
     JSON.parse(
       localStorage.getItem("admin")
     );
@@ -467,7 +583,6 @@ function login(){
 
       window.location.href =
       "index.html";
-
     }
 
     else{
@@ -475,76 +590,116 @@ function login(){
       alert(
         "Invalid Admin Login"
       );
-
     }
-
   }
 
-  /* =====================
+  /* =========================
      EMPLOYEE LOGIN
-  ===================== */
+  ========================= */
 
-  if(mode==="employee"){
+  if(mode === "employee"){
 
-    let employees =
+    /* LOAD USERS */
+
+    let users =
+
     JSON.parse(
-      localStorage.getItem("employees")
-    ) || [];
+      localStorage.getItem("users")
+    )
 
-    let found =
-    employees.find(e =>
+    || [];
 
-      (e.lname || "")
+    let foundUser =
+
+    users.find(u =>
+
+      u.username
       .toLowerCase()
 
       ===
 
       username
 
+      &&
+
+      u.password ===
+      password
+
     );
 
-    if(
+    if(!foundUser){
 
-      found &&
-      password === "123"
+      alert(
+        "Invalid Employee Login"
+      );
 
-    ){
+      return;
+    }
+
+    /* FIREBASE EMPLOYEE */
+
+    const querySnapshot =
+
+    await getDocs(
+      collection(db,"employees")
+    );
+
+    let employee = null;
+
+    querySnapshot.forEach((d)=>{
+
+      let e = d.data();
+
+      let fullname =
+
+      (
+        (e.fname || "") +
+        " " +
+        (e.lname || "")
+      )
+
+      .trim();
+
+      if(fullname === foundUser.name){
+
+        employee = e;
+      }
+    });
+
+    if(employee){
 
       localStorage.setItem(
 
         "empSession",
 
-        JSON.stringify(found)
+        JSON.stringify(employee)
 
       );
 
       alert(
 
         "Welcome " +
-        found.fname
+        employee.fname
 
       );
 
       window.location.href =
       "employee-portal.html";
-
     }
 
     else{
 
       alert(
-        "Invalid Employee Login"
+        "Employee record not found"
       );
-
     }
-
   }
 
 }
 
-/* =========================
+/* =====================================
    ENTER KEY
-========================= */
+===================================== */
 
 document.addEventListener(
 
@@ -552,12 +707,10 @@ document.addEventListener(
 
   function(e){
 
-    if(e.key==="Enter"){
+    if(e.key === "Enter"){
 
       login();
-
     }
-
   }
 
 );
