@@ -25,7 +25,7 @@ body{
 
 .container{
     width:100%;
-    max-width:1100px;
+    max-width:1200px;
     margin:auto;
     background:white;
     border-radius:10px;
@@ -123,24 +123,32 @@ select{
 .buttons{
     display:flex;
     justify-content:center;
-    gap:20px;
+    gap:10px;
     margin-top:20px;
     flex-wrap:wrap;
 }
 
 .btn{
-    width:170px;
+    width:160px;
     padding:12px;
     border:none;
     border-radius:5px;
     color:white;
-    font-size:18px;
+    font-size:16px;
     font-weight:bold;
     cursor:pointer;
 }
 
 .timein{
     background:#12b347;
+}
+
+.breakout{
+    background:#f39c12;
+}
+
+.breakin{
+    background:#3498db;
 }
 
 .timeout{
@@ -156,7 +164,7 @@ select{
 
 table{
     width:100%;
-    min-width:1100px;
+    min-width:1300px;
     border-collapse:collapse;
 }
 
@@ -258,6 +266,20 @@ td{
 
             </button>
 
+            <button class="btn breakout"
+            onclick="breakOut()">
+
+                BREAK OUT
+
+            </button>
+
+            <button class="btn breakin"
+            onclick="breakIn()">
+
+                BREAK IN
+
+            </button>
+
             <button class="btn timeout"
             onclick="timeOut()">
 
@@ -283,8 +305,10 @@ td{
                     <th>EMP ID</th>
                     <th>EMPLOYEE NAME</th>
                     <th>TIME IN</th>
-                    <th>BREAK</th>
+                    <th>BREAK OUT</th>
+                    <th>BREAK IN</th>
                     <th>TIME OUT</th>
+                    <th>BREAK MINUTES</th>
                     <th>TOTAL HOURS</th>
                     <th>LATE</th>
                     <th>STATUS</th>
@@ -595,6 +619,9 @@ window.timeIn = async function(){
             timein:
             now.toLocaleTimeString(),
 
+            breakOut:"",
+            breakIn:"",
+
             breaktime:0,
 
             timeout:"",
@@ -613,6 +640,110 @@ window.timeIn = async function(){
     await loadAttendance();
 
     alert("TIME IN SUCCESS");
+}
+
+/* =========================================
+   BREAK OUT
+========================================= */
+
+window.breakOut = async function(){
+
+    let row =
+    attendance.find(r =>
+
+        r.empid ===
+        currentEmployee.empid
+
+        &&
+
+        !r.timeout
+
+    );
+
+    if(!row){
+
+        alert("No active TIME IN");
+
+        return;
+    }
+
+    if(row.breakOut){
+
+        alert("Already BREAK OUT");
+
+        return;
+    }
+
+    let now = new Date();
+
+    await updateDoc(
+
+        doc(db,"attendance",row.docId),
+
+        {
+
+            breakOut:
+            now.toLocaleTimeString()
+
+        }
+
+    );
+
+    await loadAttendance();
+
+    alert("BREAK OUT SUCCESS");
+}
+
+/* =========================================
+   BREAK IN
+========================================= */
+
+window.breakIn = async function(){
+
+    let row =
+    attendance.find(r =>
+
+        r.empid ===
+        currentEmployee.empid
+
+        &&
+
+        !r.timeout
+
+    );
+
+    if(!row){
+
+        alert("No active TIME IN");
+
+        return;
+    }
+
+    if(!row.breakOut){
+
+        alert("No BREAK OUT yet");
+
+        return;
+    }
+
+    let now = new Date();
+
+    await updateDoc(
+
+        doc(db,"attendance",row.docId),
+
+        {
+
+            breakIn:
+            now.toLocaleTimeString()
+
+        }
+
+    );
+
+    await loadAttendance();
+
+    alert("BREAK IN SUCCESS");
 }
 
 /* =========================================
@@ -769,11 +900,19 @@ function render(){
             </td>
 
             <td>
-            ${r.breaktime || 0} mins
+            ${r.breakOut || '-'}
+            </td>
+
+            <td>
+            ${r.breakIn || '-'}
             </td>
 
             <td>
             ${r.timeout || '-'}
+            </td>
+
+            <td>
+            ${r.breaktime || 0} mins
             </td>
 
             <td>
