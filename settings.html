@@ -115,7 +115,7 @@ input,select{
 
 table{
   width:100%;
-  min-width:700px;
+  min-width:850px;
   margin-top:20px;
   border-collapse:collapse;
 }
@@ -231,6 +231,8 @@ Save User
 
 <tr>
 
+<th>Employee ID</th>
+
 <th>Employee Name</th>
 
 <th>Username</th>
@@ -336,9 +338,8 @@ async function loadEmployees(){
 
     <option>
 
-    ${e.fname || ""}
-
-    ${e.lname || ""}
+    ${(e.fname || "")}
+    ${(e.lname || "")}
 
     </option>
 
@@ -374,7 +375,7 @@ async function loadUsers(){
 
     <tr>
 
-      <td colspan="4"
+      <td colspan="5"
       class="empty">
 
       No users found
@@ -400,7 +401,9 @@ async function loadUsers(){
   renderUsers();
 }
 
-/* RENDER USERS */
+/* =====================================
+   RENDER USERS
+===================================== */
 
 function renderUsers(){
 
@@ -411,6 +414,12 @@ function renderUsers(){
     userTable.innerHTML += `
 
     <tr>
+
+      <td>
+
+      ${u.empid || "-"}
+
+      </td>
 
       <td>
 
@@ -485,20 +494,53 @@ window.saveUser = async function(){
     return;
   }
 
+  /* GET SELECTED EMPLOYEE */
+
+  let selectedEmployee = employees.find(e =>
+
+      (
+        (e.fname || "") +
+        " " +
+        (e.lname || "")
+      )
+
+      .trim()
+
+      ===
+
+      empSelect.value.trim()
+
+  );
+
+  /* EMPLOYEE ID */
+
+  let selectedEmpId =
+
+  selectedEmployee
+
+  ? selectedEmployee.empid
+
+  : "";
+
+  /* USER OBJECT */
+
   let user = {
 
-    name:
-    empSelect.value
-    .trim(),
+      name:
+      empSelect.value
+      .trim(),
 
-    username:
-    username.value
-    .trim()
-    .toLowerCase(),
+      empid:
+      selectedEmpId,
 
-    password:
-    password.value
-    .trim()
+      username:
+      username.value
+      .trim()
+      .toLowerCase(),
+
+      password:
+      password.value
+      .trim()
 
   };
 
