@@ -393,7 +393,7 @@ button:hover{
 
     id="username"
 
-    placeholder="Username / Last Name">
+    placeholder="Username">
 
     <!-- PASSWORD -->
 
@@ -599,33 +599,46 @@ window.login = async function(){
 
   if(mode === "employee"){
 
-    /* LOAD USERS */
+    /* LOAD FIREBASE USERS */
 
-    let users =
+    const userSnapshot =
 
-    JSON.parse(
-      localStorage.getItem("users")
-    )
-
-    || [];
-
-    let foundUser =
-
-    users.find(u =>
-
-      u.username
-      .toLowerCase()
-
-      ===
-
-      username
-
-      &&
-
-      u.password ===
-      password
-
+    await getDocs(
+      collection(db,"users")
     );
+
+    let foundUser = null;
+
+    userSnapshot.forEach((d)=>{
+
+      let u = d.data();
+
+      if(
+
+        (u.username || "")
+        .toLowerCase()
+        .trim()
+
+        ===
+
+        username
+
+        &&
+
+        (u.password || "")
+        .trim()
+
+        ===
+
+        password
+
+      ){
+
+        foundUser = u;
+      }
+    });
+
+    /* USER NOT FOUND */
 
     if(!foundUser){
 
@@ -658,13 +671,27 @@ window.login = async function(){
         (e.lname || "")
       )
 
+      .toLowerCase()
       .trim();
 
-      if(fullname === foundUser.name){
+      let savedName =
+
+      (foundUser.name || "")
+
+      .toLowerCase()
+      .trim();
+
+      if(
+
+        fullname === savedName
+
+      ){
 
         employee = e;
       }
     });
+
+    /* LOGIN SUCCESS */
 
     if(employee){
 
@@ -674,6 +701,11 @@ window.login = async function(){
 
         JSON.stringify(employee)
 
+      );
+
+      localStorage.setItem(
+        "employeeLoggedIn",
+        "true"
       );
 
       alert(
