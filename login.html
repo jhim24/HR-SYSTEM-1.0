@@ -7,12 +7,11 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>HR System Login</title>
+<title>PAPPRITO HR Login</title>
 
 <!-- FONT AWESOME -->
 
 <link rel="stylesheet"
-
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
@@ -25,6 +24,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 body{
   margin:0;
   height:100vh;
+
   display:flex;
   justify-content:center;
   align-items:center;
@@ -32,51 +32,77 @@ body{
   background:
   linear-gradient(
     135deg,
-    #1e0033,
-    #3a0066,
-    #001f3f
+    #7a0000,
+    #c1121f,
+    #ffb703
   );
 
   overflow:hidden;
+}
+
+/* ANIMATION */
+
+body::before{
+
+  content:"";
+
+  position:absolute;
+
+  width:500px;
+  height:500px;
+
+  background:
+  rgba(255,255,255,0.08);
+
+  border-radius:50%;
+
+  top:-120px;
+  left:-120px;
+}
+
+body::after{
+
+  content:"";
+
+  position:absolute;
+
+  width:400px;
+  height:400px;
+
+  background:
+  rgba(255,255,255,0.05);
+
+  border-radius:50%;
+
+  bottom:-100px;
+  right:-100px;
 }
 
 /* CONTAINER */
 
 .container{
 
-  width:850px;
+  width:950px;
 
-  min-height:500px;
+  min-height:560px;
 
   display:flex;
 
-  border-radius:20px;
+  border-radius:25px;
 
   overflow:hidden;
 
+  background:
+  rgba(255,255,255,0.08);
+
+  backdrop-filter:blur(20px);
+
   box-shadow:
-  0 0 40px rgba(0,255,255,0.2);
+  0 0 40px rgba(0,0,0,0.3);
 
-  animation:float 4s ease-in-out infinite;
+  position:relative;
 
-}
-
-/* FLOAT EFFECT */
-
-@keyframes float{
-
-  0%{
-    transform:translateY(0);
-  }
-
-  50%{
-    transform:translateY(-10px);
-  }
-
-  100%{
-    transform:translateY(0);
-  }
-
+  z-index:10;
 }
 
 /* LEFT */
@@ -85,42 +111,21 @@ body{
 
   flex:1;
 
-  position:relative;
-
-  background:
-  url('hr-bg.jpg')
-  no-repeat center center;
-
-  background-size:cover;
-
   display:flex;
 
   justify-content:center;
 
   align-items:center;
 
-  color:white;
+  padding:40px;
 
-  text-align:center;
-
-  padding:20px;
-}
-
-/* OVERLAY */
-
-.left::before{
-
-  content:"";
-
-  position:absolute;
-
-  inset:0;
+  position:relative;
 
   background:
   linear-gradient(
-    135deg,
-    rgba(0,0,0,0.7),
-    rgba(0,0,0,0.3)
+    180deg,
+    rgba(255,0,0,0.15),
+    rgba(255,193,7,0.1)
   );
 }
 
@@ -128,46 +133,58 @@ body{
 
 .left-content{
 
-  position:relative;
-
-  z-index:1;
+  text-align:center;
 }
 
 /* LOGO */
 
 .logo{
 
-  width:110px;
+  width:180px;
 
-  height:110px;
+  height:180px;
 
   object-fit:contain;
 
-  border-radius:50%;
+  margin:auto;
 
-  background:white;
+  display:block;
 
-  padding:8px;
-
-  margin-bottom:15px;
-
-  box-shadow:
-  0 0 20px rgba(255,255,255,0.7);
+  filter:
+  drop-shadow(
+    0 0 25px rgba(255,255,255,0.6)
+  );
 }
 
-/* TEXT */
+/* PAPPRITO */
 
-.left span{
+.brand{
 
-  font-size:30px;
+  margin-top:20px;
 
-  font-weight:bold;
+  font-size:48px;
 
-  line-height:1.5;
+  font-weight:900;
+
+  letter-spacing:3px;
+
+  color:#ffd60a;
 
   text-shadow:
-  0 0 15px rgba(255,255,255,0.8);
+  0 0 20px rgba(255,214,10,0.8);
+}
 
+/* SUB */
+
+.sub{
+
+  margin-top:10px;
+
+  font-size:18px;
+
+  color:white;
+
+  line-height:1.6;
 }
 
 /* RIGHT */
@@ -176,20 +193,18 @@ body{
 
   flex:1;
 
-  background:
-  rgba(255,255,255,0.08);
-
-  backdrop-filter:blur(15px);
-
-  padding:35px;
-
-  color:white;
+  padding:50px;
 
   display:flex;
 
   flex-direction:column;
 
   justify-content:center;
+
+  background:
+  rgba(0,0,0,0.25);
+
+  color:white;
 }
 
 /* TITLE */
@@ -198,9 +213,14 @@ body{
 
   text-align:center;
 
-  margin-bottom:25px;
+  margin-bottom:30px;
 
-  font-size:32px;
+  font-size:36px;
+
+  color:#ffd60a;
+
+  text-shadow:
+  0 0 15px rgba(255,214,10,0.6);
 }
 
 /* INPUTS */
@@ -210,27 +230,31 @@ select{
 
   width:100%;
 
-  padding:13px;
+  padding:14px;
 
-  margin-top:12px;
+  margin-top:14px;
 
   border:none;
 
-  border-radius:8px;
+  border-radius:12px;
 
   background:
   rgba(255,255,255,0.15);
 
   color:white;
 
+  font-size:15px;
+
   outline:none;
 
-  font-size:15px;
+  backdrop-filter:blur(10px);
 }
+
+/* PLACEHOLDER */
 
 input::placeholder{
 
-  color:#ddd;
+  color:#f1f1f1;
 }
 
 select option{
@@ -244,26 +268,26 @@ button{
 
   width:100%;
 
-  padding:13px;
+  padding:14px;
 
-  margin-top:18px;
+  margin-top:22px;
 
   border:none;
 
-  border-radius:8px;
+  border-radius:12px;
 
   background:
   linear-gradient(
     45deg,
-    #00c6ff,
-    #0072ff
+    #ffbe0b,
+    #fb5607
   );
 
   color:white;
 
-  font-weight:bold;
+  font-size:17px;
 
-  font-size:16px;
+  font-weight:bold;
 
   cursor:pointer;
 
@@ -272,33 +296,15 @@ button{
 
 button:hover{
 
-  transform:scale(1.03);
+  transform:translateY(-2px);
 
   box-shadow:
-  0 0 15px #00c6ff;
-}
-
-/* INFO */
-
-.info{
-
-  margin-top:18px;
-
-  background:
-  rgba(255,255,255,0.1);
-
-  padding:12px;
-
-  border-radius:8px;
-
-  font-size:13px;
-
-  line-height:1.6;
+  0 0 20px rgba(255,190,11,0.7);
 }
 
 /* MOBILE */
 
-@media(max-width:850px){
+@media(max-width:900px){
 
   body{
     padding:15px;
@@ -306,16 +312,19 @@ button:hover{
 
   .container{
 
-    width:100%;
-
     flex-direction:column;
 
-    min-height:auto;
+    width:100%;
   }
 
   .left{
 
-    height:250px;
+    padding:30px;
+  }
+
+  .brand{
+
+    font-size:38px;
   }
 
 }
@@ -328,116 +337,86 @@ button:hover{
 
 <div class="container">
 
-  <!-- LEFT -->
+<!-- LEFT -->
 
-  <div class="left">
+<div class="left">
 
-    <div class="left-content">
+<div class="left-content">
 
-      <!-- LOGO -->
+<img src="logo.png"
+class="logo">
 
-      <img src="logo.png"
-      class="logo">
+<div class="brand">
 
-      <!-- TITLE -->
+PAPPRITO
 
-      <span>
+</div>
 
-        PAPPRITO<br>
+<div class="sub">
 
-        HR MANAGEMENT<br>
+HR MANAGEMENT SYSTEM
 
-        SYSTEM
+</div>
 
-      </span>
+</div>
 
-    </div>
+</div>
 
-  </div>
+<!-- RIGHT -->
 
-  <!-- RIGHT -->
+<div class="right">
 
-  <div class="right">
+<h2>
 
-    <h2>
+<i class="fa-solid fa-user-lock"></i>
 
-    <i class="fa-solid fa-user-lock"></i>
+LOGIN
 
-    LOGIN
+</h2>
 
-    </h2>
+<!-- MODE -->
 
-    <!-- MODE -->
+<select id="mode">
 
-    <select id="mode">
+<option value="admin">
 
-      <option value="admin">
+Admin Login
 
-        Admin Login
+</option>
 
-      </option>
+<option value="employee">
 
-      <option value="employee">
+Employee Login
 
-        Employee Login
+</option>
 
-      </option>
+</select>
 
-    </select>
+<!-- USERNAME -->
 
-    <!-- USERNAME -->
+<input
+type="text"
+id="username"
+placeholder="Enter Username">
 
-    <input
+<!-- PASSWORD -->
 
-    type="text"
+<input
+type="password"
+id="password"
+placeholder="Enter Password">
 
-    id="username"
+<!-- LOGIN -->
 
-    placeholder="Username">
+<button onclick="login()">
 
-    <!-- PASSWORD -->
+<i class="fa-solid fa-right-to-bracket"></i>
 
-    <input
+LOGIN
 
-    type="password"
+</button>
 
-    id="password"
-
-    placeholder="Password">
-
-    <!-- BUTTON -->
-
-    <button onclick="login()">
-
-      <i class="fa-solid fa-right-to-bracket"></i>
-
-      LOGIN
-
-    </button>
-
-    <!-- INFO -->
-
-    <div class="info">
-
-      <b>
-
-      <i class="fa-solid fa-user-shield"></i>
-
-      Default Admin
-
-      </b>
-
-      <br><br>
-
-      Username: admin
-
-      <br>
-
-      Password: 123
-
-    </div>
-
-  </div>
+</div>
 
 </div>
 
@@ -492,29 +471,26 @@ initializeApp(firebaseConfig);
 const db =
 getFirestore(app);
 
-/* =====================================
-   DEFAULT ADMIN
-===================================== */
+/* ADMIN */
 
 if(!localStorage.getItem("admin")){
 
-  let admin = {
-
-    username:"admin",
-
-    password:"123"
-
-  };
-
   localStorage.setItem(
+
     "admin",
-    JSON.stringify(admin)
+
+    JSON.stringify({
+
+      username:"admin",
+
+      password:"123"
+
+    })
+
   );
 }
 
-/* =====================================
-   LOGIN
-===================================== */
+/* LOGIN */
 
 window.login = async function(){
 
@@ -527,7 +503,6 @@ window.login = async function(){
   .value
 
   .trim()
-
   .toLowerCase();
 
   let password =
@@ -548,9 +523,7 @@ window.login = async function(){
 
   .value;
 
-  /* =========================
-     ADMIN LOGIN
-  ========================= */
+  /* ADMIN */
 
   if(mode === "admin"){
 
@@ -593,13 +566,9 @@ window.login = async function(){
     }
   }
 
-  /* =========================
-     EMPLOYEE LOGIN
-  ========================= */
+  /* EMPLOYEE */
 
   if(mode === "employee"){
-
-    /* LOAD FIREBASE USERS */
 
     const userSnapshot =
 
@@ -638,8 +607,6 @@ window.login = async function(){
       }
     });
 
-    /* USER NOT FOUND */
-
     if(!foundUser){
 
       alert(
@@ -648,8 +615,6 @@ window.login = async function(){
 
       return;
     }
-
-    /* FIREBASE EMPLOYEE */
 
     const querySnapshot =
 
@@ -663,35 +628,23 @@ window.login = async function(){
 
       let e = d.data();
 
-      let fullname =
-
-      (
-        (e.fname || "") +
-        " " +
-        (e.lname || "")
-      )
-
-      .toLowerCase()
-      .trim();
-
-      let savedName =
-
-      (foundUser.name || "")
-
-      .toLowerCase()
-      .trim();
-
       if(
 
-        fullname === savedName
+        (e.empid || "")
+        .toString()
+        .trim()
+
+        ===
+
+        (foundUser.empid || "")
+        .toString()
+        .trim()
 
       ){
 
         employee = e;
       }
     });
-
-    /* LOGIN SUCCESS */
 
     if(employee){
 
@@ -729,9 +682,7 @@ window.login = async function(){
 
 }
 
-/* =====================================
-   ENTER KEY
-===================================== */
+/* ENTER KEY */
 
 document.addEventListener(
 
