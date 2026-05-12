@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Papprito Admin Login</title>
+<title>Papprito Attendance</title>
 
 <style>
 
@@ -17,212 +16,115 @@ content="width=device-width, initial-scale=1.0">
 }
 
 body{
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    background:
-    linear-gradient(rgba(0,0,0,0.6),
-    rgba(0,0,0,0.6)),
-    url('bg.jpg');
-
-    background-size:cover;
-    background-position:center;
+    background:#ececec;
 }
 
-/* LOGIN BOX */
+/* MAIN */
 
-.box{
-
-    width:400px;
-
+.container{
+    width:1000px;
+    margin:20px auto;
     background:white;
-
-    border-radius:15px;
-
-    overflow:hidden;
-
-    box-shadow:0 0 20px rgba(0,0,0,0.4);
-
-    animation:fade 0.5s ease;
-
+    box-shadow:0 0 15px rgba(0,0,0,0.2);
 }
 
-@keyframes fade{
-
-    from{
-        opacity:0;
-        transform:translateY(20px);
-    }
-
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-
-}
-
-/* TOP */
+/* HEADER */
 
 .top{
-
     background:#d71920;
-
-    color:white;
-
+    padding:40px 20px 60px;
     text-align:center;
-
-    padding:35px 20px;
-
+    color:white;
 }
 
-.top img{
-
+.logo{
     width:100px;
-
     margin-bottom:10px;
-
 }
 
-.top h2{
-
-    font-size:36px;
-
+.title{
+    font-size:60px;
     font-weight:900;
-
+    margin-top:10px;
 }
 
-.top p{
+/* EMPLOYEE INFO */
 
-    margin-top:5px;
-
-    opacity:0.9;
-
+.emp-box{
+    margin-top:30px;
+    font-size:22px;
+    line-height:1.8;
 }
 
-/* FORM */
+/* BUTTONS */
 
-.form{
-
-    padding:30px;
-
+.buttons{
+    display:flex;
+    justify-content:center;
+    gap:120px;
+    margin-top:40px;
 }
 
-.input-group{
-
-    margin-bottom:18px;
-
-}
-
-.input-group label{
-
-    display:block;
-
-    margin-bottom:6px;
-
-    font-weight:bold;
-
-    color:#444;
-
-}
-
-.input-group input{
-
-    width:100%;
-
-    padding:12px;
-
-    border:1px solid #ccc;
-
-    border-radius:6px;
-
-    font-size:16px;
-
-    transition:0.3s;
-
-}
-
-.input-group input:focus{
-
-    border-color:#d71920;
-
-    outline:none;
-
-    box-shadow:0 0 5px rgba(215,25,32,0.4);
-
-}
-
-/* BUTTON */
-
-.loginBtn{
-
-    width:100%;
-
-    padding:14px;
-
-    background:#d71920;
-
+.btn{
+    width:220px;
+    padding:18px;
+    border:3px solid white;
     color:white;
-
-    border:none;
-
-    border-radius:6px;
-
-    font-size:18px;
-
+    font-size:28px;
     font-weight:bold;
-
     cursor:pointer;
-
-    transition:0.3s;
-
+    transition:.3s;
 }
 
-.loginBtn:hover{
-
-    background:#b81418;
-
-    transform:scale(1.02);
-
+.btn:hover{
+    transform:scale(1.05);
 }
 
-/* LOGIN INFO */
-
-.defaultBox{
-
-    margin-top:20px;
-
-    background:#f5f5f5;
-
-    padding:15px;
-
-    border-radius:8px;
-
-    font-size:14px;
-
-    color:#333;
-
+.timein{
+    background:#10b64d;
 }
 
-.defaultBox p{
-
-    margin:5px 0;
-
+.timeout{
+    background:#ff0000;
 }
 
-/* FOOTER */
+/* TABLE */
 
-.footer{
+.table-box{
+    overflow:auto;
+}
 
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:yellow;
+    color:black;
+    border:1px solid #555;
+    padding:12px;
+    font-size:22px;
+}
+
+td{
+    border:1px solid #777;
+    padding:10px;
     text-align:center;
+    font-size:20px;
+}
 
-    padding:15px;
+/* CLOCK */
 
-    font-size:13px;
+.clock{
+    margin-top:20px;
+    font-size:30px;
+    font-weight:bold;
+}
 
-    color:#888;
-
+.date{
+    font-size:22px;
+    margin-top:5px;
 }
 
 </style>
@@ -230,81 +132,61 @@ body{
 
 <body>
 
-<div class="box">
-
-    <!-- TOP -->
+<div class="container">
 
     <div class="top">
 
-        <!-- CHANGE LOGO -->
-        <img src="logo.png">
+        <!-- LOGO -->
+        <img src="logo.png" class="logo">
 
-        <h2>PAPPRITO</h2>
-
-        <p>Admin Attendance System</p>
-
-    </div>
-
-    <!-- FORM -->
-
-    <div class="form">
-
-        <!-- USERNAME -->
-
-        <div class="input-group">
-
-            <label>Username</label>
-
-            <input type="text"
-            id="username"
-            placeholder="Enter Username">
-
+        <div class="title">
+            EMPLOYEE ATTENDANCE
         </div>
 
-        <!-- PASSWORD -->
-
-        <div class="input-group">
-
-            <label>Password</label>
-
-            <input type="password"
-            id="password"
-            placeholder="Enter Password">
-
+        <!-- EMPLOYEE INFO -->
+        <div class="emp-box">
+            <div id="empid"></div>
+            <div id="empname"></div>
         </div>
 
-        <!-- LOGIN BUTTON -->
+        <!-- CLOCK -->
+        <div class="clock" id="clock"></div>
+        <div class="date" id="today"></div>
 
-        <button class="loginBtn"
-        onclick="login()">
+        <!-- BUTTONS -->
+        <div class="buttons">
 
-            LOGIN
+            <button class="btn timein" onclick="timeIn()">
+                TIME IN
+            </button>
 
-        </button>
-
-        <!-- DEFAULT -->
-
-        <div class="defaultBox">
-
-            <p>
-                <b>Default Username:</b>
-                admin
-            </p>
-
-            <p>
-                <b>Default Password:</b>
-                123
-            </p>
+            <button class="btn timeout" onclick="timeOut()">
+                TIME OUT
+            </button>
 
         </div>
 
     </div>
 
-    <!-- FOOTER -->
+    <!-- TABLE -->
+    <div class="table-box">
 
-    <div class="footer">
+        <table>
 
-        Papprito HR Management System
+            <thead>
+                <tr>
+                    <th>DATE</th>
+                    <th>EMP ID</th>
+                    <th>EMP NAME</th>
+                    <th>TIME IN</th>
+                    <th>TIME OUT</th>
+                    <th>TOTAL HOURS</th>
+                </tr>
+            </thead>
+
+            <tbody id="tbody"></tbody>
+
+        </table>
 
     </div>
 
@@ -312,80 +194,233 @@ body{
 
 <script>
 
-/* DEFAULT ADMIN */
+/* =========================================
+   SAMPLE MASTER LIST
+========================================= */
 
-if(!localStorage.getItem("admin")){
+if(!localStorage.getItem("employees")){
 
-    let admin = {
+    let sampleEmployees = [
 
-        username:"admin",
+        {
+            empid:"PP80050",
+            fname:"Rusty",
+            lname:"DEGAMHON",
+            password:"1234"
+        },
 
-        password:"123"
+        {
+            empid:"PP80134",
+            fname:"Joemarie",
+            lname:"MACALALAD",
+            password:"1234"
+        }
 
-    };
+    ];
 
     localStorage.setItem(
-        "admin",
-        JSON.stringify(admin)
+        "employees",
+        JSON.stringify(sampleEmployees)
+    );
+}
+
+/* =========================================
+   AUTO LOGIN DEMO
+========================================= */
+
+if(!localStorage.getItem("loggedEmployee")){
+
+    let employees =
+    JSON.parse(localStorage.getItem("employees"));
+
+    localStorage.setItem(
+        "loggedEmployee",
+        JSON.stringify(employees[0])
+    );
+}
+
+/* =========================================
+   LOAD EMPLOYEE
+========================================= */
+
+let emp =
+JSON.parse(localStorage.getItem("loggedEmployee"));
+
+document.getElementById("empid").innerHTML =
+"EMPLOYEE ID : " + emp.empid;
+
+document.getElementById("empname").innerHTML =
+"EMPLOYEE NAME : " +
+emp.lname + ", " + emp.fname;
+
+/* =========================================
+   LIVE CLOCK
+========================================= */
+
+function updateClock(){
+
+    let now = new Date();
+
+    document.getElementById("clock").innerHTML =
+    now.toLocaleTimeString();
+
+    document.getElementById("today").innerHTML =
+    now.toDateString();
+}
+
+setInterval(updateClock,1000);
+
+updateClock();
+
+/* =========================================
+   TIME IN
+========================================= */
+
+function timeIn(){
+
+    let attendance =
+    JSON.parse(localStorage.getItem("attendance")) || [];
+
+    let now = new Date();
+
+    let date =
+    now.toLocaleDateString();
+
+    /* CHECK DUPLICATE */
+
+    let existing = attendance.find(r =>
+        r.empid === emp.empid &&
+        r.date === date &&
+        r.timeout === ""
     );
 
+    if(existing){
+        alert("Already TIME IN");
+        return;
+    }
+
+    attendance.push({
+
+        date:date,
+
+        empid:emp.empid,
+
+        name:
+        emp.lname + ", " + emp.fname,
+
+        timein:
+        now.toLocaleTimeString(),
+
+        timeout:"",
+
+        total:"0"
+
+    });
+
+    localStorage.setItem(
+        "attendance",
+        JSON.stringify(attendance)
+    );
+
+    render();
+
+    alert("TIME IN SUCCESS");
 }
 
-/* LOGIN */
+/* =========================================
+   TIME OUT
+========================================= */
 
-function login(){
+function timeOut(){
 
-    let username =
-    document.getElementById("username")
-    .value
-    .trim();
+    let attendance =
+    JSON.parse(localStorage.getItem("attendance")) || [];
 
-    let password =
-    document.getElementById("password")
-    .value
-    .trim();
+    let row = [...attendance].reverse().find(r =>
+        r.empid === emp.empid &&
+        r.timeout === ""
+    );
 
-    let admin =
-    JSON.parse(localStorage.getItem("admin"));
-
-    if(
-
-        username === admin.username
-
-        &&
-
-        password === admin.password
-
-    ){
-
-        alert("Login Successful");
-
-        window.location.href =
-        "index.html";
-
+    if(!row){
+        alert("No active TIME IN");
+        return;
     }
 
-    else{
+    let now = new Date();
 
-        alert("Invalid Username or Password");
+    row.timeout =
+    now.toLocaleTimeString();
 
+    /* COMPUTE HOURS */
+
+    let start =
+    new Date(row.date + " " + row.timein);
+
+    let end =
+    new Date(row.date + " " + row.timeout);
+
+    let hrs =
+    (end-start)/1000/60/60;
+
+    if(hrs < 0){
+        hrs += 24;
     }
 
+    row.total =
+    hrs.toFixed(2);
+
+    localStorage.setItem(
+        "attendance",
+        JSON.stringify(attendance)
+    );
+
+    render();
+
+    alert("TIME OUT SUCCESS");
 }
 
-/* ENTER KEY */
+/* =========================================
+   RENDER TABLE
+========================================= */
 
-document.addEventListener("keypress",
+function render(){
 
-function(e){
+    let attendance =
+    JSON.parse(localStorage.getItem("attendance")) || [];
 
-    if(e.key==="Enter"){
+    let tbody =
+    document.getElementById("tbody");
 
-        login();
+    tbody.innerHTML = "";
 
-    }
+    attendance
+    .filter(r => r.empid === emp.empid)
+    .reverse()
+    .forEach(r => {
 
-});
+        tbody.innerHTML += `
+
+        <tr>
+
+            <td>${r.date}</td>
+
+            <td>${r.empid}</td>
+
+            <td>${r.name}</td>
+
+            <td>${r.timein}</td>
+
+            <td>${r.timeout}</td>
+
+            <td>${r.total}</td>
+
+        </tr>
+
+        `;
+    });
+}
+
+render();
 
 </script>
 
