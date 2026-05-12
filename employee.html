@@ -304,47 +304,6 @@ if(localStorage.getItem("loggedIn") !== "true") {
 </div>
 
 <script>
-let employees = JSON.parse(localStorage.getItem("employees")) || [];
-let editIndex = -1;
-
-function calcAge() {
-  let birth = new Date(birthdate.value);
-  let today = new Date();
-  age.value = today.getFullYear() - birth.getFullYear();
-}
-
-function addEmployee() {
- let idVal = empid.value || "EMP-" + Date.now();
-
-  let emp = {
-    fname: fname.value,
-    mname: mname.value,
-    lname: lname.value,
-    birthdate: birthdate.value,
-    age: age.value,
-    address: address.value,
-    bank: bank.value,
-    account: bankAcc.value,
-    empid: idVal,
-    govId: govId.value,
-    sss: sss.value,
-    philhealth: philhealth.value,
-    pagibig: pagibig.value,
-    healthcard: healthcard.value,
-    position: position.value
-  };
-
-  if(editIndex === -1){
-    employees.push(emp);
-  } else {
-    employees[editIndex] = emp;
-    editIndex = -1;
-  }
-
-  localStorage.setItem("employees", JSON.stringify(employees));
-  clearForm();
-  renderTable();
-}
 
 function editEmp(i){
   let e = employees[i];
@@ -429,6 +388,177 @@ function logout(){
 
 renderTable();
 </script>
+<script type="module">
 
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+deleteDoc,
+doc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* FIREBASE CONFIG */
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyClEtSTjrvf52exf2Qtdzb2MMLLlSfwhVg",
+
+  authDomain: "pappritohr.firebaseapp.com",
+
+  projectId: "pappritohr",
+
+  storageBucket: "pappritohr.firebasestorage.app",
+
+  messagingSenderId: "559428820611",
+
+  appId: "1:559428820611:web:09344b59fe1b21a5e2c5b6",
+
+  measurementId: "G-1CEQ4P5XW8"
+
+};
+
+/* INIT */
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
+
+/* =====================================
+   ADD EMPLOYEE
+===================================== */
+
+window.addEmployee = async function(){
+
+  let emp = {
+
+    fname: fname.value,
+    mname: mname.value,
+    lname: lname.value,
+    birthdate: birthdate.value,
+    age: age.value,
+    address: address.value,
+
+    bank: bank.value,
+
+    account: bankAcc.value,
+
+    empid: empid.value,
+
+    govId: govId.value,
+
+    sss: sss.value,
+
+    philhealth: philhealth.value,
+
+    pagibig: pagibig.value,
+
+    healthcard: healthcard.value,
+
+    position: position.value
+
+  };
+
+  await addDoc(
+    collection(db,"employees"),
+    emp
+  );
+
+  alert("Employee Saved");
+
+  clearForm();
+
+  loadEmployees();
+}
+
+/* =====================================
+   LOAD EMPLOYEES
+===================================== */
+
+window.loadEmployees = async function(){
+
+  let tbody =
+  document.querySelector("#empTable tbody");
+
+  tbody.innerHTML = "";
+
+  const querySnapshot =
+  await getDocs(
+    collection(db,"employees")
+  );
+
+  querySnapshot.forEach((d)=>{
+
+    let e = d.data();
+
+    tbody.innerHTML += `
+
+    <tr>
+
+      <td>${e.fname || ''}</td>
+      <td>${e.mname || ''}</td>
+      <td>${e.lname || ''}</td>
+      <td>${e.birthdate || ''}</td>
+      <td>${e.age || ''}</td>
+      <td>${e.address || ''}</td>
+      <td>${e.bank || ''}</td>
+      <td>${e.account || ''}</td>
+      <td>${e.empid || ''}</td>
+      <td>${e.govId || ''}</td>
+      <td>${e.sss || ''}</td>
+      <td>${e.philhealth || ''}</td>
+      <td>${e.pagibig || ''}</td>
+      <td>${e.healthcard || ''}</td>
+      <td>${e.position || ''}</td>
+
+      <td>
+
+      <button onclick="deleteEmployee('${d.id}')">
+
+      Delete
+
+      </button>
+
+      </td>
+
+    </tr>
+
+    `;
+
+  });
+
+}
+
+/* =====================================
+   DELETE
+===================================== */
+
+window.deleteEmployee = async function(id){
+
+  if(!confirm("Delete employee?")){
+    return;
+  }
+
+  await deleteDoc(
+    doc(db,"employees",id)
+  );
+
+  loadEmployees();
+}
+
+/* =====================================
+   START
+===================================== */
+
+loadEmployees();
+
+</script>
 </body>
 </html>
