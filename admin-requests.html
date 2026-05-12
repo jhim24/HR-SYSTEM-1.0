@@ -1,25 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>Admin Requests</title>
 
+<!-- FONT AWESOME -->
+
+<link rel="stylesheet"
+
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <style>
-*{box-sizing:border-box;font-family:'Segoe UI';}
+
+*{
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
 
 body{
   margin:0;
   background:linear-gradient(135deg,#1e3c72,#2a5298);
   padding:20px;
   color:white;
+  min-height:100vh;
 }
 
 /* CONTAINER */
+
 .container{
-  max-width:1000px;
+  max-width:1100px;
   margin:auto;
 }
 
 /* FLOAT BOX */
+
 .box{
   background:rgba(255,255,255,0.1);
   backdrop-filter:blur(15px);
@@ -30,55 +44,124 @@ body{
 }
 
 /* HEADER */
+
 .header{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
 }
 
-/* 🔙 BACK BUTTON */
+/* TITLE */
+
+.title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* BACK BUTTON */
+
 .back{
   background:#00c6ff;
-  padding:6px 12px;
-  border-radius:6px;
+  padding:10px 16px;
+  border-radius:8px;
   cursor:pointer;
-  font-size:13px;
+  font-size:14px;
+  font-weight:bold;
+  transition:0.2s;
+}
+
+.back:hover{
+  transform:scale(1.05);
+  background:#00a8e8;
+}
+
+/* TABLE WRAPPER */
+
+.table-wrap{
+  overflow-x:auto;
 }
 
 /* TABLE */
+
 table{
   width:100%;
+  min-width:900px;
   border-collapse:collapse;
   margin-top:10px;
-  background:rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.08);
 }
 
 th,td{
-  padding:8px;
+  padding:10px;
   text-align:center;
   border:1px solid rgba(255,255,255,0.2);
 }
 
 th{
   background:rgba(0,0,0,0.4);
+  font-size:14px;
+}
+
+td{
+  font-size:13px;
 }
 
 /* STATUS */
-.pending{color:yellow;}
-.approved{color:#00ffcc;}
-.rejected{color:#ff6b6b;}
+
+.pending{
+  color:yellow;
+  font-weight:bold;
+}
+
+.approved{
+  color:#00ffcc;
+  font-weight:bold;
+}
+
+.rejected{
+  color:#ff6b6b;
+  font-weight:bold;
+}
 
 /* BUTTON */
+
 .btn{
-  padding:5px 8px;
+  padding:6px 10px;
   border:none;
   border-radius:6px;
   cursor:pointer;
   margin:2px;
+  color:white;
+  transition:0.2s;
 }
 
-.approve{background:#2ecc71;color:white;}
-.reject{background:#e74c3c;color:white;}
+.btn:hover{
+  transform:scale(1.05);
+}
+
+.approve{
+  background:#2ecc71;
+}
+
+.reject{
+  background:#e74c3c;
+}
+
+.delete{
+  background:#555;
+}
+
+/* EMPTY */
+
+.empty{
+  text-align:center;
+  padding:20px;
+  opacity:0.8;
+}
+
 </style>
 
 </head>
@@ -88,28 +171,65 @@ th{
 <div class="container">
 
 <!-- HEADER -->
+
 <div class="box header">
-  <h2>Admin Request Panel</h2>
-  <div class="back" onclick="goBack()">⬅ Back</div>
+
+  <div class="title">
+
+    <h2>
+
+    <i class="fa-solid fa-clipboard-list"></i>
+
+    Admin Request Panel
+
+    </h2>
+
+  </div>
+
+  <div class="back"
+  onclick="goBack()">
+
+  <i class="fa-solid fa-arrow-left"></i>
+
+  Back
+
+  </div>
+
 </div>
 
 <!-- TABLE -->
+
 <div class="box">
 
+<div class="table-wrap">
+
 <table>
+
 <thead>
+
 <tr>
-<th>Name</th>
-<th>Type</th>
+
+<th>Employee Name</th>
+
+<th>Request Type</th>
+
 <th>Date</th>
+
 <th>Reason</th>
+
 <th>Status</th>
+
 <th>Action</th>
+
 </tr>
+
 </thead>
 
 <tbody id="reqTable"></tbody>
+
 </table>
+
+</div>
 
 </div>
 
@@ -117,43 +237,207 @@ th{
 
 <script>
 
-/* LOAD REQUESTS */
-let requests = JSON.parse(localStorage.getItem("requests")) || [];
+/* =====================================
+   LOAD REQUESTS
+===================================== */
+
+let requests =
+
+JSON.parse(
+localStorage.getItem("requests")
+)
+
+|| [];
+
+/* =====================================
+   LOAD TABLE
+===================================== */
 
 function loadRequests(){
 
-  reqTable.innerHTML="";
+  reqTable.innerHTML = "";
+
+  if(requests.length === 0){
+
+    reqTable.innerHTML = `
+
+    <tr>
+
+      <td colspan="6"
+      class="empty">
+
+      No requests found
+
+      </td>
+
+    </tr>
+
+    `;
+
+    return;
+  }
 
   requests.forEach((r,i)=>{
 
-    let statusClass = r.status.toLowerCase();
+    let statusClass =
+
+    (r.status || "Pending")
+    .toLowerCase();
 
     reqTable.innerHTML += `
+
     <tr>
-      <td>${r.name}</td>
-      <td>${r.type}</td>
-      <td>${r.date}</td>
-      <td>${r.reason}</td>
-      <td class="${statusClass}">${r.status}</td>
+
       <td>
-        <button class="btn approve" onclick="updateStatus(${i},'Approved')">Approve</button>
-        <button class="btn reject" onclick="updateStatus(${i},'Rejected')">Reject</button>
+
+      ${r.name || "-"}
+
       </td>
-    </tr>`;
+
+      <td>
+
+      ${r.type || "-"}
+
+      </td>
+
+      <td>
+
+      ${r.date || "-"}
+
+      </td>
+
+      <td>
+
+      ${r.reason || "-"}
+
+      </td>
+
+      <td class="${statusClass}">
+
+      ${r.status || "Pending"}
+
+      </td>
+
+      <td>
+
+        <button
+
+        class="btn approve"
+
+        onclick="updateStatus(
+
+        ${i},
+
+        'Approved'
+
+        )">
+
+        <i class="fa-solid fa-check"></i>
+
+        Approve
+
+        </button>
+
+        <button
+
+        class="btn reject"
+
+        onclick="updateStatus(
+
+        ${i},
+
+        'Rejected'
+
+        )">
+
+        <i class="fa-solid fa-xmark"></i>
+
+        Reject
+
+        </button>
+
+        <button
+
+        class="btn delete"
+
+        onclick="deleteRequest(${i})">
+
+        <i class="fa-solid fa-trash"></i>
+
+        Delete
+
+        </button>
+
+      </td>
+
+    </tr>
+
+    `;
   });
 
 }
 
+/* =====================================
+   UPDATE STATUS
+===================================== */
+
 function updateStatus(i,status){
+
   requests[i].status = status;
-  localStorage.setItem("requests", JSON.stringify(requests));
+
+  localStorage.setItem(
+
+    "requests",
+
+    JSON.stringify(requests)
+
+  );
+
   loadRequests();
 }
 
-/* 🔙 BACK FUNCTION */
-function goBack(){
-  window.location.href = "index.html";
+/* =====================================
+   DELETE REQUEST
+===================================== */
+
+function deleteRequest(i){
+
+  let confirmDelete =
+
+  confirm(
+    "Delete this request?"
+  );
+
+  if(!confirmDelete){
+    return;
+  }
+
+  requests.splice(i,1);
+
+  localStorage.setItem(
+
+    "requests",
+
+    JSON.stringify(requests)
+
+  );
+
+  loadRequests();
 }
+
+/* =====================================
+   BACK
+===================================== */
+
+function goBack(){
+
+  window.location.href =
+  "index.html";
+}
+
+/* =====================================
+   START
+===================================== */
 
 loadRequests();
 
