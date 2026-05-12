@@ -5,7 +5,7 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Papprito Employee Login</title>
+<title>Papprito Admin Login</title>
 
 <style>
 
@@ -21,6 +21,7 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
+
     background:
     linear-gradient(rgba(0,0,0,0.6),
     rgba(0,0,0,0.6)),
@@ -44,9 +45,25 @@ body{
 
     box-shadow:0 0 20px rgba(0,0,0,0.4);
 
+    animation:fade 0.5s ease;
+
 }
 
-/* HEADER */
+@keyframes fade{
+
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+/* TOP */
 
 .top{
 
@@ -56,13 +73,13 @@ body{
 
     text-align:center;
 
-    padding:30px 20px;
+    padding:35px 20px;
 
 }
 
 .top img{
 
-    width:90px;
+    width:100px;
 
     margin-bottom:10px;
 
@@ -70,7 +87,7 @@ body{
 
 .top h2{
 
-    font-size:34px;
+    font-size:36px;
 
     font-weight:900;
 
@@ -166,31 +183,31 @@ body{
 
     background:#b81418;
 
+    transform:scale(1.02);
+
 }
 
-/* EMPLOYEE INFO */
+/* LOGIN INFO */
 
-.info{
+.defaultBox{
 
     margin-top:20px;
 
-    background:#f4f4f4;
+    background:#f5f5f5;
 
     padding:15px;
 
     border-radius:8px;
 
-    display:none;
-
-}
-
-.info p{
-
-    margin:5px 0;
+    font-size:14px;
 
     color:#333;
 
-    font-size:15px;
+}
+
+.defaultBox p{
+
+    margin:5px 0;
 
 }
 
@@ -202,9 +219,9 @@ body{
 
     padding:15px;
 
-    color:#777;
-
     font-size:13px;
+
+    color:#888;
 
 }
 
@@ -224,7 +241,7 @@ body{
 
         <h2>PAPPRITO</h2>
 
-        <p>Employee Attendance Portal</p>
+        <p>Admin Attendance System</p>
 
     </div>
 
@@ -232,53 +249,31 @@ body{
 
     <div class="form">
 
-        <!-- EMPLOYEE ID -->
+        <!-- USERNAME -->
 
         <div class="input-group">
 
-            <label>Employee ID</label>
+            <label>Username</label>
 
             <input type="text"
-            id="id"
-            placeholder="Enter Employee ID">
+            id="username"
+            placeholder="Enter Username">
 
         </div>
 
-        <!-- EMPLOYEE NAME -->
+        <!-- PASSWORD -->
 
         <div class="input-group">
 
-            <label>Employee Name</label>
+            <label>Password</label>
 
-            <input type="text"
-            id="name"
-            placeholder="Employee Name"
-            readonly>
-
-        </div>
-
-        <!-- EMPLOYEE DETAILS -->
-
-        <div class="info" id="infoBox">
-
-            <p>
-                <b>Department:</b>
-                <span id="dept"></span>
-            </p>
-
-            <p>
-                <b>Position:</b>
-                <span id="position"></span>
-            </p>
-
-            <p>
-                <b>Status:</b>
-                <span id="status"></span>
-            </p>
+            <input type="password"
+            id="password"
+            placeholder="Enter Password">
 
         </div>
 
-        <!-- BUTTON -->
+        <!-- LOGIN BUTTON -->
 
         <button class="loginBtn"
         onclick="login()">
@@ -286,6 +281,22 @@ body{
             LOGIN
 
         </button>
+
+        <!-- DEFAULT -->
+
+        <div class="defaultBox">
+
+            <p>
+                <b>Default Username:</b>
+                admin
+            </p>
+
+            <p>
+                <b>Default Password:</b>
+                123
+            </p>
+
+        </div>
 
     </div>
 
@@ -301,135 +312,62 @@ body{
 
 <script>
 
-/* SAMPLE EMPLOYEES */
+/* DEFAULT ADMIN */
 
-if(!localStorage.getItem("employees")){
+if(!localStorage.getItem("admin")){
 
-    let sampleEmployees = [
+    let admin = {
 
-        {
-            id:"PP80050",
-            fname:"Rusty",
-            lname:"DEGAMHON",
-            department:"Kitchen",
-            position:"Cook",
-            status:"Active"
-        },
+        username:"admin",
 
-        {
-            id:"PP80134",
-            fname:"Joemarie",
-            lname:"MACALALAD",
-            department:"Cashier",
-            position:"Supervisor",
-            status:"Active"
-        }
+        password:"123"
 
-    ];
+    };
 
     localStorage.setItem(
-        "employees",
-        JSON.stringify(sampleEmployees)
+        "admin",
+        JSON.stringify(admin)
     );
 
 }
-
-/* AUTO SEARCH EMPLOYEE */
-
-document.getElementById("id")
-.addEventListener("keyup", function(){
-
-    let empId = this.value.trim();
-
-    let employees =
-    JSON.parse(localStorage.getItem("employees"))
-    || [];
-
-    let found =
-    employees.find(e =>
-        (e.id || e.empId) === empId
-    );
-
-    if(found){
-
-        /* NAME */
-
-        document.getElementById("name").value =
-
-        found.fname + " " + found.lname;
-
-        /* DETAILS */
-
-        document.getElementById("dept").innerText =
-
-        found.department || "N/A";
-
-        document.getElementById("position").innerText =
-
-        found.position || "N/A";
-
-        document.getElementById("status").innerText =
-
-        found.status || "Active";
-
-        /* SHOW INFO */
-
-        document.getElementById("infoBox")
-        .style.display="block";
-
-    }else{
-
-        document.getElementById("name").value="";
-
-        document.getElementById("dept").innerText="";
-
-        document.getElementById("position").innerText="";
-
-        document.getElementById("status").innerText="";
-
-        document.getElementById("infoBox")
-        .style.display="none";
-
-    }
-
-});
 
 /* LOGIN */
 
 function login(){
 
-    let empId =
-    document.getElementById("id")
+    let username =
+    document.getElementById("username")
     .value
     .trim();
 
-    let employees =
-    JSON.parse(localStorage.getItem("employees"))
-    || [];
+    let password =
+    document.getElementById("password")
+    .value
+    .trim();
 
-    let found =
-    employees.find(e =>
-        (e.id || e.empId) === empId
-    );
+    let admin =
+    JSON.parse(localStorage.getItem("admin"));
 
-    if(found){
+    if(
 
-        localStorage.setItem(
-            "empSession",
-            JSON.stringify(found)
-        );
+        username === admin.username
 
-        alert(
-            "Welcome " +
-            found.fname + "!"
-        );
+        &&
+
+        password === admin.password
+
+    ){
+
+        alert("Login Successful");
 
         window.location.href =
-        "employee-portal.html";
+        "index.html";
 
-    }else{
+    }
 
-        alert("Employee not found");
+    else{
+
+        alert("Invalid Username or Password");
 
     }
 
@@ -438,6 +376,7 @@ function login(){
 /* ENTER KEY */
 
 document.addEventListener("keypress",
+
 function(e){
 
     if(e.key==="Enter"){
