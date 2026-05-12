@@ -17,15 +17,19 @@
 
 body{
     background:#e5e5e5;
+    padding:15px;
 }
 
-/* CONTAINER */
+/* MAIN CONTAINER */
 
 .container{
-    width:1100px;
-    margin:20px auto;
+    width:100%;
+    max-width:1000px;
+    margin:auto;
     background:white;
-    box-shadow:0 0 15px rgba(0,0,0,0.2);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 0 10px rgba(0,0,0,0.2);
 }
 
 /* HEADER */
@@ -34,38 +38,47 @@ body{
     background:#d71920;
     color:white;
     text-align:center;
-    padding:40px 20px 60px;
-}
-
-.logo{
-    width:100px;
-    margin-bottom:10px;
+    padding:20px;
 }
 
 .title{
-    font-size:60px;
+    font-size:35px;
     font-weight:900;
+}
+
+/* DROPDOWN */
+
+.select-box{
+    margin-top:15px;
+}
+
+select{
+    width:300px;
+    padding:10px;
+    border:none;
+    border-radius:5px;
+    font-size:16px;
 }
 
 /* EMPLOYEE INFO */
 
 .emp-box{
-    margin-top:25px;
-    line-height:1.8;
-    font-size:22px;
+    margin-top:15px;
+    line-height:1.7;
+    font-size:16px;
     font-weight:bold;
 }
 
 /* CLOCK */
 
 .clock{
-    margin-top:20px;
-    font-size:35px;
+    margin-top:10px;
+    font-size:28px;
     font-weight:bold;
 }
 
 .today{
-    font-size:22px;
+    font-size:16px;
     margin-top:5px;
 }
 
@@ -74,24 +87,20 @@ body{
 .buttons{
     display:flex;
     justify-content:center;
-    gap:120px;
-    margin-top:40px;
+    gap:20px;
+    margin-top:20px;
+    flex-wrap:wrap;
 }
 
 .btn{
-    width:220px;
-    padding:18px;
+    width:160px;
+    padding:12px;
     border:none;
+    border-radius:5px;
     color:white;
-    font-size:28px;
+    font-size:18px;
     font-weight:bold;
     cursor:pointer;
-    transition:.3s;
-    border:3px solid white;
-}
-
-.btn:hover{
-    transform:scale(1.05);
 }
 
 .timein{
@@ -104,27 +113,29 @@ body{
 
 /* TABLE */
 
-.table-box{
-    overflow:auto;
+.table-wrapper{
+    width:100%;
+    overflow-x:auto;
 }
 
 table{
     width:100%;
+    min-width:950px;
     border-collapse:collapse;
 }
 
 th{
     background:yellow;
     border:1px solid #555;
-    padding:12px;
-    font-size:20px;
+    padding:10px;
+    font-size:15px;
 }
 
 td{
     border:1px solid #777;
-    padding:10px;
+    padding:8px;
     text-align:center;
-    font-size:18px;
+    font-size:14px;
 }
 
 .late{
@@ -146,15 +157,23 @@ td{
 
     <div class="top">
 
-        <!-- LOGO -->
-        <!-- Replace with your own logo -->
-        <img src="logo.png" class="logo">
-
         <div class="title">
             EMPLOYEE ATTENDANCE
         </div>
 
+        <!-- EMPLOYEE DROPDOWN -->
+
+        <div class="select-box">
+
+            <select id="employeeSelect"
+            onchange="changeEmployee()">
+
+            </select>
+
+        </div>
+
         <!-- EMPLOYEE INFO -->
+
         <div class="emp-box">
 
             <div id="empid"></div>
@@ -164,11 +183,13 @@ td{
         </div>
 
         <!-- CLOCK -->
+
         <div class="clock" id="clock"></div>
 
         <div class="today" id="today"></div>
 
         <!-- BUTTONS -->
+
         <div class="buttons">
 
             <button class="btn timein"
@@ -191,7 +212,7 @@ td{
 
     <!-- TABLE -->
 
-    <div class="table-box">
+    <div class="table-wrapper">
 
         <table>
 
@@ -200,21 +221,13 @@ td{
                 <tr>
 
                     <th>DATE</th>
-
                     <th>EMP ID</th>
-
-                    <th>EMP NAME</th>
-
+                    <th>EMPLOYEE NAME</th>
                     <th>TIME IN</th>
-
                     <th>BREAK</th>
-
                     <th>TIME OUT</th>
-
                     <th>TOTAL HOURS</th>
-
                     <th>LATE</th>
-
                     <th>STATUS</th>
 
                 </tr>
@@ -231,68 +244,117 @@ td{
 
 <script>
 
-/* =========================================
-   SAMPLE EMPLOYEE MASTER LIST
-========================================= */
+/* ======================================
+   EMPLOYEE MASTER LIST
+====================================== */
 
 if(!localStorage.getItem("employees")){
 
-    let sampleEmployees = [
+    let employees = [
 
         {
             empid:"PP80050",
             fname:"Rusty",
-            lname:"DEGAMHON",
-            password:"1234"
+            lname:"DEGAMHON"
         },
 
         {
             empid:"PP80134",
             fname:"Joemarie",
-            lname:"MACALALAD",
-            password:"1234"
+            lname:"MACALALAD"
+        },
+
+        {
+            empid:"PP80199",
+            fname:"Mark",
+            lname:"SANTOS"
         }
 
     ];
 
     localStorage.setItem(
         "employees",
-        JSON.stringify(sampleEmployees)
+        JSON.stringify(employees)
     );
 }
 
-/* =========================================
-   AUTO LOGIN DEMO
-========================================= */
+/* ======================================
+   VARIABLES
+====================================== */
 
-if(!localStorage.getItem("loggedEmployee")){
+let employees =
+JSON.parse(localStorage.getItem("employees")) || [];
 
-    let employees =
-    JSON.parse(localStorage.getItem("employees"));
+let attendance =
+JSON.parse(localStorage.getItem("attendance")) || [];
 
-    localStorage.setItem(
-        "loggedEmployee",
-        JSON.stringify(employees[0])
-    );
+let currentEmployee =
+employees[0];
+
+/* ======================================
+   LOAD DROPDOWN
+====================================== */
+
+function loadDropdown(){
+
+    let select =
+    document.getElementById("employeeSelect");
+
+    select.innerHTML = "";
+
+    employees.forEach((e,index)=>{
+
+        select.innerHTML += `
+
+        <option value="${index}">
+
+            ${e.empid} -
+            ${e.lname},
+            ${e.fname}
+
+        </option>
+
+        `;
+    });
 }
 
-/* =========================================
-   LOAD EMPLOYEE
-========================================= */
+/* ======================================
+   CHANGE EMPLOYEE
+====================================== */
 
-let emp =
-JSON.parse(localStorage.getItem("loggedEmployee"));
+function changeEmployee(){
 
-document.getElementById("empid").innerHTML =
-"EMPLOYEE ID : " + emp.empid;
+    let index =
+    document.getElementById("employeeSelect").value;
 
-document.getElementById("empname").innerHTML =
-"EMPLOYEE NAME : " +
-emp.lname + ", " + emp.fname;
+    currentEmployee =
+    employees[index];
 
-/* =========================================
+    loadEmployeeInfo();
+
+    render();
+}
+
+/* ======================================
+   EMPLOYEE INFO
+====================================== */
+
+function loadEmployeeInfo(){
+
+    document.getElementById("empid").innerHTML =
+    "EMPLOYEE ID : " +
+    currentEmployee.empid;
+
+    document.getElementById("empname").innerHTML =
+    "EMPLOYEE NAME : " +
+    currentEmployee.lname +
+    ", " +
+    currentEmployee.fname;
+}
+
+/* ======================================
    LIVE CLOCK
-========================================= */
+====================================== */
 
 function updateClock(){
 
@@ -309,13 +371,13 @@ setInterval(updateClock,1000);
 
 updateClock();
 
-/* =========================================
+/* ======================================
    TIME IN
-========================================= */
+====================================== */
 
 function timeIn(){
 
-    let attendance =
+    attendance =
     JSON.parse(localStorage.getItem("attendance")) || [];
 
     let now = new Date();
@@ -323,12 +385,14 @@ function timeIn(){
     let date =
     now.toLocaleDateString();
 
-    /* CHECK EXISTING OPEN TIME IN */
+    /* CHECK EXISTING */
 
     let existing = attendance.find(r =>
-        r.empid === emp.empid &&
+
+        r.empid === currentEmployee.empid &&
         r.date === date &&
         r.timeout === ""
+
     );
 
     if(existing){
@@ -338,14 +402,15 @@ function timeIn(){
         return;
     }
 
-    /* LATE COMPUTATION */
+    /* LATE */
 
     let lateMinutes = 0;
 
     let status = "ON TIME";
 
     let totalMinutes =
-    now.getHours() * 60 + now.getMinutes();
+    now.getHours() * 60 +
+    now.getMinutes();
 
     let officeTime = 8 * 60;
 
@@ -361,10 +426,12 @@ function timeIn(){
 
         date:date,
 
-        empid:emp.empid,
+        empid:currentEmployee.empid,
 
         name:
-        emp.lname + ", " + emp.fname,
+        currentEmployee.lname +
+        ", " +
+        currentEmployee.fname,
 
         timein:
         now.toLocaleTimeString(),
@@ -392,23 +459,23 @@ function timeIn(){
     alert("TIME IN SUCCESS");
 }
 
-/* =========================================
+/* ======================================
    TIME OUT
-========================================= */
+====================================== */
 
 function timeOut(){
 
-    let attendance =
+    attendance =
     JSON.parse(localStorage.getItem("attendance")) || [];
-
-    /* FIND ACTIVE ROW */
 
     let row =
     [...attendance]
     .reverse()
     .find(r =>
-        r.empid === emp.empid &&
+
+        r.empid === currentEmployee.empid &&
         r.timeout === ""
+
     );
 
     if(!row){
@@ -423,10 +490,13 @@ function timeOut(){
     row.timeout =
     now.toLocaleTimeString();
 
-    /* BREAK */
+    /* BREAK TIME */
 
     let breakMinutes =
-    prompt("Enter Break Time in Minutes", "60");
+    prompt(
+        "Enter Break Time in Minutes",
+        "60"
+    );
 
     breakMinutes =
     parseInt(breakMinutes) || 0;
@@ -434,24 +504,24 @@ function timeOut(){
     row.breaktime =
     breakMinutes;
 
-    /* COMPUTE HOURS */
+    /* TOTAL HOURS */
 
     let start =
-    new Date(row.date + " " + row.timein);
+    new Date(
+        row.date + " " + row.timein
+    );
 
     let end =
-    new Date(row.date + " " + row.timeout);
+    new Date(
+        row.date + " " + row.timeout
+    );
 
     let hrs =
     (end - start) / 1000 / 60 / 60;
 
-    /* OVERNIGHT FIX */
-
     if(hrs < 0){
         hrs += 24;
     }
-
-    /* LESS BREAK */
 
     hrs =
     hrs - (breakMinutes / 60);
@@ -469,13 +539,13 @@ function timeOut(){
     alert("TIME OUT SUCCESS");
 }
 
-/* =========================================
+/* ======================================
    RENDER TABLE
-========================================= */
+====================================== */
 
 function render(){
 
-    let attendance =
+    attendance =
     JSON.parse(localStorage.getItem("attendance")) || [];
 
     let tbody =
@@ -484,7 +554,11 @@ function render(){
     tbody.innerHTML = "";
 
     attendance
-    .filter(r => r.empid === emp.empid)
+    .filter(r =>
+
+        r.empid === currentEmployee.empid
+
+    )
     .reverse()
     .forEach(r => {
 
@@ -523,6 +597,14 @@ function render(){
         `;
     });
 }
+
+/* ======================================
+   START
+====================================== */
+
+loadDropdown();
+
+loadEmployeeInfo();
 
 render();
 
