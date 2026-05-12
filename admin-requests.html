@@ -23,6 +23,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 body{
   margin:0;
+  min-height:100vh;
+
   background:
   linear-gradient(
     135deg,
@@ -34,8 +36,6 @@ body{
   padding:20px;
 
   color:white;
-
-  min-height:100vh;
 }
 
 /* CONTAINER */
@@ -81,14 +81,17 @@ body{
   gap:12px;
 }
 
-/* NOTIFICATION */
+/* BADGE */
 
 .notify{
-  background:#ff0000;
-  color:white;
-  font-size:12px;
-  padding:6px 10px;
+  background:#ff1744;
+
+  padding:6px 12px;
+
   border-radius:30px;
+
+  font-size:12px;
+
   font-weight:bold;
 
   animation:pulse 1s infinite;
@@ -101,7 +104,7 @@ body{
   }
 
   50%{
-    transform:scale(1.1);
+    transform:scale(1.08);
   }
 
   100%{
@@ -130,9 +133,9 @@ body{
   transform:scale(1.05);
 }
 
-/* SEARCH */
+/* FILTER */
 
-.search-box{
+.filters{
   display:grid;
 
   grid-template-columns:
@@ -157,6 +160,44 @@ select{
   outline:none;
 
   font-size:14px;
+}
+
+/* STATS */
+
+.stats{
+  display:grid;
+
+  grid-template-columns:
+  repeat(auto-fit,minmax(220px,1fr));
+
+  gap:15px;
+
+  margin-bottom:20px;
+}
+
+.card{
+  background:
+  rgba(255,255,255,0.1);
+
+  backdrop-filter:blur(15px);
+
+  padding:20px;
+
+  border-radius:20px;
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,0.3);
+}
+
+.card h3{
+  margin:0;
+  font-size:15px;
+}
+
+.card .value{
+  margin-top:10px;
+  font-size:32px;
+  font-weight:bold;
 }
 
 /* TABLE */
@@ -242,44 +283,6 @@ th{
   opacity:0.8;
 }
 
-/* STATS */
-
-.stats{
-  display:grid;
-
-  grid-template-columns:
-  repeat(auto-fit,minmax(220px,1fr));
-
-  gap:15px;
-
-  margin-bottom:20px;
-}
-
-.card{
-  background:
-  rgba(255,255,255,0.1);
-
-  backdrop-filter:blur(15px);
-
-  padding:20px;
-
-  border-radius:20px;
-
-  box-shadow:
-  0 10px 30px rgba(0,0,0,0.3);
-}
-
-.card h3{
-  margin:0;
-  font-size:15px;
-}
-
-.card .value{
-  font-size:32px;
-  font-weight:bold;
-  margin-top:10px;
-}
-
 /* MOBILE */
 
 @media(max-width:768px){
@@ -315,7 +318,7 @@ Admin Request Panel
 <div class="notify"
 id="notifyBadge">
 
-0 New
+0 Pending
 
 </div>
 
@@ -418,7 +421,7 @@ id="rejectedCount">
 
 <div class="box">
 
-<div class="search-box">
+<div class="filters">
 
 <input
 type="text"
@@ -474,7 +477,7 @@ Rejected
 
 <th>Employee ID</th>
 
-<th>Employee Name</th>
+<th>Name</th>
 
 <th>Request Type</th>
 
@@ -555,11 +558,13 @@ initializeApp(firebaseConfig);
 const db =
 getFirestore(app);
 
-/* DATA */
+/* =====================================
+   VARIABLES
+===================================== */
 
-let requests = [];
+let allRequests = [];
 
-let lastRequestCount = 0;
+let initialized = false;
 
 /* =====================================
    LOAD REQUESTS
@@ -567,9 +572,9 @@ let lastRequestCount = 0;
 
 window.loadRequests = async function(){
 
-  requests = [];
-
   reqTable.innerHTML = "";
+
+  allRequests = [];
 
   const querySnapshot =
 
@@ -577,16 +582,29 @@ window.loadRequests = async function(){
     collection(db,"requests")
   );
 
+  /* REMOVE DUPLICATES */
+
+  const uniqueMap = new Map();
+
   querySnapshot.forEach((d)=>{
 
     let r = d.data();
 
     r.docId = d.id;
 
-    requests.push(r);
+    uniqueMap.set(
+      d.id,
+      r
+    );
   });
 
-  /* SEARCH */
+  allRequests =
+
+  Array.from(
+    uniqueMap.values()
+  );
+
+  /* FILTERS */
 
   let search =
 
@@ -612,7 +630,9 @@ window.loadRequests = async function(){
   let approved = 0;
   let rejected = 0;
 
-  if(requests.length === 0){
+  /* EMPTY */
+
+  if(allRequests.length === 0){
 
     reqTable.innerHTML = `
 
@@ -630,19 +650,9 @@ window.loadRequests = async function(){
     `;
   }
 
-  requests.forEach((r)=>{
+  /* LOOP */
 
-    let matchSearch =
-
-    (r.name || "")
-    .toLowerCase()
-    .includes(search);
-
-    let matchStatus =
-
-    !statusFilter ||
-
-    r.status === statusFilter;
+  allRequests.forEach((r)=>{
 
     if(r.status === "Pending"){
       pending++;
@@ -655,6 +665,18 @@ window.loadRequests = async function(){
     if(r.status === "Rejected"){
       rejected++;
     }
+
+    let matchSearch =
+
+    (r.name || "")
+    .toLowerCase()
+    .includes(search);
+
+    let matchStatus =
+
+    !statusFilter ||
+
+    r.status === statusFilter;
 
     if(
 
@@ -774,7 +796,7 @@ window.loadRequests = async function(){
   /* STATS */
 
   totalRequests.innerText =
-  requests.length;
+  allRequests.length;
 
   pendingCount.innerText =
   pending;
@@ -786,14 +808,11 @@ window.loadRequests = async function(){
   rejected;
 
   notifyBadge.innerText =
-
-  pending +
-
-  " Pending";
+  pending + " Pending";
 }
 
 /* =====================================
-   REALTIME NOTIFICATION
+   REALTIME LISTENER
 ===================================== */
 
 onSnapshot(
@@ -802,23 +821,24 @@ onSnapshot(
 
   (snapshot)=>{
 
-    if(
+    if(initialized){
 
-      snapshot.size >
-      lastRequestCount
+      if(snapshot.docChanges().length > 0){
 
-    ){
+        snapshot.docChanges().forEach((change)=>{
 
-      if(lastRequestCount !== 0){
+          if(change.type === "added"){
 
-        alert(
-          "🔔 New Employee Request Received"
-        );
+            alert(
+              "🔔 New Employee Request"
+            );
+          }
+
+        });
       }
-
-      lastRequestCount =
-      snapshot.size;
     }
+
+    initialized = true;
 
     loadRequests();
   }
@@ -848,6 +868,10 @@ window.updateStatus = async function(
 
   );
 
+  alert(
+    "Request Updated"
+  );
+
   loadRequests();
 }
 
@@ -860,7 +884,7 @@ window.deleteRequest = async function(id){
   let confirmDelete =
 
   confirm(
-    "Delete request?"
+    "Delete this request?"
   );
 
   if(!confirmDelete){
@@ -871,6 +895,10 @@ window.deleteRequest = async function(id){
 
     doc(db,"requests",id)
 
+  );
+
+  alert(
+    "Request Deleted"
   );
 
   loadRequests();
