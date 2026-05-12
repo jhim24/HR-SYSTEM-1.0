@@ -222,7 +222,53 @@ td{
     border-radius:4px;
     cursor:pointer;
 }
+/* PRINT BUTTON */
 
+.printbtn{
+    background:#6c5ce7;
+}
+
+/* PRINT ONLY TABLE */
+
+@media print{
+
+    body *{
+        visibility:hidden;
+    }
+
+    .table-wrapper,
+    .table-wrapper *{
+        visibility:visible;
+    }
+
+    .table-wrapper{
+        position:absolute;
+        left:0;
+        top:0;
+        width:100%;
+    }
+
+    table{
+        width:100%;
+        border-collapse:collapse;
+    }
+
+    th{
+        background:yellow !important;
+        color:black;
+        border:1px solid #000;
+        padding:10px;
+        font-size:14px;
+    }
+
+    td{
+        border:1px solid #000;
+        padding:8px;
+        text-align:center;
+        font-size:13px;
+    }
+
+}
 </style>
 
 </head>
@@ -286,37 +332,44 @@ td{
 
         <!-- BUTTONS -->
 
-        <div class="buttons">
+       <div class="buttons">
 
-            <button class="btn timein"
-            onclick="timeIn()">
+    <button class="btn timein"
+    onclick="timeIn()">
 
-                TIME IN
+        TIME IN
 
-            </button>
+    </button>
 
-            <button class="btn breakout"
-            onclick="breakOut()">
+    <button class="btn breakout"
+    onclick="breakOut()">
 
-                BREAK OUT
+        BREAK OUT
 
-            </button>
+    </button>
 
-            <button class="btn breakin"
-            onclick="breakIn()">
+    <button class="btn breakin"
+    onclick="breakIn()">
 
-                BREAK IN
+        BREAK IN
 
-            </button>
+    </button>
 
-            <button class="btn timeout"
-            onclick="timeOut()">
+    <button class="btn timeout"
+    onclick="timeOut()">
 
-                TIME OUT
+        TIME OUT
 
-            </button>
+    </button>
 
-        </div>
+    <button class="btn printbtn"
+    onclick="printAttendance()">
+
+        PRINT
+
+    </button>
+
+</div>
 
     </div>
 
@@ -982,7 +1035,15 @@ function render(){
         `;
     });
 }
+/* =========================================
+   PRINT ATTENDANCE
+========================================= */
 
+window.printAttendance = function(){
+
+    window.print();
+
+}
 /* START */
 
 loadEmployees();
