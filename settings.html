@@ -7,7 +7,6 @@
 <!-- FONT AWESOME -->
 
 <link rel="stylesheet"
-
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
@@ -266,7 +265,11 @@ import {
 
 getFirestore,
 collection,
-getDocs
+getDocs,
+addDoc,
+updateDoc,
+deleteDoc,
+doc
 
 }
 
@@ -311,8 +314,6 @@ getFirestore(app);
 
 let employees = [];
 
-/* LOAD EMPLOYEES */
-
 async function loadEmployees(){
 
   employees = [];
@@ -349,92 +350,25 @@ async function loadEmployees(){
    USERS
 ===================================== */
 
-let users =
-
-JSON.parse(
-localStorage.getItem("users")
-)
-
-|| [];
+let users = [];
 
 let editIndex = -1;
 
-/* =====================================
-   SAVE USER
-===================================== */
+/* LOAD USERS */
 
-window.saveUser = function(){
+async function loadUsers(){
 
-  if(
-
-    !empSelect.value ||
-
-    !username.value ||
-
-    !password.value
-
-  ){
-
-    alert("Fill all fields");
-
-    return;
-  }
-
-  let user = {
-
-    name:
-    empSelect.value,
-
-    username:
-    username.value,
-
-    password:
-    password.value
-
-  };
-
-  /* UPDATE */
-
-  if(editIndex > -1){
-
-    users[editIndex] = user;
-
-    editIndex = -1;
-
-    alert("User Updated");
-  }
-
-  /* ADD */
-
-  else{
-
-    users.push(user);
-
-    alert("User Saved");
-  }
-
-  localStorage.setItem(
-
-    "users",
-
-    JSON.stringify(users)
-
-  );
-
-  clearForm();
-
-  loadUsers();
-}
-
-/* =====================================
-   LOAD USERS
-===================================== */
-
-function loadUsers(){
+  users = [];
 
   userTable.innerHTML = "";
 
-  if(users.length === 0){
+  const querySnapshot =
+
+  await getDocs(
+    collection(db,"users")
+  );
+
+  if(querySnapshot.empty){
 
     userTable.innerHTML = `
 
@@ -453,6 +387,24 @@ function loadUsers(){
 
     return;
   }
+
+  querySnapshot.forEach((d)=>{
+
+    let u = d.data();
+
+    u.docId = d.id;
+
+    users.push(u);
+  });
+
+  renderUsers();
+}
+
+/* RENDER USERS */
+
+function renderUsers(){
+
+  userTable.innerHTML = "";
 
   users.forEach((u,i)=>{
 
@@ -496,7 +448,7 @@ function loadUsers(){
 
         class="action-btn delete-btn"
 
-        onclick="deleteUser(${i})">
+        onclick="deleteUser('${u.docId}')">
 
         <i class="fa-solid fa-trash"></i>
 
@@ -510,6 +462,88 @@ function loadUsers(){
 
     `;
   });
+}
+
+/* =====================================
+   SAVE USER
+===================================== */
+
+window.saveUser = async function(){
+
+  if(
+
+    !empSelect.value ||
+
+    !username.value ||
+
+    !password.value
+
+  ){
+
+    alert("Fill all fields");
+
+    return;
+  }
+
+  let user = {
+
+    name:
+    empSelect.value
+    .trim(),
+
+    username:
+    username.value
+    .trim()
+    .toLowerCase(),
+
+    password:
+    password.value
+    .trim()
+
+  };
+
+  /* UPDATE */
+
+  if(editIndex > -1){
+
+    let oldUser =
+    users[editIndex];
+
+    await updateDoc(
+
+      doc(
+        db,
+        "users",
+        oldUser.docId
+      ),
+
+      user
+
+    );
+
+    editIndex = -1;
+
+    alert("User Updated");
+  }
+
+  /* ADD */
+
+  else{
+
+    await addDoc(
+
+      collection(db,"users"),
+
+      user
+
+    );
+
+    alert("User Saved");
+  }
+
+  clearForm();
+
+  loadUsers();
 }
 
 /* =====================================
@@ -541,7 +575,7 @@ window.editUser = function(i){
    DELETE
 ===================================== */
 
-window.deleteUser = function(i){
+window.deleteUser = async function(id){
 
   let confirmDelete =
 
@@ -553,13 +587,9 @@ window.deleteUser = function(i){
     return;
   }
 
-  users.splice(i,1);
+  await deleteDoc(
 
-  localStorage.setItem(
-
-    "users",
-
-    JSON.stringify(users)
+    doc(db,"users",id)
 
   );
 
