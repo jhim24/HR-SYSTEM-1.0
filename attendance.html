@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Papprito Attendance System</title>
 
@@ -158,6 +159,7 @@ td{
 }
 
 </style>
+
 </head>
 
 <body>
@@ -167,7 +169,9 @@ td{
     <div class="top">
 
         <div class="title">
+
             EMPLOYEE ATTENDANCE
+
         </div>
 
         <!-- DROPDOWN -->
@@ -193,9 +197,11 @@ td{
 
         <!-- CLOCK -->
 
-        <div class="clock" id="clock"></div>
+        <div class="clock"
+        id="clock"></div>
 
-        <div class="today" id="today"></div>
+        <div class="today"
+        id="today"></div>
 
         <!-- BUTTONS -->
 
@@ -252,91 +258,102 @@ td{
 
 </div>
 
-<script>
+<!-- FIREBASE -->
 
-/* =========================================
-   FIX OLD DATA
-========================================= */
+<script type="module">
 
-let oldAttendance =
-JSON.parse(localStorage.getItem("attendance")) || [];
+import { initializeApp }
 
-oldAttendance = oldAttendance.filter(r =>
-    r &&
-    r.empid &&
-    r.name
-);
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-localStorage.setItem(
-    "attendance",
-    JSON.stringify(oldAttendance)
-);
+import {
 
-/* =========================================
-   SAMPLE EMPLOYEES
-========================================= */
+getFirestore,
 
-if(!localStorage.getItem("employees")){
+collection,
 
-    let employees = [
+getDocs,
 
-        {
-            empid:"PP80050",
-            fname:"Rusty",
-            lname:"DEGAMHON"
-        },
+addDoc,
 
-        {
-            empid:"PP80134",
-            fname:"Joemarie",
-            lname:"MACALALAD"
-        },
+deleteDoc,
 
-        {
-            empid:"PP80199",
-            fname:"Mark",
-            lname:"SANTOS"
-        },
+doc,
 
-        {
-            empid:"PP80210",
-            fname:"Kenneth",
-            lname:"QUIRUBIN"
-        }
+updateDoc
 
-    ];
-
-    localStorage.setItem(
-        "employees",
-        JSON.stringify(employees)
-    );
 }
 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* FIREBASE CONFIG */
+
+const firebaseConfig = {
+
+apiKey:
+"AIzaSyClEtSTjrvf52exf2Qtdzb2MMLLlSfwhVg",
+
+authDomain:
+"pappritohr.firebaseapp.com",
+
+projectId:
+"pappritohr",
+
+storageBucket:
+"pappritohr.firebasestorage.app",
+
+messagingSenderId:
+"559428820611",
+
+appId:
+"1:559428820611:web:09344b59fe1b21a5e2c5b6",
+
+measurementId:
+"G-1CEQ4P5XW8"
+
+};
+
+/* INIT */
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
+
+/* VARIABLES */
+
+let employees = [];
+
+let attendance = [];
+
+let currentEmployee = null;
+
 /* =========================================
-   VARIABLES
+   LOAD EMPLOYEES
 ========================================= */
 
-let employees =
-JSON.parse(localStorage.getItem("employees")) || [];
+async function loadEmployees(){
 
-let attendance =
-JSON.parse(localStorage.getItem("attendance")) || [];
+    employees = [];
 
-let currentEmployee =
-employees[0];
-
-/* =========================================
-   LOAD DROPDOWN
-========================================= */
-
-function loadDropdown(){
+    const querySnapshot =
+    await getDocs(
+        collection(db,"employees")
+    );
 
     let select =
-    document.getElementById("employeeSelect");
+    document.getElementById(
+        "employeeSelect"
+    );
 
     select.innerHTML = "";
 
-    employees.forEach((e,index)=>{
+    querySnapshot.forEach((d,index)=>{
+
+        let e = d.data();
+
+        employees.push(e);
 
         select.innerHTML += `
 
@@ -350,16 +367,28 @@ function loadDropdown(){
 
         `;
     });
+
+    if(employees.length > 0){
+
+        currentEmployee =
+        employees[0];
+
+        loadEmployeeInfo();
+
+        loadAttendance();
+    }
 }
 
 /* =========================================
    CHANGE EMPLOYEE
 ========================================= */
 
-function changeEmployee(){
+window.changeEmployee = function(){
 
     let index =
-    document.getElementById("employeeSelect").value;
+    document.getElementById(
+        "employeeSelect"
+    ).value;
 
     currentEmployee =
     employees[index];
@@ -370,34 +399,50 @@ function changeEmployee(){
 }
 
 /* =========================================
-   LOAD EMPLOYEE INFO
+   EMPLOYEE INFO
 ========================================= */
 
 function loadEmployeeInfo(){
 
-    document.getElementById("empid").innerHTML =
+    if(!currentEmployee){
+        return;
+    }
+
+    document.getElementById("empid")
+    .innerHTML =
+
     "EMPLOYEE ID : " +
+
     (currentEmployee.empid || "-");
 
-    document.getElementById("empname").innerHTML =
+    document.getElementById("empname")
+    .innerHTML =
+
     "EMPLOYEE NAME : " +
+
     currentEmployee.lname +
+
     ", " +
+
     currentEmployee.fname;
 }
 
 /* =========================================
-   LIVE CLOCK
+   CLOCK
 ========================================= */
 
 function updateClock(){
 
     let now = new Date();
 
-    document.getElementById("clock").innerHTML =
+    document.getElementById("clock")
+    .innerHTML =
+
     now.toLocaleTimeString();
 
-    document.getElementById("today").innerHTML =
+    document.getElementById("today")
+    .innerHTML =
+
     now.toDateString();
 }
 
@@ -406,23 +451,51 @@ setInterval(updateClock,1000);
 updateClock();
 
 /* =========================================
+   LOAD ATTENDANCE
+========================================= */
+
+async function loadAttendance(){
+
+    attendance = [];
+
+    const querySnapshot =
+    await getDocs(
+        collection(db,"attendance")
+    );
+
+    querySnapshot.forEach((d)=>{
+
+        let row = d.data();
+
+        row.docId = d.id;
+
+        attendance.push(row);
+    });
+
+    render();
+}
+
+/* =========================================
    TIME IN
 ========================================= */
 
-function timeIn(){
+window.timeIn = async function(){
 
-    attendance =
-    JSON.parse(localStorage.getItem("attendance")) || [];
+    if(!currentEmployee){
+        alert("No Employee Found");
+        return;
+    }
 
     let now = new Date();
 
     let date =
     now.toLocaleDateString();
 
-    let existing = attendance.find(r =>
+    let existing =
+    attendance.find(r =>
 
-        String(r.empid).trim() ===
-        String(currentEmployee.empid).trim()
+        r.empid ===
+        currentEmployee.empid
 
         &&
 
@@ -430,20 +503,13 @@ function timeIn(){
 
         &&
 
-        (
-            r.timeout === "" ||
-            r.timeout === null ||
-            r.timeout === undefined
-        )
+        !r.timeout
 
     );
 
     if(existing){
 
-        alert(
-            currentEmployee.lname +
-            " already TIME IN"
-        );
+        alert("Already TIME IN");
 
         return;
     }
@@ -453,7 +519,9 @@ function timeIn(){
     let status = "ON TIME";
 
     let totalMinutes =
+
     now.getHours() * 60 +
+
     now.getMinutes();
 
     let officeTime = 8 * 60;
@@ -461,93 +529,84 @@ function timeIn(){
     if(totalMinutes > officeTime){
 
         lateMinutes =
+
         totalMinutes - officeTime;
 
         status = "LATE";
     }
 
-    attendance.push({
+    await addDoc(
 
-        date:date,
+        collection(db,"attendance"),
 
-        empid:
-        currentEmployee.empid,
+        {
 
-        name:
-        currentEmployee.lname +
-        ", " +
-        currentEmployee.fname,
+            date:date,
 
-        timein:
-        now.toLocaleTimeString(),
+            empid:
+            currentEmployee.empid,
 
-        breaktime:0,
+            name:
 
-        timeout:"",
+            currentEmployee.lname +
 
-        total:"0",
+            ", " +
 
-        late:
-        lateMinutes + " mins",
+            currentEmployee.fname,
 
-        status:status
+            timein:
+            now.toLocaleTimeString(),
 
-    });
+            breaktime:0,
 
-    localStorage.setItem(
-        "attendance",
-        JSON.stringify(attendance)
+            timeout:"",
+
+            total:"0",
+
+            late:
+            lateMinutes + " mins",
+
+            status:status
+
+        }
+
     );
 
-    render();
+    await loadAttendance();
 
-    alert(
-        currentEmployee.lname +
-        " TIME IN SUCCESS"
-    );
+    alert("TIME IN SUCCESS");
 }
 
 /* =========================================
    TIME OUT
 ========================================= */
 
-function timeOut(){
+window.timeOut = async function(){
 
-    attendance =
-    JSON.parse(localStorage.getItem("attendance")) || [];
+    if(!currentEmployee){
+        return;
+    }
 
     let row =
-    [...attendance]
-    .reverse()
-    .find(r =>
+    attendance.find(r =>
 
-        String(r.empid).trim() ===
-        String(currentEmployee.empid).trim()
+        r.empid ===
+        currentEmployee.empid
 
         &&
 
-        (
-            r.timeout === "" ||
-            r.timeout === null ||
-            r.timeout === undefined
-        )
+        !r.timeout
 
     );
 
     if(!row){
 
-        alert(
-            currentEmployee.lname +
-            " has no active TIME IN"
-        );
+        alert("No active TIME IN");
 
         return;
     }
 
     let now = new Date();
-
-    row.timeout =
-    now.toLocaleTimeString();
 
     let breakMinutes =
     prompt(
@@ -558,25 +617,16 @@ function timeOut(){
     breakMinutes =
     parseInt(breakMinutes) || 0;
 
-    row.breaktime =
-    breakMinutes;
-
     let start =
     new Date(
         row.date + " " + row.timein
     );
 
     let end =
-    new Date(
-        row.date + " " + row.timeout
-    );
+    new Date();
 
     let hrs =
     (end-start)/1000/60/60;
-
-    if(hrs < 0){
-        hrs += 24;
-    }
 
     hrs =
     hrs - (breakMinutes/60);
@@ -585,113 +635,137 @@ function timeOut(){
         hrs = 0;
     }
 
-    row.total =
-    hrs.toFixed(2);
+    await updateDoc(
 
-    localStorage.setItem(
-        "attendance",
-        JSON.stringify(attendance)
+        doc(db,"attendance",row.docId),
+
+        {
+
+            timeout:
+            now.toLocaleTimeString(),
+
+            breaktime:
+            breakMinutes,
+
+            total:
+            hrs.toFixed(2)
+
+        }
+
     );
 
-    render();
+    await loadAttendance();
 
-    alert(
-        currentEmployee.lname +
-        " TIME OUT SUCCESS"
-    );
+    alert("TIME OUT SUCCESS");
 }
 
 /* =========================================
-   DELETE ROW
+   DELETE
 ========================================= */
 
-function deleteRow(index){
-
-    attendance =
-    JSON.parse(localStorage.getItem("attendance")) || [];
+window.deleteRow =
+async function(id){
 
     let confirmDelete =
-    confirm("Delete attendance record?");
+    confirm(
+        "Delete attendance?"
+    );
 
     if(!confirmDelete){
         return;
     }
 
-    attendance.splice(index,1);
-
-    localStorage.setItem(
-        "attendance",
-        JSON.stringify(attendance)
+    await deleteDoc(
+        doc(db,"attendance",id)
     );
 
-    render();
-
-    alert("Deleted Successfully");
+    loadAttendance();
 }
 
 /* =========================================
-   RENDER TABLE
+   RENDER
 ========================================= */
 
 function render(){
 
-    attendance =
-    JSON.parse(localStorage.getItem("attendance")) || [];
-
     let tbody =
-    document.getElementById("tbody");
+    document.getElementById(
+        "tbody"
+    );
 
     tbody.innerHTML = "";
 
     attendance
+
     .filter(r =>
 
-        String(r.empid).trim() ===
-        String(currentEmployee.empid).trim()
+        currentEmployee &&
+
+        r.empid ===
+        currentEmployee.empid
 
     )
-    .reverse()
-    .forEach(r => {
 
-        let realIndex =
-        attendance.indexOf(r);
+    .reverse()
+
+    .forEach(r => {
 
         tbody.innerHTML += `
 
         <tr>
 
-            <td>${r.date || '-'}</td>
+            <td>
+            ${r.date || '-'}
+            </td>
 
-            <td>${r.empid || '-'}</td>
+            <td>
+            ${r.empid || '-'}
+            </td>
 
-            <td>${r.name || '-'}</td>
+            <td>
+            ${r.name || '-'}
+            </td>
 
-            <td>${r.timein || '-'}</td>
+            <td>
+            ${r.timein || '-'}
+            </td>
 
-            <td>${r.breaktime || 0} mins</td>
+            <td>
+            ${r.breaktime || 0} mins
+            </td>
 
-            <td>${r.timeout || '-'}</td>
+            <td>
+            ${r.timeout || '-'}
+            </td>
 
-            <td>${r.total || 0}</td>
+            <td>
+            ${r.total || 0}
+            </td>
 
             <td class="late">
-                ${r.late || '0 mins'}
+
+            ${r.late || '0 mins'}
+
             </td>
 
             <td class="
-                ${r.status === 'LATE'
-                ? 'late'
-                : 'ontime'}
+            ${r.status === 'LATE'
+            ? 'late'
+            : 'ontime'}
             ">
-                ${r.status || 'ON TIME'}
+
+            ${r.status || 'ON TIME'}
+
             </td>
 
             <td>
 
-                <button class="delete-btn"
-                onclick="deleteRow(${realIndex})">
+                <button
+                class="delete-btn"
 
-                    DELETE
+                onclick="deleteRow('${r.docId}')">
+
+                DELETE
 
                 </button>
 
@@ -703,15 +777,9 @@ function render(){
     });
 }
 
-/* =========================================
-   START
-========================================= */
+/* START */
 
-loadDropdown();
-
-loadEmployeeInfo();
-
-render();
+loadEmployees();
 
 </script>
 
