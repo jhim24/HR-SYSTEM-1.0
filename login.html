@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <title>HR System Login</title>
 
 <style>
-*{box-sizing:border-box;font-family:'Segoe UI';}
+
+*{
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
 
 body{
   margin:0;
@@ -12,184 +20,547 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  background:linear-gradient(135deg,#1e0033,#3a0066,#001f3f);
+
+  background:
+  linear-gradient(135deg,#1e0033,#3a0066,#001f3f);
+
+  overflow:hidden;
 }
 
 /* CONTAINER */
+
 .container{
+
   width:750px;
   height:420px;
+
   display:flex;
+
   border-radius:20px;
+
   overflow:hidden;
-  box-shadow:0 0 40px rgba(0,255,255,0.2);
+
+  box-shadow:
+  0 0 40px rgba(0,255,255,0.2);
 
   animation:float 4s ease-in-out infinite;
+
 }
 
 /* FLOAT EFFECT */
+
 @keyframes float{
-  0%{transform:translateY(0);}
-  50%{transform:translateY(-10px);}
-  100%{transform:translateY(0);}
+
+  0%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-10px);
+  }
+
+  100%{
+    transform:translateY(0);
+  }
+
 }
 
-/* LEFT SIDE (IMAGE) */
+/* LEFT SIDE */
+
 .left{
+
   flex:1;
+
   position:relative;
 
-  background:url('hr-bg.jpg') no-repeat center center;
+  background:
+  url('hr-bg.jpg')
+  no-repeat center center;
+
   background-size:cover;
 
   display:flex;
+
   justify-content:center;
+
   align-items:center;
 
   color:white;
-  font-size:22px;
-  font-weight:bold;
+
   text-align:center;
+
   padding:20px;
+
 }
 
 /* DARK OVERLAY */
+
 .left::before{
+
   content:"";
+
   position:absolute;
+
   inset:0;
-  background:linear-gradient(
+
+  background:
+  linear-gradient(
     135deg,
-    rgba(0,0,0,0.6),
+    rgba(0,0,0,0.7),
     rgba(0,0,0,0.3)
   );
+
 }
 
-/* TEXT ABOVE IMAGE */
+/* TEXT */
+
 .left span{
+
   position:relative;
+
   z-index:1;
-  text-shadow:0 0 15px rgba(255,255,255,0.8);
+
+  font-size:28px;
+
+  font-weight:bold;
+
+  line-height:1.5;
+
+  text-shadow:
+  0 0 15px rgba(255,255,255,0.8);
+
 }
 
 /* RIGHT SIDE */
+
 .right{
+
   flex:1;
-  background:rgba(255,255,255,0.1);
+
+  background:
+  rgba(255,255,255,0.08);
+
   backdrop-filter:blur(15px);
-  padding:30px;
+
+  padding:35px;
+
   color:white;
+
 }
 
 /* TITLE */
+
 .right h2{
+
   text-align:center;
-  margin-bottom:20px;
+
+  margin-bottom:25px;
+
+  font-size:30px;
+
 }
 
-/* INPUT */
-input,select{
+/* INPUTS */
+
+input,
+select{
+
   width:100%;
-  padding:10px;
-  margin-top:10px;
+
+  padding:12px;
+
+  margin-top:12px;
+
   border:none;
+
   border-radius:8px;
-  background:rgba(255,255,255,0.2);
+
+  background:
+  rgba(255,255,255,0.15);
+
   color:white;
+
   outline:none;
+
+  font-size:15px;
+
 }
 
 input::placeholder{
+
   color:#ddd;
+
+}
+
+select option{
+
+  color:black;
+
 }
 
 /* BUTTON */
+
 button{
+
   width:100%;
-  padding:10px;
-  margin-top:15px;
+
+  padding:12px;
+
+  margin-top:18px;
+
   border:none;
+
   border-radius:8px;
-  background:linear-gradient(45deg,#00c6ff,#0072ff);
+
+  background:
+  linear-gradient(
+    45deg,
+    #00c6ff,
+    #0072ff
+  );
+
   color:white;
+
   font-weight:bold;
+
+  font-size:16px;
+
   cursor:pointer;
+
   transition:0.3s;
+
 }
 
 button:hover{
-  transform:scale(1.05);
-  box-shadow:0 0 15px #00c6ff;
+
+  transform:scale(1.03);
+
+  box-shadow:
+  0 0 15px #00c6ff;
+
+}
+
+/* LOGIN INFO */
+
+.info{
+
+  margin-top:18px;
+
+  background:
+  rgba(255,255,255,0.1);
+
+  padding:12px;
+
+  border-radius:8px;
+
+  font-size:13px;
+
+  line-height:1.6;
+
+}
+
+/* MOBILE */
+
+@media(max-width:800px){
+
+  .container{
+
+    width:95%;
+
+    height:auto;
+
+    flex-direction:column;
+
+  }
+
+  .left{
+
+    height:220px;
+
+  }
+
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-<!-- LEFT IMAGE -->
-<div class="left">
-  <span>HR SYSTEM<br>WELCOME<br>PAPPRITO</span>
-</div>
+  <!-- LEFT -->
 
-<!-- RIGHT LOGIN -->
-<div class="right">
+  <div class="left">
 
-<h2>LOGIN</h2>
+    <span>
+      PAPPRITO<br>
+      HR MANAGEMENT<br>
+      SYSTEM
+    </span>
 
-<select id="mode">
-  <option value="admin">Admin Login</option>
-  <option value="employee">Employee Login</option>
-</select>
+  </div>
 
-<input id="username" placeholder="Username / Last Name">
-<input id="password" type="password" placeholder="Password">
+  <!-- RIGHT -->
 
-<button onclick="login()">LOGIN</button>
+  <div class="right">
 
-</div>
+    <h2>LOGIN</h2>
+
+    <!-- MODE -->
+
+    <select id="mode">
+
+      <option value="admin">
+        Admin Login
+      </option>
+
+      <option value="employee">
+        Employee Login
+      </option>
+
+    </select>
+
+    <!-- USERNAME -->
+
+    <input
+    type="text"
+    id="username"
+    placeholder="Username / Last Name">
+
+    <!-- PASSWORD -->
+
+    <input
+    type="password"
+    id="password"
+    placeholder="Password">
+
+    <!-- BUTTON -->
+
+    <button onclick="login()">
+
+      LOGIN
+
+    </button>
+
+    <!-- INFO -->
+
+    <div class="info">
+
+      <b>Default Admin</b><br>
+
+      Username: admin<br>
+
+      Password: 123
+
+    </div>
+
+  </div>
 
 </div>
 
 <script>
 
+/* =========================
+   DEFAULT ADMIN
+========================= */
+
+if(!localStorage.getItem("admin")){
+
+  let admin = {
+
+    username:"admin",
+
+    password:"123"
+
+  };
+
+  localStorage.setItem(
+    "admin",
+    JSON.stringify(admin)
+  );
+
+}
+
+/* =========================
+   SAMPLE EMPLOYEES
+========================= */
+
+if(!localStorage.getItem("employees")){
+
+  let sampleEmployees = [
+
+    {
+      id:"PP80050",
+      fname:"Rusty",
+      lname:"DEGAMHON",
+      position:"Cook"
+    },
+
+    {
+      id:"PP80134",
+      fname:"Joemarie",
+      lname:"MACALALAD",
+      position:"Supervisor"
+    }
+
+  ];
+
+  localStorage.setItem(
+    "employees",
+    JSON.stringify(sampleEmployees)
+  );
+
+}
+
+/* =========================
+   LOGIN FUNCTION
+========================= */
+
 function login(){
 
-  let u = document.getElementById("username").value.toLowerCase();
-  let p = document.getElementById("password").value;
-  let mode = document.getElementById("mode").value;
+  let username =
+  document.getElementById("username")
+  .value
+  .trim()
+  .toLowerCase();
 
-  /* ADMIN LOGIN */
+  let password =
+  document.getElementById("password")
+  .value
+  .trim();
+
+  let mode =
+  document.getElementById("mode")
+  .value;
+
+  /* =====================
+     ADMIN LOGIN
+  ===================== */
+
   if(mode==="admin"){
-    if(u==="admin" && p==="1234"){
-      localStorage.setItem("loggedIn","true");
-      window.location.href="index.html";
-    }else{
-      alert("Invalid admin login");
-    }
-  }
 
-  /* EMPLOYEE LOGIN */
-  if(mode==="employee"){
-    let emp = JSON.parse(localStorage.getItem("employees")) || [];
-
-    let found = emp.find(e =>
-      (e.lname || "").toLowerCase() === u &&
-      p === "1234"
+    let admin =
+    JSON.parse(
+      localStorage.getItem("admin")
     );
 
-    if(found){
-      localStorage.setItem("empSession", JSON.stringify(found));
-      window.location.href="employee-portal.html";
-    }else{
-      alert("Invalid employee login");
+    if(
+
+      username ===
+      admin.username
+
+      &&
+
+      password ===
+      admin.password
+
+    ){
+
+      localStorage.setItem(
+        "loggedIn",
+        "true"
+      );
+
+      alert(
+        "Admin Login Success"
+      );
+
+      window.location.href =
+      "index.html";
+
     }
+
+    else{
+
+      alert(
+        "Invalid Admin Login"
+      );
+
+    }
+
+  }
+
+  /* =====================
+     EMPLOYEE LOGIN
+  ===================== */
+
+  if(mode==="employee"){
+
+    let employees =
+    JSON.parse(
+      localStorage.getItem("employees")
+    ) || [];
+
+    let found =
+    employees.find(e =>
+
+      (e.lname || "")
+      .toLowerCase()
+
+      ===
+
+      username
+
+    );
+
+    if(
+
+      found &&
+      password === "123"
+
+    ){
+
+      localStorage.setItem(
+
+        "empSession",
+
+        JSON.stringify(found)
+
+      );
+
+      alert(
+
+        "Welcome " +
+        found.fname
+
+      );
+
+      window.location.href =
+      "employee-portal.html";
+
+    }
+
+    else{
+
+      alert(
+        "Invalid Employee Login"
+      );
+
+    }
+
   }
 
 }
+
+/* =========================
+   ENTER KEY
+========================= */
+
+document.addEventListener(
+
+  "keypress",
+
+  function(e){
+
+    if(e.key==="Enter"){
+
+      login();
+
+    }
+
+  }
+
+);
 
 </script>
 
