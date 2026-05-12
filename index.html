@@ -547,7 +547,12 @@ import {
 
 getFirestore,
 collection,
-getDocs
+getDocs,
+addDoc,
+deleteDoc,
+doc,
+updateDoc,
+onSnapshot
 
 }
 
@@ -766,104 +771,164 @@ window.closeEmp = function(){
   "none";
 }
 
-/* ANNOUNCEMENTS */
+/* =====================================
+   ANNOUNCEMENTS FIREBASE
+===================================== */
 
-let announcements =
+import {
 
-JSON.parse(
-localStorage.getItem("announcements")
-)
+addDoc,
+deleteDoc,
+doc,
+updateDoc,
+onSnapshot
 
-|| [];
+}
 
-window.addAnnouncement = function(){
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  if(!announceInput.value){
+/* LOAD REALTIME */
+
+function loadAnnouncements(){
+
+  onSnapshot(
+
+    collection(db,"announcements"),
+
+    (snapshot)=>{
+
+      announceList.innerHTML = "";
+
+      snapshot.forEach((d)=>{
+
+        let a = d.data();
+
+        announceList.innerHTML += `
+
+        <div class="announce-item">
+
+          ${a.text || ""}
+
+          <div class="announce-actions">
+
+            <button
+
+            class="edit-btn"
+
+            onclick="editAnnouncement(
+
+            '${d.id}',
+
+            '${a.text}'
+
+            )">
+
+            Edit
+
+            </button>
+
+            <button
+
+            class="delete-btn"
+
+            onclick="deleteAnnouncement(
+
+            '${d.id}'
+
+            )">
+
+            Delete
+
+            </button>
+
+          </div>
+
+        </div>
+
+        `;
+      });
+
+    }
+
+  );
+
+}
+
+/* ADD */
+
+window.addAnnouncement = async function(){
+
+  if(!announceInput.value.trim()){
+
+    alert("Enter announcement");
+
     return;
   }
 
-  announcements.push({
+  await addDoc(
 
-    text:
-    announceInput.value
+    collection(db,"announcements"),
 
-  });
+    {
 
-  localStorage.setItem(
+      text:
+      announceInput.value,
 
-    "announcements",
+      createdAt:
+      Date.now()
 
-    JSON.stringify(announcements)
+    }
 
   );
 
   announceInput.value = "";
 
-  loadAnnouncements();
 }
 
-function loadAnnouncements(){
+/* EDIT */
 
-  announceList.innerHTML = "";
-
-  announcements.forEach((a,i)=>{
-
-    announceList.innerHTML += `
-
-    <div class="announce-item">
-
-      ${a.text}
-
-      <div class="announce-actions">
-
-        <button class="edit-btn"
-
-        onclick="editAnnouncement(${i})">
-
-        Edit
-
-        </button>
-
-        <button class="delete-btn"
-
-        onclick="deleteAnnouncement(${i})">
-
-        Delete
-
-        </button>
-
-      </div>
-
-    </div>
-
-    `;
-  });
-}
-
-window.editAnnouncement = function(i){
+window.editAnnouncement = async function(id,oldText){
 
   let t = prompt(
 
-    "Edit:",
+    "Edit Announcement",
 
-    announcements[i].text
+    oldText
 
   );
 
-  if(t){
+  if(!t){
+    return;
+  }
 
-    announcements[i].text = t;
+  await updateDoc(
 
-    localStorage.setItem(
+    doc(db,"announcements",id),
 
-      "announcements",
+    {
 
-      JSON.stringify(announcements)
+      text:t
+
+    }
+
+  );
+
+}
+
+/* DELETE */
+
+window.deleteAnnouncement = async function(id){
+
+  if(confirm("Delete announcement?")){
+
+    await deleteDoc(
+
+      doc(db,"announcements",id)
 
     );
 
-    loadAnnouncements();
   }
+
 }
 
 window.deleteAnnouncement = function(i){
