@@ -457,27 +457,19 @@ Request Leave / Day Off
 <select id="type">
 
 <option value="Leave">
-
 Leave
-
 </option>
 
 <option value="Day Off">
-
 Day Off
-
 </option>
 
 <option value="Birthday Leave">
-
 Birthday Leave
-
 </option>
 
 <option value="Vacation Leave">
-
 Vacation Leave
-
 </option>
 
 </select>
@@ -490,7 +482,9 @@ id="date">
 id="reason"
 placeholder="Enter reason..."></textarea>
 
-<button onclick="submitRequest()">
+<button
+id="submitBtn"
+onclick="submitRequest()">
 
 Submit Request
 
@@ -519,15 +513,10 @@ My Attendance
 <tr>
 
 <th>Date</th>
-
 <th>Time In</th>
-
 <th>Time Out</th>
-
 <th>Break</th>
-
 <th>Total Hours</th>
-
 <th>Late</th>
 
 </tr>
@@ -563,11 +552,8 @@ My Payroll
 <tr>
 
 <th>Gross</th>
-
 <th>Deductions</th>
-
 <th>Net Salary</th>
-
 <th>Status</th>
 
 </tr>
@@ -613,11 +599,8 @@ My Requests
 <tr>
 
 <th>Type</th>
-
 <th>Date</th>
-
 <th>Reason</th>
-
 <th>Status</th>
 
 </tr>
@@ -691,15 +674,16 @@ getFirestore(app);
 let user =
 
 JSON.parse(
-  localStorage.getItem(
-    "empSession"
-  )
+localStorage.getItem(
+"empSession"
+)
 );
 
 if(!user){
 
-  window.location.href =
-  "login.html";
+window.location.href =
+"login.html";
+
 }
 
 /* PROFILE */
@@ -724,350 +708,414 @@ Position:
 
 `;
 
-/* =====================================
-   ANNOUNCEMENT
-===================================== */
+/* ANNOUNCEMENT */
 
 async function loadAnnouncement(){
 
-  const querySnapshot =
+const querySnapshot =
 
-  await getDocs(
-    collection(db,"announcements")
-  );
+await getDocs(
+collection(db,"announcements")
+);
 
-  let announcements = [];
+let announcements = [];
 
-  querySnapshot.forEach((d)=>{
+querySnapshot.forEach((d)=>{
 
-    announcements.push(
-      d.data()
-    );
-  });
+announcements.push(
+d.data()
+);
 
-  if(announcements.length > 0){
+});
 
-    portalMessage.innerText =
+if(announcements.length > 0){
 
-    announcements[
-      announcements.length - 1
-    ].text;
-  }
+portalMessage.innerText =
+
+announcements[
+announcements.length - 1
+].text;
+
+}
+
 }
 
 loadAnnouncement();
 
-/* =====================================
-   ATTENDANCE
-===================================== */
+/* ATTENDANCE */
 
 async function loadAttendance(){
 
-  attendanceTable.innerHTML = "";
+attendanceTable.innerHTML = "";
 
-  let totalPresent = 0;
+let totalPresent = 0;
 
-  let totalLate = 0;
+let totalLate = 0;
 
-  const querySnapshot =
+const querySnapshot =
 
-  await getDocs(
-    collection(db,"attendance")
-  );
+await getDocs(
+collection(db,"attendance")
+);
 
-  querySnapshot.forEach((d)=>{
+querySnapshot.forEach((d)=>{
 
-    let a = d.data();
+let a = d.data();
 
-    if(a.empid == user.empid){
+if(a.empid == user.empid){
 
-      totalPresent++;
+totalPresent++;
 
-      totalLate +=
-      Number(a.late || 0);
+totalLate +=
+Number(a.late || 0);
 
-      attendanceTable.innerHTML += `
+attendanceTable.innerHTML += `
 
-      <tr>
+<tr>
 
-        <td>
+<td>${a.date || "-"}</td>
 
-        ${a.date || "-"}
+<td>${a.tin || "-"}</td>
 
-        </td>
+<td>${a.tout || "-"}</td>
 
-        <td>
+<td>${a.breakTime || 0}</td>
 
-        ${a.tin || "-"}
+<td>${a.total || 0}</td>
 
-        </td>
+<td>${a.late || 0}</td>
 
-        <td>
+</tr>
 
-        ${a.tout || "-"}
+`;
 
-        </td>
+}
 
-        <td>
+});
 
-        ${a.breakTime || 0}
+presentDays.innerText =
+totalPresent;
 
-        </td>
+lateCount.innerText =
+totalLate;
 
-        <td>
-
-        ${a.total || 0}
-
-        </td>
-
-        <td>
-
-        ${a.late || 0}
-
-        </td>
-
-      </tr>
-
-      `;
-    }
-  });
-
-  presentDays.innerText =
-  totalPresent;
-
-  lateCount.innerText =
-  totalLate;
 }
 
 loadAttendance();
 
-/* =====================================
-   PAYROLL
-===================================== */
+/* PAYROLL */
 
 async function loadPayroll(){
 
-  payrollTable.innerHTML = "";
+payrollTable.innerHTML = "";
 
-  const querySnapshot =
+const querySnapshot =
 
-  await getDocs(
-    collection(db,"payroll")
-  );
+await getDocs(
+collection(db,"payroll")
+);
 
-  querySnapshot.forEach((d)=>{
+querySnapshot.forEach((d)=>{
 
-    let p = d.data();
+let p = d.data();
 
-    if(p.empid == user.empid){
+if(p.empid == user.empid){
 
-      let deductions =
+let deductions =
 
-      Number(p.sss || 0)+
-      Number(p.pagibig || 0)+
-      Number(p.philhealth || 0)+
-      Number(p.loan || 0);
+Number(p.sss || 0)+
+Number(p.pagibig || 0)+
+Number(p.philhealth || 0)+
+Number(p.loan || 0);
 
-      payrollTable.innerHTML += `
+payrollTable.innerHTML += `
 
-      <tr>
+<tr>
 
-        <td>
+<td>
 
-        ₱${Number(p.gross || 0)
-        .toLocaleString()}
+₱${Number(p.gross || 0)
+.toLocaleString()}
 
-        </td>
+</td>
 
-        <td>
+<td>
 
-        ₱${deductions
-        .toLocaleString()}
+₱${deductions
+.toLocaleString()}
 
-        </td>
+</td>
 
-        <td>
+<td>
 
-        ₱${Number(p.net || 0)
-        .toLocaleString()}
+₱${Number(p.net || 0)
+.toLocaleString()}
 
-        </td>
+</td>
 
-        <td>
+<td>
 
-        PAID
+PAID
 
-        </td>
+</td>
 
-      </tr>
+</tr>
 
-      `;
+`;
 
-      netSalary.innerText =
+netSalary.innerText =
 
-      "₱" +
+"₱" +
 
-      Number(p.net || 0)
-      .toLocaleString();
-    }
-  });
+Number(p.net || 0)
+.toLocaleString();
+
+}
+
+});
+
 }
 
 loadPayroll();
 
-/* =====================================
-   REQUESTS
-===================================== */
+/* REQUESTS */
 
 async function loadRequests(){
 
-  reqTable.innerHTML = "";
+reqTable.innerHTML = "";
 
-  let total = 0;
+let total = 0;
 
-  const querySnapshot =
+const querySnapshot =
 
-  await getDocs(
-    collection(db,"requests")
-  );
+await getDocs(
+collection(db,"requests")
+);
 
-  querySnapshot.forEach((d)=>{
+querySnapshot.forEach((d)=>{
 
-    let r = d.data();
+let r = d.data();
 
-    if(r.empid == user.empid){
+if(r.empid == user.empid){
 
-      total++;
+total++;
 
-      let statusClass =
+let statusClass =
 
-      (r.status || "")
-      .toLowerCase();
+(r.status || "")
+.toLowerCase();
 
-      reqTable.innerHTML += `
+reqTable.innerHTML += `
 
-      <tr>
+<tr>
 
-        <td>
+<td>${r.type || "-"}</td>
 
-        ${r.type || "-"}
+<td>${r.date || "-"}</td>
 
-        </td>
+<td>${r.reason || "-"}</td>
 
-        <td>
+<td class="${statusClass}">
 
-        ${r.date || "-"}
+${r.status || "-"}
 
-        </td>
+</td>
 
-        <td>
+</tr>
 
-        ${r.reason || "-"}
+`;
 
-        </td>
+}
 
-        <td class="${statusClass}">
+});
 
-        ${r.status || "-"}
+reqCount.innerText =
+total;
 
-        </td>
-
-      </tr>
-
-      `;
-    }
-  });
-
-  reqCount.innerText =
-  total;
 }
 
 loadRequests();
 
-/* =====================================
-   SUBMIT REQUEST
-===================================== */
+/* FIXED REQUEST SUBMIT */
+
+let isSubmitting = false;
 
 window.submitRequest = async function(){
 
-  if(!date.value){
-
-    alert(
-      "Select date"
-    );
-
-    return;
-  }
-
-  let request = {
-
-    empid:
-    user.empid,
-
-    name:
-
-    (user.fname || "") +
-
-    " " +
-
-    (user.lname || ""),
-
-    type:
-    type.value,
-
-    date:
-    date.value,
-
-    reason:
-    reason.value,
-
-    status:
-    "Pending"
-
-  };
-
-  await addDoc(
-
-    collection(db,"requests"),
-
-    request
-
-  );
-
-  alert(
-    "Request Submitted"
-  );
-
-  reason.value = "";
-
-  loadRequests();
+if(isSubmitting){
+return;
 }
 
-/* =====================================
-   PDF
-===================================== */
+if(!date.value){
+
+alert(
+"Select date"
+);
+
+return;
+}
+
+if(!reason.value.trim()){
+
+alert(
+"Enter reason"
+);
+
+return;
+}
+
+isSubmitting = true;
+
+submitBtn.disabled = true;
+
+try{
+
+const querySnapshot =
+
+await getDocs(
+collection(db,"requests")
+);
+
+let duplicate = false;
+
+querySnapshot.forEach((d)=>{
+
+let r = d.data();
+
+if(
+
+r.empid == user.empid
+
+&&
+
+r.date == date.value
+
+&&
+
+r.type == type.value
+
+&&
+
+r.status == "Pending"
+
+){
+
+duplicate = true;
+
+}
+
+});
+
+if(duplicate){
+
+alert(
+"Request already submitted"
+);
+
+isSubmitting = false;
+
+submitBtn.disabled = false;
+
+return;
+}
+
+let request = {
+
+empid:
+user.empid,
+
+name:
+
+(user.fname || "") +
+
+" " +
+
+(user.lname || ""),
+
+type:
+type.value,
+
+date:
+date.value,
+
+reason:
+reason.value,
+
+status:
+"Pending",
+
+createdAt:
+Date.now()
+
+};
+
+await addDoc(
+
+collection(db,"requests"),
+
+request
+
+);
+
+alert(
+"Request Submitted"
+);
+
+reason.value = "";
+
+date.value = "";
+
+loadRequests();
+
+}
+
+catch(err){
+
+console.log(err);
+
+alert(
+"Error submitting request"
+);
+
+}
+
+finally{
+
+setTimeout(()=>{
+
+isSubmitting = false;
+
+submitBtn.disabled = false;
+
+},1000);
+
+}
+
+}
+
+/* PDF */
 
 window.downloadPayslip = function(){
 
-  window.print();
+window.print();
+
 }
 
-/* =====================================
-   LOGOUT
-===================================== */
+/* LOGOUT */
 
 window.logout = function(){
 
-  localStorage.removeItem(
-    "empSession"
-  );
+localStorage.removeItem(
+"empSession"
+);
 
-  localStorage.removeItem(
-    "employeeLoggedIn"
-  );
+localStorage.removeItem(
+"employeeLoggedIn"
+);
 
-  window.location.href =
-  "login.html";
+window.location.href =
+"login.html";
+
 }
 
 </script>
