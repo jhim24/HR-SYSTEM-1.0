@@ -539,6 +539,10 @@ Close
 
 <script type="module">
 
+/* =====================================
+   FIREBASE IMPORTS
+===================================== */
+
 import { initializeApp }
 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -552,13 +556,17 @@ addDoc,
 deleteDoc,
 doc,
 updateDoc,
-onSnapshot
+onSnapshot,
+query,
+orderBy
 
 }
 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* FIREBASE */
+/* =====================================
+   FIREBASE CONFIG
+===================================== */
 
 const firebaseConfig = {
 
@@ -591,57 +599,90 @@ initializeApp(firebaseConfig);
 const db =
 getFirestore(app);
 
-/* PAGE */
+/* =====================================
+   PAGE NAVIGATION
+===================================== */
 
-window.goPage = function(p){
+window.goPage = function(page){
 
-  window.location.href = p;
+  window.location.href = page;
+
 }
+
+/* =====================================
+   LOGOUT
+===================================== */
 
 window.logout = function(){
 
-  localStorage.removeItem("loggedIn");
+  localStorage.removeItem(
+    "loggedIn"
+  );
 
   window.location.href =
   "login.html";
+
 }
 
-/* EMPLOYEES */
+/* =====================================
+   EMPLOYEE STORAGE
+===================================== */
 
 let employees = [];
+
+/* =====================================
+   LOAD EMPLOYEES
+===================================== */
 
 async function loadEmployees(){
 
   employees = [];
 
   const querySnapshot =
+
   await getDocs(
+
     collection(db,"employees")
+
   );
 
-  querySnapshot.forEach((d)=>{
+  querySnapshot.forEach((docSnap)=>{
 
-    employees.push(d.data());
+    employees.push(docSnap.data());
 
   });
 
   loadBirthday();
+
 }
 
-/* SEARCH */
+/* =====================================
+   SEARCH EMPLOYEE
+===================================== */
 
 window.searchEmployee = function(){
 
   let keyword =
-  searchEmp.value.toLowerCase();
+
+  document.getElementById(
+    "searchEmp"
+  )
+
+  .value
+
+  .toLowerCase()
+
+  .trim();
 
   searchResult.innerHTML = "";
 
   if(!keyword){
+
     return;
+
   }
 
-  employees.forEach(e=>{
+  employees.forEach((e)=>{
 
     let fullname =
 
@@ -658,211 +699,241 @@ window.searchEmployee = function(){
       searchResult.innerHTML += `
 
       <div
-
       class="search-item"
 
       onclick="showEmp(
-
       '${e.fname || ""}',
-
       '${e.lname || ""}'
-
-      )"
-
-      >
+      )">
 
       ${e.fname || ""}
-
       ${e.lname || ""}
 
       </div>
 
       `;
     }
+
   });
+
 }
 
-/* SHOW EMPLOYEE */
+/* =====================================
+   SHOW EMPLOYEE
+===================================== */
 
 window.showEmp = function(fname,lname){
 
-  let e = employees.find(x =>
+  let emp = employees.find(e =>
 
-    x.fname === fname &&
+    e.fname === fname &&
 
-    x.lname === lname
+    e.lname === lname
 
   );
 
-  if(!e){
+  if(!emp){
+
     return;
+
   }
 
   empDetails.innerHTML = `
 
   <p>
+
   <b>Name:</b>
 
-  ${e.fname || ""}
-
-  ${e.lname || ""}
+  ${emp.fname || ""}
+  ${emp.lname || ""}
 
   </p>
 
   <p>
+
   <b>Position:</b>
 
-  ${e.position || "-"}
+  ${emp.position || "-"}
+
   </p>
 
   <p>
-  <b>ID:</b>
 
-  ${e.empid || "-"}
+  <b>Employee ID:</b>
+
+  ${emp.empid || "-"}
+
   </p>
 
   <p>
+
   <b>Birthday:</b>
 
-  ${e.birthdate || "-"}
+  ${emp.birthdate || "-"}
+
   </p>
 
   <p>
+
   <b>SSS:</b>
 
-  ${e.sss || "-"}
+  ${emp.sss || "-"}
+
   </p>
 
   <p>
+
   <b>PhilHealth:</b>
 
-  ${e.philhealth || "-"}
+  ${emp.philhealth || "-"}
+
   </p>
 
   <p>
+
   <b>Pag-IBIG:</b>
 
-  ${e.pagibig || "-"}
+  ${emp.pagibig || "-"}
+
   </p>
 
   <p>
+
   <b>Bank:</b>
 
-  ${e.bank || "-"}
+  ${emp.bank || "-"}
+
   </p>
 
   <p>
-  <b>Account:</b>
 
-  ${e.account || "-"}
+  <b>Account Number:</b>
+
+  ${emp.account || "-"}
+
   </p>
 
   `;
 
   empPopup.style.display =
   "flex";
+
 }
 
-/* CLOSE POPUP */
+/* =====================================
+   CLOSE EMPLOYEE POPUP
+===================================== */
 
 window.closeEmp = function(){
 
   empPopup.style.display =
   "none";
+
 }
 
 /* =====================================
-   ANNOUNCEMENTS FIREBASE
+   LOAD ANNOUNCEMENTS REALTIME
 ===================================== */
-
-import {
-
-addDoc,
-deleteDoc,
-doc,
-updateDoc,
-onSnapshot
-
-}
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-/* LOAD REALTIME */
 
 function loadAnnouncements(){
 
-  onSnapshot(
+  const q = query(
 
     collection(db,"announcements"),
 
-    (snapshot)=>{
-
-      announceList.innerHTML = "";
-
-      snapshot.forEach((d)=>{
-
-        let a = d.data();
-
-        announceList.innerHTML += `
-
-        <div class="announce-item">
-
-          ${a.text || ""}
-
-          <div class="announce-actions">
-
-            <button
-
-            class="edit-btn"
-
-            onclick="editAnnouncement(
-
-            '${d.id}',
-
-            '${a.text}'
-
-            )">
-
-            Edit
-
-            </button>
-
-            <button
-
-            class="delete-btn"
-
-            onclick="deleteAnnouncement(
-
-            '${d.id}'
-
-            )">
-
-            Delete
-
-            </button>
-
-          </div>
-
-        </div>
-
-        `;
-      });
-
-    }
+    orderBy(
+      "createdAt",
+      "desc"
+    )
 
   );
 
+  onSnapshot(q,(snapshot)=>{
+
+    announceList.innerHTML = "";
+
+    if(snapshot.empty){
+
+      announceList.innerHTML = `
+
+      <div class="announce-item">
+
+      No announcements yet
+
+      </div>
+
+      `;
+
+      return;
+
+    }
+
+    snapshot.forEach((docSnap)=>{
+
+      let data = docSnap.data();
+
+      announceList.innerHTML += `
+
+      <div class="announce-item">
+
+        ${data.text || ""}
+
+        <div class="announce-actions">
+
+          <button
+          class="edit-btn"
+
+          onclick="editAnnouncement(
+          '${docSnap.id}',
+          \`${data.text || ""}\`
+          )">
+
+          Edit
+
+          </button>
+
+          <button
+          class="delete-btn"
+
+          onclick="deleteAnnouncement(
+          '${docSnap.id}'
+          )">
+
+          Delete
+
+          </button>
+
+        </div>
+
+      </div>
+
+      `;
+
+    });
+
+  });
+
 }
 
-/* ADD */
+/* =====================================
+   ADD ANNOUNCEMENT
+===================================== */
 
 window.addAnnouncement = async function(){
 
-  if(!announceInput.value.trim()){
+  let text =
 
-    alert("Enter announcement");
+  announceInput.value
+  .trim();
+
+  if(!text){
+
+    alert(
+      "Enter announcement"
+    );
 
     return;
+
   }
 
   await addDoc(
@@ -871,8 +942,7 @@ window.addAnnouncement = async function(){
 
     {
 
-      text:
-      announceInput.value,
+      text:text,
 
       createdAt:
       Date.now()
@@ -885,11 +955,13 @@ window.addAnnouncement = async function(){
 
 }
 
-/* EDIT */
+/* =====================================
+   EDIT ANNOUNCEMENT
+===================================== */
 
 window.editAnnouncement = async function(id,oldText){
 
-  let t = prompt(
+  let updatedText = prompt(
 
     "Edit Announcement",
 
@@ -897,8 +969,10 @@ window.editAnnouncement = async function(id,oldText){
 
   );
 
-  if(!t){
+  if(!updatedText){
+
     return;
+
   }
 
   await updateDoc(
@@ -907,7 +981,8 @@ window.editAnnouncement = async function(id,oldText){
 
     {
 
-      text:t
+      text:
+      updatedText
 
     }
 
@@ -915,83 +990,83 @@ window.editAnnouncement = async function(id,oldText){
 
 }
 
-/* DELETE */
+/* =====================================
+   DELETE ANNOUNCEMENT
+===================================== */
 
 window.deleteAnnouncement = async function(id){
 
-  if(confirm("Delete announcement?")){
+  let confirmDelete = confirm(
+    "Delete announcement?"
+  );
 
-    await deleteDoc(
+  if(!confirmDelete){
 
-      doc(db,"announcements",id)
-
-    );
+    return;
 
   }
 
+  await deleteDoc(
+
+    doc(db,"announcements",id)
+
+  );
+
 }
 
-window.deleteAnnouncement = function(i){
-
-  if(confirm("Delete?")){
-
-    announcements.splice(i,1);
-
-    localStorage.setItem(
-
-      "announcements",
-
-      JSON.stringify(announcements)
-
-    );
-
-    loadAnnouncements();
-  }
-}
-
-/* BIRTHDAY */
+/* =====================================
+   LOAD BIRTHDAY
+===================================== */
 
 function loadBirthday(){
 
   let today =
+
   new Date()
-
   .toISOString()
-
   .slice(5,10);
 
-  let b = employees.filter(e =>
+  let birthdayEmployees =
+
+  employees.filter(e =>
 
     e.birthdate &&
 
-    e.birthdate.slice(5,10) === today
+    e.birthdate
+    .slice(5,10)
+
+    ===
+
+    today
 
   );
 
-  bdayList.innerHTML =
+  if(birthdayEmployees.length > 0){
 
-  b.length
+    bdayList.innerHTML =
 
-  ?
+    birthdayEmployees.map(e =>
 
-  b.map(e =>
+      `${e.fname} ${e.lname}`
 
-    e.fname +
+    )
 
-    " " +
+    .join("<br>");
 
-    e.lname
+  }
 
-  )
+  else{
 
-  .join("<br>")
+    bdayList.innerHTML =
+    "No birthday today";
 
-  :
+  }
 
-  "No birthday";
 }
 
-/* START */
+/* =====================================
+   START SYSTEM
+===================================== */
 
 loadEmployees();
 
