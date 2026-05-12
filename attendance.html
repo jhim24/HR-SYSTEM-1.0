@@ -120,7 +120,7 @@ select{
 
 table{
     width:100%;
-    min-width:1050px;
+    min-width:1100px;
     border-collapse:collapse;
 }
 
@@ -148,6 +148,15 @@ td{
     font-weight:bold;
 }
 
+.delete-btn{
+    background:red;
+    color:white;
+    border:none;
+    padding:6px 10px;
+    border-radius:4px;
+    cursor:pointer;
+}
+
 </style>
 </head>
 
@@ -161,7 +170,7 @@ td{
             EMPLOYEE ATTENDANCE
         </div>
 
-        <!-- EMPLOYEE DROPDOWN -->
+        <!-- DROPDOWN -->
 
         <div class="select-box">
 
@@ -201,30 +210,7 @@ td{
 
             <button class="btn timeout"
             onclick="timeOut()">
-/* =========================================
-   DELETE ROW
-========================================= */
 
-function deleteRow(index){
-
-    let confirmDelete =
-    confirm("Delete attendance record?");
-
-    if(!confirmDelete){
-        return;
-    }
-
-    attendance.splice(index,1);
-
-    localStorage.setItem(
-        "attendance",
-        JSON.stringify(attendance)
-    );
-
-    render();
-
-    alert("Deleted Successfully");
-}
                 TIME OUT
 
             </button>
@@ -251,7 +237,7 @@ function deleteRow(index){
                     <th>TIME OUT</th>
                     <th>TOTAL HOURS</th>
                     <th>LATE</th>
-                   <th>STATUS</th>
+                    <th>STATUS</th>
                     <th>ACTION</th>
 
                 </tr>
@@ -269,7 +255,7 @@ function deleteRow(index){
 <script>
 
 /* =========================================
-   AUTO FIX OLD BROKEN DATA
+   FIX OLD DATA
 ========================================= */
 
 let oldAttendance =
@@ -287,7 +273,7 @@ localStorage.setItem(
 );
 
 /* =========================================
-   SAMPLE EMPLOYEE MASTER LIST
+   SAMPLE EMPLOYEES
 ========================================= */
 
 if(!localStorage.getItem("employees")){
@@ -433,8 +419,6 @@ function timeIn(){
     let date =
     now.toLocaleDateString();
 
-    /* CHECK ONLY CURRENT EMPLOYEE */
-
     let existing = attendance.find(r =>
 
         String(r.empid).trim() ===
@@ -463,8 +447,6 @@ function timeIn(){
 
         return;
     }
-
-    /* LATE COMPUTATION */
 
     let lateMinutes = 0;
 
@@ -567,8 +549,6 @@ function timeOut(){
     row.timeout =
     now.toLocaleTimeString();
 
-    /* BREAK */
-
     let breakMinutes =
     prompt(
         "Enter Break Time in Minutes",
@@ -580,8 +560,6 @@ function timeOut(){
 
     row.breaktime =
     breakMinutes;
-
-    /* COMPUTE HOURS */
 
     let start =
     new Date(
@@ -596,13 +574,9 @@ function timeOut(){
     let hrs =
     (end-start)/1000/60/60;
 
-    /* OVERNIGHT FIX */
-
     if(hrs < 0){
         hrs += 24;
     }
-
-    /* LESS BREAK */
 
     hrs =
     hrs - (breakMinutes/60);
@@ -628,6 +602,34 @@ function timeOut(){
 }
 
 /* =========================================
+   DELETE ROW
+========================================= */
+
+function deleteRow(index){
+
+    attendance =
+    JSON.parse(localStorage.getItem("attendance")) || [];
+
+    let confirmDelete =
+    confirm("Delete attendance record?");
+
+    if(!confirmDelete){
+        return;
+    }
+
+    attendance.splice(index,1);
+
+    localStorage.setItem(
+        "attendance",
+        JSON.stringify(attendance)
+    );
+
+    render();
+
+    alert("Deleted Successfully");
+}
+
+/* =========================================
    RENDER TABLE
 ========================================= */
 
@@ -650,6 +652,9 @@ function render(){
     )
     .reverse()
     .forEach(r => {
+
+        let realIndex =
+        attendance.indexOf(r);
 
         tbody.innerHTML += `
 
@@ -680,23 +685,18 @@ function render(){
             ">
                 ${r.status || 'ON TIME'}
             </td>
-<td>
 
-    <button onclick="deleteRow(${attendance.indexOf(r)})"
-    style="
-        background:red;
-        color:white;
-        border:none;
-        padding:6px 10px;
-        border-radius:4px;
-        cursor:pointer;
-    ">
+            <td>
 
-        DELETE
+                <button class="delete-btn"
+                onclick="deleteRow(${realIndex})">
 
-    </button>
+                    DELETE
 
-</td>
+                </button>
+
+            </td>
+
         </tr>
 
         `;
