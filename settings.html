@@ -254,36 +254,96 @@ Save User
 
 </div>
 
-<script>
+<!-- FIREBASE -->
+
+<script type="module">
+
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+
+getFirestore,
+collection,
+getDocs
+
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* FIREBASE */
+
+const firebaseConfig = {
+
+apiKey:
+"AIzaSyClEtSTjrvf52exf2Qtdzb2MMLLlSfwhVg",
+
+authDomain:
+"pappritohr.firebaseapp.com",
+
+projectId:
+"pappritohr",
+
+storageBucket:
+"pappritohr.firebasestorage.app",
+
+messagingSenderId:
+"559428820611",
+
+appId:
+"1:559428820611:web:09344b59fe1b21a5e2c5b6",
+
+measurementId:
+"G-1CEQ4P5XW8"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
 
 /* =====================================
-   LOAD EMPLOYEES
+   EMPLOYEES
 ===================================== */
 
-let employees =
+let employees = [];
 
-JSON.parse(
-localStorage.getItem("employees")
-)
+/* LOAD EMPLOYEES */
 
-|| [];
+async function loadEmployees(){
 
-/* DROPDOWN */
+  employees = [];
 
-employees.forEach(e=>{
+  empSelect.innerHTML = "";
 
-  empSelect.innerHTML += `
+  const querySnapshot =
 
-  <option>
+  await getDocs(
+    collection(db,"employees")
+  );
 
-  ${e.fname || ""}
+  querySnapshot.forEach((d)=>{
 
-  ${e.lname || ""}
+    let e = d.data();
 
-  </option>
+    employees.push(e);
 
-  `;
-});
+    empSelect.innerHTML += `
+
+    <option>
+
+    ${e.fname || ""}
+
+    ${e.lname || ""}
+
+    </option>
+
+    `;
+  });
+}
 
 /* =====================================
    USERS
@@ -303,7 +363,7 @@ let editIndex = -1;
    SAVE USER
 ===================================== */
 
-function saveUser(){
+window.saveUser = function(){
 
   if(
 
@@ -456,7 +516,7 @@ function loadUsers(){
    EDIT
 ===================================== */
 
-function editUser(i){
+window.editUser = function(i){
 
   let u = users[i];
 
@@ -481,7 +541,7 @@ function editUser(i){
    DELETE
 ===================================== */
 
-function deleteUser(i){
+window.deleteUser = function(i){
 
   let confirmDelete =
 
@@ -523,7 +583,7 @@ function clearForm(){
    BACK
 ===================================== */
 
-function goBack(){
+window.goBack = function(){
 
   window.location.href =
   "index.html";
@@ -532,6 +592,8 @@ function goBack(){
 /* =====================================
    START
 ===================================== */
+
+loadEmployees();
 
 loadUsers();
 
