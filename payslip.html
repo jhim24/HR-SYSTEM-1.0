@@ -1,63 +1,164 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>Payslip System</title>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<!-- PDF -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+<!-- FONT AWESOME -->
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <style>
+
+*{
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
 body{
-  font-family:Arial;
-  background:#f0f0f0;
+  margin:0;
+  background:
+  linear-gradient(
+    135deg,
+    #dfe9f3,
+    #ffffff
+  );
   padding:20px;
 }
 
 /* CONTROLS */
+
 .controls{
-  max-width:900px;
+  max-width:1000px;
   margin:auto;
-  margin-bottom:10px;
+  margin-bottom:15px;
+
   display:flex;
   gap:10px;
   flex-wrap:wrap;
+
+  background:white;
+  padding:15px;
+  border-radius:15px;
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,0.08);
 }
 
-select,button{
-  padding:8px;
+/* INPUTS */
+
+select,
+button,
+input{
+
+  padding:10px;
+
+  border-radius:8px;
+
+  border:1px solid #ccc;
+
+  font-size:14px;
+}
+
+/* BUTTON */
+
+button{
   cursor:pointer;
+  border:none;
+  color:white;
+}
+
+.generate{
+  background:#3498db;
+}
+
+.save{
+  background:#2ecc71;
+}
+
+.pdf{
+  background:#e67e22;
+}
+
+.email{
+  background:#9b59b6;
 }
 
 /* PAYSLIP */
+
 .payslip{
+
   background:white;
-  max-width:900px;
+
+  max-width:1000px;
+
   margin:auto;
-  padding:20px;
-  border:4px solid #2c3e50;
+
+  padding:25px;
+
+  border-radius:15px;
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,0.1);
+
+  border-top:8px solid #2c3e50;
 }
 
-.header{text-align:center;}
-.sub{font-size:12px;color:#555;}
+/* HEADER */
+
+.header{
+  text-align:center;
+}
+
+.logo{
+  width:80px;
+  height:80px;
+  object-fit:contain;
+}
+
+.sub{
+  font-size:12px;
+  color:#666;
+}
+
+/* TITLE */
 
 .title{
-  background:#3c6fa5;
+  background:#2c3e50;
   color:white;
-  padding:5px;
-  margin-top:10px;
-  font-size:12px;
+  padding:8px;
+  margin-top:15px;
+  border-radius:6px;
+  font-size:13px;
 }
+
+/* GRID */
 
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:10px;
-  font-size:12px;
+  gap:15px;
+  margin-top:10px;
 }
 
 .box{
-  border:1px solid #ccc;
-  padding:8px;
+  border:1px solid #ddd;
+  padding:10px;
+  border-radius:8px;
+  font-size:13px;
 }
+
+/* TABLE */
 
 table{
   width:100%;
@@ -65,24 +166,78 @@ table{
 }
 
 td{
-  padding:4px;
-  border-bottom:1px solid #ddd;
+  padding:6px;
+  border-bottom:1px solid #eee;
+  font-size:13px;
 }
+
+/* NET */
 
 .net{
-  background:#2c3e50;
+  background:#27ae60;
   color:white;
-  padding:10px;
+  padding:15px;
   text-align:center;
-  margin-top:10px;
+  margin-top:15px;
+  border-radius:10px;
+  font-size:20px;
+  font-weight:bold;
 }
 
-/* EMAIL MODAL */
+/* SIGNATURE */
+
+.sign{
+  margin-top:40px;
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+}
+
+.line{
+  margin-top:50px;
+  border-top:1px solid #333;
+  width:220px;
+  text-align:center;
+  padding-top:5px;
+}
+
+/* HISTORY */
+
+.history{
+  max-width:1000px;
+  margin:20px auto;
+  background:white;
+  border-radius:15px;
+  padding:15px;
+  box-shadow:
+  0 10px 30px rgba(0,0,0,0.08);
+
+  overflow:auto;
+}
+
+.history table{
+  min-width:900px;
+}
+
+th{
+  background:#34495e;
+  color:white;
+  padding:8px;
+}
+
+th,td{
+  border:1px solid #ddd;
+  text-align:center;
+}
+
+/* MODAL */
+
 .modal{
   display:none;
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.6);
+  background:rgba(0,0,0,0.5);
+
   justify-content:center;
   align-items:center;
 }
@@ -90,165 +245,807 @@ td{
 .modal-box{
   background:white;
   padding:20px;
-  width:300px;
+  border-radius:15px;
+  width:320px;
 }
+
+.modal-box h3{
+  margin-top:0;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
 </style>
+
 </head>
 
 <body>
 
+<!-- CONTROLS -->
+
 <div class="controls">
+
 <select id="emp"></select>
 
 <select id="cutoff">
-<option>Monthly</option>
-<option>1-15</option>
-<option>16-30</option>
+
+<option value="Monthly">
+
+Monthly
+
+</option>
+
+<option value="1-15">
+
+1-15
+
+</option>
+
+<option value="16-30">
+
+16-30
+
+</option>
+
 </select>
 
-<button onclick="generate()">Generate</button>
-<button onclick="saveHistory()">Save</button>
-<button onclick="downloadPDF()">Download PDF</button>
-<button onclick="openEmail()">Send Email</button>
+<button
+class="generate"
+onclick="generatePayslip()">
+
+<i class="fa-solid fa-file-invoice-dollar"></i>
+
+Generate
+
+</button>
+
+<button
+class="save"
+onclick="saveHistory()">
+
+<i class="fa-solid fa-floppy-disk"></i>
+
+Save
+
+</button>
+
+<button
+class="pdf"
+onclick="downloadPDF()">
+
+<i class="fa-solid fa-file-pdf"></i>
+
+PDF
+
+</button>
+
+<button
+class="email"
+onclick="openEmail()">
+
+<i class="fa-solid fa-envelope"></i>
+
+Email
+
+</button>
+
 </div>
 
-<div id="printArea" class="payslip">
+<!-- PAYSLIP -->
+
+<div id="printArea"
+class="payslip">
 
 <div class="header">
-<h2>Payslip</h2>
-<div class="sub">HR System</div>
+
+<img src="logo.png"
+class="logo">
+
+<h2>PAPPRITO PAYSLIP</h2>
+
+<div class="sub">
+
+HR MANAGEMENT SYSTEM
+
 </div>
 
-<div class="title">Details</div>
+</div>
+
+<div class="title">
+
+Employee Information
+
+</div>
 
 <div class="grid">
+
 <div class="box">
-Name: <span id="name"></span><br>
-Position: <span id="pos"></span>
+
+Employee ID:
+<b id="empid"></b>
+
+<br><br>
+
+Employee Name:
+<b id="name"></b>
+
+<br><br>
+
+Position:
+<b id="pos"></b>
+
 </div>
 
 <div class="box">
-Period: <span id="period"></span><br>
-Date: <span id="date"></span>
+
+Cutoff:
+<b id="period"></b>
+
+<br><br>
+
+Date:
+<b id="date"></b>
+
+<br><br>
+
+Status:
+<b>PAID</b>
+
 </div>
+
+</div>
+
+<div class="title">
+
+Payroll Details
+
 </div>
 
 <div class="grid">
 
 <div class="box">
-<b>Earnings</b>
+
+<b>EARNINGS</b>
+
 <table>
-<tr><td>Basic</td><td id="basic"></td></tr>
-<tr><td>OT</td><td id="ot"></td></tr>
-<tr><td>Total</td><td id="earn"></td></tr>
+
+<tr>
+
+<td>Basic Salary</td>
+
+<td id="basic"></td>
+
+</tr>
+
+<tr>
+
+<td>Overtime</td>
+
+<td id="ot"></td>
+
+</tr>
+
+<tr>
+
+<td>Holiday</td>
+
+<td id="holiday"></td>
+
+</tr>
+
+<tr>
+
+<td>Total Earnings</td>
+
+<td id="earn"></td>
+
+</tr>
+
 </table>
+
 </div>
 
 <div class="box">
-<b>Deductions</b>
+
+<b>DEDUCTIONS</b>
+
 <table>
-<tr><td>SSS</td><td id="sss"></td></tr>
-<tr><td>Loan</td><td id="loan"></td></tr>
-<tr><td>Total</td><td id="ded"></td></tr>
+
+<tr>
+
+<td>SSS</td>
+
+<td id="sss"></td>
+
+</tr>
+
+<tr>
+
+<td>Pag-IBIG</td>
+
+<td id="pagibig"></td>
+
+</tr>
+
+<tr>
+
+<td>PhilHealth</td>
+
+<td id="philhealth"></td>
+
+</tr>
+
+<tr>
+
+<td>Loan</td>
+
+<td id="loan"></td>
+
+</tr>
+
+<tr>
+
+<td>Total Deductions</td>
+
+<td id="ded"></td>
+
+</tr>
+
 </table>
+
+</div>
+
+</div>
+
+<div class="net">
+
+NET PAY:
+₱ <span id="net"></span>
+
+</div>
+
+<!-- SIGNATURE -->
+
+<div class="sign">
+
+<div>
+
+<div class="line">
+
+Employee Signature
+
 </div>
 
 </div>
 
-<div class="net">NET: <span id="net"></span></div>
+<div>
+
+<div class="line">
+
+HR Signature
 
 </div>
 
-<!-- EMAIL MODAL -->
-<div class="modal" id="emailModal">
-  <div class="modal-box">
-    <h3>Send Payslip</h3>
-    <input id="email" placeholder="Enter email"><br><br>
-    <button onclick="sendEmail()">Send</button>
-  </div>
 </div>
 
-<script>
+</div>
 
-let empList = JSON.parse(localStorage.getItem("employees"))||[];
-let payroll = JSON.parse(localStorage.getItem("payroll"))||[];
-let history = JSON.parse(localStorage.getItem("payslipHistory"))||[];
+</div>
 
-function loadEmp(){
-  emp.innerHTML="";
-  empList.forEach(e=>{
-    emp.innerHTML+=`<option>${e.fname} ${e.lname}</option>`;
+<!-- HISTORY -->
+
+<div class="history">
+
+<h3>
+
+<i class="fa-solid fa-clock-rotate-left"></i>
+
+Payslip History
+
+</h3>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Employee ID</th>
+
+<th>Name</th>
+
+<th>Cutoff</th>
+
+<th>Net Pay</th>
+
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody id="historyTable"></tbody>
+
+</table>
+
+</div>
+
+<!-- EMAIL -->
+
+<div class="modal"
+id="emailModal">
+
+<div class="modal-box">
+
+<h3>Send Payslip</h3>
+
+<input
+id="email"
+placeholder="Enter Email">
+
+<br><br>
+
+<button
+class="email"
+onclick="sendEmail()">
+
+Send
+
+</button>
+
+</div>
+
+</div>
+
+<!-- FIREBASE -->
+
+<script type="module">
+
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+
+getFirestore,
+collection,
+getDocs,
+addDoc
+
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* FIREBASE */
+
+const firebaseConfig = {
+
+apiKey:
+"AIzaSyClEtSTjrvf52exf2Qtdzb2MMLLlSfwhVg",
+
+authDomain:
+"pappritohr.firebaseapp.com",
+
+projectId:
+"pappritohr",
+
+storageBucket:
+"pappritohr.firebasestorage.app",
+
+messagingSenderId:
+"559428820611",
+
+appId:
+"1:559428820611:web:09344b59fe1b21a5e2c5b6",
+
+measurementId:
+"G-1CEQ4P5XW8"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
+
+/* =====================================
+   DATA
+===================================== */
+
+let employees = [];
+
+let payroll = [];
+
+let history = [];
+
+/* =====================================
+   LOAD EMPLOYEES
+===================================== */
+
+async function loadEmployees(){
+
+  emp.innerHTML = "";
+
+  const querySnapshot =
+
+  await getDocs(
+    collection(db,"employees")
+  );
+
+  employees = [];
+
+  querySnapshot.forEach((d)=>{
+
+    let e = d.data();
+
+    employees.push(e);
+
+    emp.innerHTML += `
+
+    <option value="${e.empid}">
+
+    ${e.empid} -
+    ${e.fname} ${e.lname}
+
+    </option>
+
+    `;
   });
 }
 
-function generate(){
+/* =====================================
+   LOAD PAYROLL
+===================================== */
 
-  let nameVal = emp.value;
-  let p = payroll.find(x=>x.name===nameVal);
-  if(!p){alert("No payroll");return;}
+async function loadPayroll(){
 
-  let e = empList.find(x=>(x.fname+" "+x.lname)===nameVal)||{};
+  payroll = [];
 
-  let cut = cutoff.value;
-  let mult = (cut==="Monthly")?1:0.5;
+  const querySnapshot =
 
-  let basicVal = p.gross * mult;
-  let otVal = (p.ot||0)*mult;
+  await getDocs(
+    collection(db,"payroll")
+  );
 
-  let earn = basicVal+otVal;
-  let ded = (Number(p.sss||0)+Number(p.loan||0))*mult;
+  querySnapshot.forEach((d)=>{
 
-  name.innerText=nameVal;
-  pos.innerText=e.position||"-";
-  period.innerText=cut;
-  date.innerText=new Date().toLocaleDateString();
-
-  basic.innerText=basicVal;
-  ot.innerText=otVal;
-  earnEl.innerText=earn;
-
-  sss.innerText=p.sss;
-  loan.innerText=p.loan;
-  dedEl.innerText=ded;
-
-  net.innerText=earn-ded;
-
-  window.currentPayslip = {name:nameVal,cut,net:earn-ded,date:new Date()};
+    payroll.push(d.data());
+  });
 }
 
-/* SAVE HISTORY */
-function saveHistory(){
-  if(!window.currentPayslip){alert("Generate first");return;}
-  history.push(window.currentPayslip);
-  localStorage.setItem("payslipHistory",JSON.stringify(history));
-  alert("Saved!");
+/* =====================================
+   GENERATE PAYSLIP
+===================================== */
+
+window.generatePayslip = function(){
+
+  let empidVal =
+  emp.value;
+
+  let employee =
+
+  employees.find(e =>
+
+    e.empid == empidVal
+  );
+
+  if(!employee){
+
+    alert("Employee not found");
+
+    return;
+  }
+
+  let pay =
+
+  payroll.find(p =>
+
+    p.empid == empidVal
+  );
+
+  if(!pay){
+
+    alert("No payroll found");
+
+    return;
+  }
+
+  let cut =
+  cutoff.value;
+
+  let multiplier =
+
+  cut === "Monthly"
+
+  ? 1
+
+  : 0.5;
+
+  /* COMPUTE */
+
+  let basicSalary =
+
+  Number(pay.gross || 0)
+  * multiplier;
+
+  let overtime =
+
+  Number(pay.ot || 0)
+  * multiplier;
+
+  let holidayPay =
+
+  Number(pay.holiday || 0)
+  * multiplier;
+
+  let totalEarn =
+
+  basicSalary +
+  overtime +
+  holidayPay;
+
+  let totalDed =
+
+  (
+    Number(pay.sss || 0)+
+    Number(pay.pagibig || 0)+
+    Number(pay.philhealth || 0)+
+    Number(pay.loan || 0)
+  )
+
+  * multiplier;
+
+  let netPay =
+
+  totalEarn -
+  totalDed;
+
+  /* DISPLAY */
+
+  empid.innerText =
+  employee.empid || "-";
+
+  name.innerText =
+
+  employee.fname +
+
+  " " +
+
+  employee.lname;
+
+  pos.innerText =
+  employee.position || "-";
+
+  period.innerText =
+  cut;
+
+  date.innerText =
+
+  new Date()
+  .toLocaleDateString();
+
+  basic.innerText =
+  basicSalary.toFixed(2);
+
+  ot.innerText =
+  overtime.toFixed(2);
+
+  holiday.innerText =
+  holidayPay.toFixed(2);
+
+  earn.innerText =
+  totalEarn.toFixed(2);
+
+  sss.innerText =
+  Number(pay.sss || 0)
+  .toFixed(2);
+
+  pagibig.innerText =
+  Number(pay.pagibig || 0)
+  .toFixed(2);
+
+  philhealth.innerText =
+  Number(pay.philhealth || 0)
+  .toFixed(2);
+
+  loan.innerText =
+  Number(pay.loan || 0)
+  .toFixed(2);
+
+  ded.innerText =
+  totalDed.toFixed(2);
+
+  net.innerText =
+  netPay.toFixed(2);
+
+  /* STORE */
+
+  window.currentPayslip = {
+
+    empid:
+    employee.empid,
+
+    name:
+    employee.fname +
+    " " +
+    employee.lname,
+
+    cutoff:
+    cut,
+
+    net:
+    netPay,
+
+    date:
+    new Date()
+    .toLocaleString()
+
+  };
 }
 
-/* PDF */
-function downloadPDF(){
-  html2pdf().from(document.getElementById("printArea")).save();
+/* =====================================
+   SAVE HISTORY
+===================================== */
+
+window.saveHistory = async function(){
+
+  if(!window.currentPayslip){
+
+    alert("Generate first");
+
+    return;
+  }
+
+  await addDoc(
+
+    collection(db,"payslipHistory"),
+
+    window.currentPayslip
+
+  );
+
+  alert("Payslip Saved");
+
+  loadHistory();
 }
 
-/* EMAIL */
-function openEmail(){
-  emailModal.style.display="flex";
+/* =====================================
+   LOAD HISTORY
+===================================== */
+
+async function loadHistory(){
+
+  historyTable.innerHTML = "";
+
+  const querySnapshot =
+
+  await getDocs(
+    collection(db,"payslipHistory")
+  );
+
+  querySnapshot.forEach((d)=>{
+
+    let h = d.data();
+
+    historyTable.innerHTML += `
+
+    <tr>
+
+      <td>
+
+      ${h.empid || "-"}
+
+      </td>
+
+      <td>
+
+      ${h.name || "-"}
+
+      </td>
+
+      <td>
+
+      ${h.cutoff || "-"}
+
+      </td>
+
+      <td>
+
+      ₱ ${Number(h.net || 0)
+      .toFixed(2)}
+
+      </td>
+
+      <td>
+
+      ${h.date || "-"}
+
+      </td>
+
+    </tr>
+
+    `;
+  });
 }
 
-function sendEmail(){
-  alert("Payslip sent to "+email.value+" (simulation)");
-  emailModal.style.display="none";
+/* =====================================
+   PDF
+===================================== */
+
+window.downloadPDF = function(){
+
+  html2pdf()
+
+  .from(
+    document.getElementById(
+      "printArea"
+    )
+  )
+
+  .save();
 }
 
-/* AUTO MONTHLY */
-function autoGenerateMonthly(){
-  let now=new Date().getDate();
-  if(now===30){
-    alert("Auto Monthly Payslip Generated");
+/* =====================================
+   EMAIL
+===================================== */
+
+window.openEmail = function(){
+
+  emailModal.style.display =
+  "flex";
+}
+
+window.sendEmail = function(){
+
+  alert(
+
+    "Payslip sent to " +
+
+    email.value +
+
+    " (simulation only)"
+
+  );
+
+  emailModal.style.display =
+  "none";
+}
+
+/* =====================================
+   AUTO MONTHLY
+===================================== */
+
+function autoMonthlyReminder(){
+
+  let now =
+  new Date().getDate();
+
+  if(now === 30){
+
+    console.log(
+      "Monthly payroll ready"
+    );
   }
 }
 
-loadEmp();
-autoGenerateMonthly();
+/* START */
+
+loadEmployees();
+
+loadPayroll();
+
+loadHistory();
+
+autoMonthlyReminder();
 
 </script>
 
