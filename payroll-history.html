@@ -1,447 +1,1276 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>Payroll History</title>
 
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<!-- FONT AWESOME -->
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <style>
-body {
-  font-family: Arial;
-  background:#f4f6f9;
-  padding:20px;
+
+*{
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
 }
 
-h2 { text-align:center; }
+body{
+  margin:0;
+  background:
+  linear-gradient(
+    135deg,
+    #eef2ff,
+    #f8fafc
+  );
+  padding:20px;
+  color:#1e293b;
+}
 
-/* TOP */
-.top {
+/* HEADER */
+
+.header{
+  max-width:1400px;
+  margin:auto;
+  margin-bottom:20px;
+
   display:flex;
   justify-content:space-between;
-  margin-bottom:10px;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
 }
 
-.btn {
-  padding:8px 12px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  color:white;
+/* TITLE */
+
+.title-box h2{
+  margin:0;
 }
 
-.back { background:#6c757d; }
-.clear { background:#dc3545; }
+.title-box p{
+  margin:5px 0 0;
+  color:#64748b;
+}
 
-/* FILTER */
-.filters {
+/* BUTTONS */
+
+.top-actions{
   display:flex;
   gap:10px;
-  margin-bottom:15px;
+  flex-wrap:wrap;
 }
 
-input {
-  padding:8px;
-  border-radius:5px;
-  border:1px solid #ccc;
-}
-
-/* CARD */
-.card {
-  background:white;
-  padding:15px;
+.btn{
+  padding:10px 16px;
+  border:none;
   border-radius:10px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.1);
-  margin-bottom:15px;
+  cursor:pointer;
+  color:white;
+  font-weight:600;
+  transition:0.2s;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+}
+
+.back{
+  background:#64748b;
+}
+
+.clear{
+  background:#ef4444;
+}
+
+.export{
+  background:#0ea5e9;
+}
+
+/* FILTER */
+
+.filters{
+  max-width:1400px;
+  margin:auto;
+  margin-bottom:20px;
+
+  background:white;
+  padding:18px;
+  border-radius:16px;
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,0.06);
+
+  display:grid;
+  grid-template-columns:
+  repeat(auto-fit,minmax(220px,1fr));
+
+  gap:12px;
+}
+
+/* INPUT */
+
+input,
+select{
+
+  padding:12px;
+
+  border-radius:10px;
+
+  border:1px solid #dbeafe;
+
+  outline:none;
+
+  font-size:14px;
+}
+
+input:focus,
+select:focus{
+
+  border-color:#2563eb;
+
+  box-shadow:
+  0 0 0 4px rgba(37,99,235,0.1);
+}
+
+/* STATS */
+
+.stats{
+
+  max-width:1400px;
+
+  margin:auto;
+
+  margin-bottom:20px;
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(auto-fit,minmax(220px,1fr));
+
+  gap:15px;
+}
+
+.stat-card{
+
+  background:white;
+
+  border-radius:18px;
+
+  padding:20px;
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,0.06);
+
+  position:relative;
+
+  overflow:hidden;
+}
+
+.stat-card::before{
+
+  content:"";
+
+  position:absolute;
+
+  right:-30px;
+  top:-30px;
+
+  width:100px;
+  height:100px;
+
+  background:
+  rgba(37,99,235,0.08);
+
+  border-radius:50%;
+}
+
+.stat-title{
+
+  color:#64748b;
+
+  font-size:13px;
+}
+
+.stat-value{
+
+  font-size:28px;
+
+  font-weight:bold;
+
+  margin-top:8px;
+}
+
+/* TABLE CARD */
+
+.card{
+
+  max-width:1400px;
+
+  margin:auto;
+
+  background:white;
+
+  border-radius:18px;
+
+  padding:18px;
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,0.06);
+
+  overflow:auto;
 }
 
 /* TABLE */
-table {
+
+table{
+
   width:100%;
+
+  min-width:1200px;
+
   border-collapse:collapse;
 }
 
-th, td {
-  border:1px solid #ddd;
-  padding:8px;
-  text-align:center;
-}
+th{
 
-th {
-  background:#0d6efd;
+  background:#2563eb;
+
   color:white;
+
+  padding:12px;
+
+  font-size:13px;
 }
 
-/* ACTION */
-.view { background:#0d6efd; color:white; }
-.edit { background:#ffc107; }
-.delete { background:#dc3545; color:white; }
-.print { background:#198754; color:white; }
+td{
+
+  padding:10px;
+
+  border-bottom:1px solid #e5e7eb;
+
+  text-align:center;
+
+  font-size:13px;
+}
+
+/* ROW HOVER */
+
+tbody tr:hover{
+
+  background:#f8fafc;
+}
+
+/* ACTION BUTTONS */
+
+.action-btn{
+
+  border:none;
+
+  padding:7px 12px;
+
+  border-radius:8px;
+
+  cursor:pointer;
+
+  color:white;
+
+  margin:2px;
+
+  font-size:12px;
+}
+
+.view{
+  background:#2563eb;
+}
+
+.edit{
+  background:#f59e0b;
+}
+
+.delete{
+  background:#ef4444;
+}
+
+.print{
+  background:#10b981;
+}
 
 /* DETAILS */
-#detailsBox { display:none; }
+
+#detailsBox{
+  display:none;
+  margin-top:20px;
+}
+
+/* BADGE */
+
+.badge{
+
+  background:#dcfce7;
+
+  color:#166534;
+
+  padding:5px 10px;
+
+  border-radius:20px;
+
+  font-size:11px;
+
+  font-weight:bold;
+}
+
+/* EMPTY */
+
+.empty{
+
+  text-align:center;
+
+  padding:30px;
+
+  color:#64748b;
+}
+
 </style>
 
 </head>
 
 <body>
 
-<div class="top">
-  <button class="btn back" onclick="goBack()">⬅ Back</button>
-  <button class="btn clear" onclick="clearAll()">🗑 Clear All</button>
+<!-- HEADER -->
+
+<div class="header">
+
+<div class="title-box">
+
+<h2>
+
+<i class="fa-solid fa-clock-rotate-left"></i>
+
+Payroll History
+
+</h2>
+
+<p>
+
+Firebase Connected Payroll Monitoring
+
+</p>
+
 </div>
 
-<h2>Payroll History</h2>
+<div class="top-actions">
 
-<!-- FILTER -->
+<button class="btn back"
+onclick="goBack()">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+Back
+
+</button>
+
+<button class="btn clear"
+onclick="clearAll()">
+
+<i class="fa-solid fa-trash"></i>
+
+Clear All
+
+</button>
+
+<button class="btn export"
+onclick="window.print()">
+
+<i class="fa-solid fa-print"></i>
+
+Print
+
+</button>
+
+</div>
+
+</div>
+
+<!-- FILTERS -->
+
 <div class="filters">
-  <input type="text" id="search" placeholder="Search Name..." onkeyup="loadHistory()">
-  <input type="date" id="dateFilter" onchange="loadHistory()">
+
+<input
+type="text"
+id="search"
+placeholder="Search Employee Name..."
+onkeyup="loadHistory()">
+
+<input
+type="date"
+id="dateFilter"
+onchange="loadHistory()">
+
+<select
+id="salaryFilter"
+onchange="loadHistory()">
+
+<option value="">
+
+All Salary
+
+</option>
+
+<option value="high">
+
+High Salary
+
+</option>
+
+<option value="low">
+
+Low Salary
+
+</option>
+
+</select>
+
+</div>
+
+<!-- STATS -->
+
+<div class="stats">
+
+<div class="stat-card">
+
+<div class="stat-title">
+
+Total Payroll Records
+
+</div>
+
+<div class="stat-value"
+id="totalRecords">
+
+0
+
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="stat-title">
+
+Total Payroll Amount
+
+</div>
+
+<div class="stat-value"
+id="totalPayroll">
+
+₱0
+
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="stat-title">
+
+Highest Net Pay
+
+</div>
+
+<div class="stat-value"
+id="highestNet">
+
+₱0
+
+</div>
+
+</div>
+
 </div>
 
 <!-- TABLE -->
+
 <div class="card">
+
 <table>
+
 <thead>
+
 <tr>
+
+<th>Employee ID</th>
+
 <th>Name</th>
+
 <th>Date</th>
+
 <th>Gross</th>
-<th>Net</th>
+
+<th>Deductions</th>
+
+<th>Net Pay</th>
+
+<th>Status</th>
+
 <th>Action</th>
+
 </tr>
+
 </thead>
 
 <tbody id="historyTable"></tbody>
+
 </table>
+
 </div>
 
 <!-- DETAILS -->
-<div class="card" id="detailsBox">
-<h3>Payroll Details</h3>
 
-<button class="btn print" onclick="printDetails()">🖨 Print</button>
+<div class="card"
+id="detailsBox">
+
+<h3>
+
+<i class="fa-solid fa-receipt"></i>
+
+Payroll Details
+
+</h3>
+
+<br>
+
+<button
+class="action-btn print"
+onclick="printDetails()">
+
+<i class="fa-solid fa-print"></i>
+
+Print Payslip
+
+</button>
+
+<br><br>
 
 <table>
+
 <thead>
+
 <tr>
-<th>Full Name</th>
+
+<th>Employee</th>
+
 <th>Rate</th>
+
 <th>Days</th>
+
 <th>OT</th>
+
 <th>Holiday</th>
-<th>Sick</th>
-<th>Birthday</th>
-<th>Vacation</th>
+
 <th>SSS</th>
+
 <th>Pag-IBIG</th>
+
 <th>PhilHealth</th>
-<th>Health Card</th>
-<th>Other</th>
+
+<th>Loan</th>
+
 <th>Total Deduction</th>
+
 <th>Net</th>
+
 </tr>
+
 </thead>
 
 <tbody id="detailsTable"></tbody>
+
 </table>
+
 </div>
 
-<script>
+<!-- FIREBASE -->
 
-function getPayroll(){
-  return JSON.parse(localStorage.getItem("payroll")) || [];
+<script type="module">
+
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+
+getFirestore,
+collection,
+getDocs,
+deleteDoc,
+doc
+
 }
 
-/* LOAD WITH SEARCH + FILTER */
-function loadHistory(){
-  let data = getPayroll();
-  let search = document.getElementById("search").value.toLowerCase();
-  let date = document.getElementById("dateFilter").value;
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  let table = document.getElementById("historyTable");
-  table.innerHTML = "";
+/* FIREBASE */
 
-  data.forEach((p,i)=>{
+const firebaseConfig = {
 
-    let matchName = p.name.toLowerCase().includes(search);
-    let matchDate = !date || (p.date && p.date.includes(date));
+apiKey:
+"AIzaSyClEtSTjrvf52exf2Qtdzb2MMLLlSfwhVg",
 
-    if(matchName && matchDate){
-      table.innerHTML += `
-        <tr>
-          <td>${p.name}</td>
-          <td>${p.date || "-"}</td>
-          <td>${p.gross}</td>
-          <td>${p.net}</td>
-          <td>
-            <button class="view" onclick="viewRecord(${i})">View</button>
-            <button class="edit" onclick="editRecord(${i})">Edit</button>
-            <button class="delete" onclick="deleteRecord(${i})">Delete</button>
-          </td>
-        </tr>
+authDomain:
+"pappritohr.firebaseapp.com",
+
+projectId:
+"pappritohr",
+
+storageBucket:
+"pappritohr.firebasestorage.app",
+
+messagingSenderId:
+"559428820611",
+
+appId:
+"1:559428820611:web:09344b59fe1b21a5e2c5b6",
+
+measurementId:
+"G-1CEQ4P5XW8"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
+
+/* =====================================
+   DATA
+===================================== */
+
+let payrollData = [];
+
+let currentData = null;
+
+/* =====================================
+   LOAD HISTORY
+===================================== */
+
+window.loadHistory = async function(){
+
+  payrollData = [];
+
+  historyTable.innerHTML = "";
+
+  const querySnapshot =
+
+  await getDocs(
+    collection(db,"payroll")
+  );
+
+  querySnapshot.forEach((d)=>{
+
+    let row = d.data();
+
+    row.docId = d.id;
+
+    payrollData.push(row);
+  });
+
+  /* FILTERS */
+
+  let search =
+
+  document.getElementById(
+    "search"
+  )
+
+  .value
+
+  .toLowerCase();
+
+  let date =
+
+  document.getElementById(
+    "dateFilter"
+  )
+
+  .value;
+
+  let salaryFilter =
+
+  document.getElementById(
+    "salaryFilter"
+  )
+
+  .value;
+
+  let totalNet = 0;
+
+  let highestNet = 0;
+
+  let totalRecords = 0;
+
+  payrollData.forEach((p)=>{
+
+    let matchName =
+
+    (p.name || "")
+    .toLowerCase()
+    .includes(search);
+
+    let matchDate =
+
+    !date ||
+
+    (
+      (p.date || "")
+      .includes(date)
+    );
+
+    let matchSalary = true;
+
+    if(salaryFilter === "high"){
+
+      matchSalary =
+      Number(p.net || 0) >= 50000;
+    }
+
+    if(salaryFilter === "low"){
+
+      matchSalary =
+      Number(p.net || 0) < 50000;
+    }
+
+    if(
+
+      matchName &&
+      matchDate &&
+      matchSalary
+
+    ){
+
+      totalRecords++;
+
+      totalNet +=
+      Number(p.net || 0);
+
+      if(
+        Number(p.net || 0)
+        > highestNet
+      ){
+
+        highestNet =
+        Number(p.net || 0);
+      }
+
+      let totalDed =
+
+      Number(p.sss || 0)+
+      Number(p.pagibig || 0)+
+      Number(p.philhealth || 0)+
+      Number(p.loan || 0);
+
+      historyTable.innerHTML += `
+
+      <tr>
+
+        <td>
+
+        ${p.empid || "-"}
+
+        </td>
+
+        <td>
+
+        ${p.name || "-"}
+
+        </td>
+
+        <td>
+
+        ${p.date || "-"}
+
+        </td>
+
+        <td>
+
+        ₱ ${Number(p.gross || 0)
+        .toLocaleString()}
+
+        </td>
+
+        <td>
+
+        ₱ ${totalDed
+        .toLocaleString()}
+
+        </td>
+
+        <td>
+
+        ₱ ${Number(p.net || 0)
+        .toLocaleString()}
+
+        </td>
+
+        <td>
+
+        <span class="badge">
+
+        PAID
+
+        </span>
+
+        </td>
+
+        <td>
+
+          <button
+          class="action-btn view"
+          onclick="viewRecord('${p.docId}')">
+
+          View
+
+          </button>
+
+          <button
+          class="action-btn edit"
+          onclick="editRecord('${p.docId}')">
+
+          Edit
+
+          </button>
+
+          <button
+          class="action-btn delete"
+          onclick="deleteRecord('${p.docId}')">
+
+          Delete
+
+          </button>
+
+        </td>
+
+      </tr>
+
       `;
     }
 
   });
+
+  /* EMPTY */
+
+  if(totalRecords === 0){
+
+    historyTable.innerHTML = `
+
+    <tr>
+
+      <td colspan="8"
+      class="empty">
+
+      No payroll records found
+
+      </td>
+
+    </tr>
+
+    `;
+  }
+
+  /* STATS */
+
+  totalPayroll.innerText =
+
+  "₱" +
+
+  totalNet.toLocaleString();
+
+  highestNet.innerText =
+
+  "₱" +
+
+  highestNet.toLocaleString();
+
+  totalRecords.innerText =
+  totalRecords;
 }
 
-/* VIEW */
-let currentData = null;
+/* =====================================
+   VIEW
+===================================== */
 
-function viewRecord(i){
-  let data = getPayroll();
-  let p = data[i];
+window.viewRecord = function(id){
+
+  let p = payrollData.find(x =>
+
+    x.docId === id
+  );
+
+  if(!p){
+    return;
+  }
+
   currentData = p;
 
-  document.getElementById("detailsBox").style.display="block";
+  detailsBox.style.display =
+  "block";
+
+  let totalDed =
+
+  Number(p.sss || 0)+
+  Number(p.pagibig || 0)+
+  Number(p.philhealth || 0)+
+  Number(p.loan || 0);
 
   detailsTable.innerHTML = `
-    <tr>
-      <td>${p.name}</td>
-      <td>${p.rate}</td>
-      <td>${p.days}</td>
-      <td>${p.ot}</td>
-      <td>${p.holiday}</td>
-      <td>${p.sick}</td>
-      <td>${p.birthday}</td>
-      <td>${p.vacation}</td>
-      <td>${p.sss}</td>
-      <td>${p.pagibig}</td>
-      <td>${p.philhealth}</td>
-      <td>${p.healthcard}</td>
-      <td>${p.othername} (${p.other})</td>
-      <td>${p.totalDed}</td>
-      <td>${p.net}</td>
-    </tr>
-  `;
-}
 
-/* PRINT */
-function formatPeso(num){
-  return "₱" + Number(num).toLocaleString("en-PH", {
-    minimumFractionDigits:2
+  <tr>
+
+    <td>
+
+    ${p.name || "-"}
+
+    </td>
+
+    <td>
+
+    ${p.rate || 0}
+
+    </td>
+
+    <td>
+
+    ${p.days || 0}
+
+    </td>
+
+    <td>
+
+    ${p.ot || 0}
+
+    </td>
+
+    <td>
+
+    ${p.holiday || 0}
+
+    </td>
+
+    <td>
+
+    ${p.sss || 0}
+
+    </td>
+
+    <td>
+
+    ${p.pagibig || 0}
+
+    </td>
+
+    <td>
+
+    ${p.philhealth || 0}
+
+    </td>
+
+    <td>
+
+    ${p.loan || 0}
+
+    </td>
+
+    <td>
+
+    ${totalDed}
+
+    </td>
+
+    <td>
+
+    ${p.net || 0}
+
+    </td>
+
+  </tr>
+
+  `;
+
+  window.scrollTo({
+
+    top:
+    document.body.scrollHeight,
+
+    behavior:'smooth'
+
   });
 }
 
-function printDetails(){
+/* =====================================
+   PRINT
+===================================== */
+
+window.printDetails = function(){
+
+  if(!currentData){
+
+    alert("No payroll selected");
+
+    return;
+  }
 
   let p = currentData;
 
-  let content = `
+  let printWindow =
+
+  window.open(
+    "",
+    "_blank"
+  );
+
+  printWindow.document.write(`
+
   <html>
+
   <head>
+
   <title>Payslip</title>
 
   <style>
-    body {
-      font-family: Arial;
-      padding:20px;
-      background:#f5f6fa;
-    }
 
-    .container {
-      max-width:900px;
-      margin:auto;
-      background:white;
-      padding:25px;
-      border-radius:8px;
-      border-top:6px solid #4f46e5;
-    }
+  body{
 
-    .header {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      border-bottom:2px solid #ddd;
-      padding-bottom:10px;
-      margin-bottom:15px;
-    }
+    font-family:Arial;
 
-    .company {
-      font-size:22px;
-      font-weight:bold;
-    }
+    padding:30px;
+  }
 
-    .title {
-      font-weight:bold;
-      margin-bottom:15px;
-    }
+  .box{
 
-    .summary {
-      display:flex;
-      justify-content:space-between;
-      margin-bottom:15px;
-    }
+    border:2px solid #333;
 
-    .box {
-      width:48%;
-    }
+    padding:20px;
+  }
 
-    .net {
-      text-align:right;
-      font-size:28px;
-      font-weight:bold;
-    }
+  h2{
 
-    table {
-      width:100%;
-      border-collapse:collapse;
-      margin-top:10px;
-    }
+    text-align:center;
+  }
 
-    th, td {
-      padding:8px;
-      border-bottom:1px solid #ddd;
-      text-align:left;
-    }
+  table{
 
-    th {
-      color:#4f46e5;
-    }
+    width:100%;
 
-    .right { text-align:right; }
+    border-collapse:collapse;
 
-    .highlight {
-      background:#eef2ff;
-      font-weight:bold;
-    }
+    margin-top:20px;
+  }
 
-    .footer {
-      margin-top:20px;
-      text-align:center;
-      font-size:12px;
-      color:#666;
-    }
+  td,th{
+
+    border:1px solid #ddd;
+
+    padding:10px;
+  }
+
   </style>
 
   </head>
 
   <body>
 
-  <div class="container">
+  <div class="box">
 
-    <div class="header">
-      <div>
-        <div class="company">YOUR COMPANY NAME</div>
-        <div>Philippines</div>
-      </div>
-      <div><b>PAYSLIP</b></div>
-    </div>
+  <h2>Payslip</h2>
 
-    <div class="title">
-      Payslip for ${p.date || ""}
-    </div>
+  <p>
 
-    <div class="summary">
-      <div class="box">
-        <div><b>Employee Name:</b> ${p.name}</div>
-        <div><b>Pay Date:</b> ${p.date || "-"}</div>
-      </div>
+  <b>Name:</b>
 
-      <div class="box net">
-        Net Pay<br>
-        ${formatPeso(p.net)}
-      </div>
-    </div>
+  ${p.name}
 
-    <!-- EARNINGS -->
-    <table>
-      <tr>
-        <th>EARNINGS</th>
-        <th class="right">AMOUNT</th>
-      </tr>
+  </p>
 
-      <tr>
-        <td>Basic Pay</td>
-        <td class="right">${formatPeso(p.rate * p.days)}</td>
-      </tr>
+  <p>
 
-      <tr>
-        <td>Overtime</td>
-        <td class="right">${formatPeso(p.rate * p.ot)}</td>
-      </tr>
+  <b>Employee ID:</b>
 
-      <tr>
-        <td>Holiday</td>
-        <td class="right">${formatPeso(p.rate * p.holiday)}</td>
-      </tr>
+  ${p.empid}
 
-      <tr class="highlight">
-        <td>Gross Earnings</td>
-        <td class="right">${formatPeso(p.gross)}</td>
-      </tr>
-    </table>
+  </p>
 
-    <!-- DEDUCTIONS -->
-    <table>
-      <tr>
-        <th>DEDUCTIONS</th>
-        <th class="right">AMOUNT</th>
-      </tr>
+  <p>
 
-      <tr><td>SSS</td><td class="right">${formatPeso(p.sss)}</td></tr>
-      <tr><td>Pag-IBIG</td><td class="right">${formatPeso(p.pagibig)}</td></tr>
-      <tr><td>PhilHealth</td><td class="right">${formatPeso(p.philhealth)}</td></tr>
-      <tr><td>Health Card</td><td class="right">${formatPeso(p.healthcard)}</td></tr>
-      <tr><td>${p.othername}</td><td class="right">${formatPeso(p.other)}</td></tr>
+  <b>Date:</b>
 
-      <tr class="highlight">
-        <td>Total Deductions</td>
-        <td class="right">${formatPeso(p.totalDed)}</td>
-      </tr>
-    </table>
+  ${p.date || "-"}
 
-    <!-- NET -->
-    <table>
-      <tr class="highlight">
-        <td>NET PAY</td>
-        <td class="right">${formatPeso(p.net)}</td>
-      </tr>
-    </table>
+  </p>
 
-    <div class="footer">
-      This document is system generated. No signature required.
-    </div>
+  <table>
+
+  <tr>
+
+  <th>Description</th>
+
+  <th>Amount</th>
+
+  </tr>
+
+  <tr>
+
+  <td>Gross Salary</td>
+
+  <td>${p.gross}</td>
+
+  </tr>
+
+  <tr>
+
+  <td>SSS</td>
+
+  <td>${p.sss}</td>
+
+  </tr>
+
+  <tr>
+
+  <td>Pag-IBIG</td>
+
+  <td>${p.pagibig}</td>
+
+  </tr>
+
+  <tr>
+
+  <td>PhilHealth</td>
+
+  <td>${p.philhealth}</td>
+
+  </tr>
+
+  <tr>
+
+  <td>Loan</td>
+
+  <td>${p.loan}</td>
+
+  </tr>
+
+  <tr>
+
+  <th>NET PAY</th>
+
+  <th>${p.net}</th>
+
+  </tr>
+
+  </table>
 
   </div>
 
   </body>
+
   </html>
-  `;
 
-  let w = window.open("", "_blank");
-  w.document.write(content);
-  w.document.close();
-  w.print();
+  `);
+
+  printWindow.document.close();
+
+  printWindow.print();
 }
-/* DELETE */
-function deleteRecord(i){
-  let data = getPayroll();
-  if(confirm("Delete?")){
-    data.splice(i,1);
-    localStorage.setItem("payroll", JSON.stringify(data));
-    loadHistory();
+
+/* =====================================
+   DELETE
+===================================== */
+
+window.deleteRecord = async function(id){
+
+  let confirmDelete =
+
+  confirm(
+    "Delete payroll?"
+  );
+
+  if(!confirmDelete){
+    return;
   }
+
+  await deleteDoc(
+
+    doc(db,"payroll",id)
+
+  );
+
+  loadHistory();
 }
 
-/* CLEAR */
-function clearAll(){
-  if(confirm("Clear all?")){
-    localStorage.removeItem("payroll");
-    loadHistory();
+/* =====================================
+   CLEAR
+===================================== */
+
+window.clearAll = async function(){
+
+  let confirmDelete =
+
+  confirm(
+    "Delete ALL payroll?"
+  );
+
+  if(!confirmDelete){
+    return;
   }
+
+  const querySnapshot =
+
+  await getDocs(
+    collection(db,"payroll")
+  );
+
+  for(const d of querySnapshot.docs){
+
+    await deleteDoc(
+      doc(db,"payroll",d.id)
+    );
+  }
+
+  loadHistory();
 }
 
-/* EDIT */
-function editRecord(i){
-  localStorage.setItem("editIndex", i);
-  window.location.href="payroll.html";
+/* =====================================
+   EDIT
+===================================== */
+
+window.editRecord = function(id){
+
+  localStorage.setItem(
+    "editPayrollId",
+    id
+  );
+
+  window.location.href =
+  "payroll.html";
 }
 
-/* BACK */
-function goBack(){
-  window.location.href="index.html";
+/* =====================================
+   BACK
+===================================== */
+
+window.goBack = function(){
+
+  window.location.href =
+  "index.html";
 }
 
-/* INIT */
+/* START */
+
 loadHistory();
 
 </script>
