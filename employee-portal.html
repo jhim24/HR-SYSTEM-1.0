@@ -1,115 +1,242 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>Employee Portal</title>
 
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<!-- FONT AWESOME -->
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <style>
-*{box-sizing:border-box;font-family:'Segoe UI';}
+
+*{
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
 
 body{
   margin:0;
-  background:linear-gradient(135deg,#667eea,#764ba2);
+  background:
+  linear-gradient(
+    135deg,
+    #7b0000,
+    #c1121f,
+    #ffb703
+  );
   padding:20px;
   color:white;
 }
 
 /* CONTAINER */
+
 .container{
-  max-width:900px;
+  max-width:1400px;
   margin:auto;
 }
 
-/* 🔥 BIG MESSAGE */
-.message-box{
-  margin-bottom:20px;
-  padding:25px;
-  border-radius:15px;
-
-  text-align:center;
-  font-size:22px;
-  font-weight:bold;
-
-  background: rgba(255,215,0,0.2);
-  border:1px solid #FFD700;
-
-  box-shadow:
-    0 0 10px #FFD700,
-    0 0 20px rgba(255,215,0,0.6);
-
-  animation: glowPulse 2s infinite alternate;
-}
-
-@keyframes glowPulse{
-  from{ box-shadow:0 0 10px #FFD700; }
-  to{ box-shadow:0 0 25px #FFD700, 0 0 40px rgba(255,215,0,0.7); }
-}
-
-/* FLOATING CARD */
-.box{
-  background:rgba(255,255,255,0.1);
-  backdrop-filter:blur(15px);
-  padding:20px;
-  margin-bottom:20px;
-  border-radius:15px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.3);
-  animation:fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(20px);}
-  to{opacity:1;}
-}
-
 /* HEADER */
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+/* LOGOUT */
+
 .logout{
-  float:right;
   background:#ff4d4d;
-  padding:6px 10px;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-/* INPUT */
-input,select,textarea{
-  width:100%;
-  padding:10px;
-  margin-top:8px;
-  border:none;
-  border-radius:8px;
-  outline:none;
-}
-
-/* BUTTON */
-button{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  border:none;
-  border-radius:8px;
-  background:linear-gradient(45deg,#00c6ff,#0072ff);
-  color:white;
+  padding:10px 16px;
+  border-radius:10px;
   cursor:pointer;
   font-weight:bold;
   transition:0.3s;
 }
 
-button:hover{
+.logout:hover{
   transform:scale(1.05);
 }
 
+/* ANNOUNCEMENT */
+
+.message-box{
+  margin-bottom:20px;
+  padding:25px;
+  border-radius:20px;
+
+  text-align:center;
+
+  font-size:24px;
+
+  font-weight:bold;
+
+  background:
+  rgba(255,215,0,0.15);
+
+  border:2px solid #FFD700;
+
+  box-shadow:
+  0 0 20px rgba(255,215,0,0.7);
+
+  animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+
+  from{
+    box-shadow:
+    0 0 10px rgba(255,215,0,0.5);
+  }
+
+  to{
+    box-shadow:
+    0 0 30px rgba(255,215,0,1);
+  }
+}
+
+/* CARDS */
+
+.stats{
+  display:grid;
+  grid-template-columns:
+  repeat(auto-fit,minmax(220px,1fr));
+
+  gap:15px;
+
+  margin-bottom:20px;
+}
+
+.card{
+  background:
+  rgba(255,255,255,0.1);
+
+  backdrop-filter:blur(15px);
+
+  padding:20px;
+
+  border-radius:20px;
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,0.3);
+
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+}
+
+.card h3{
+  margin:0;
+  font-size:15px;
+}
+
+.card .value{
+  font-size:30px;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+/* BOX */
+
+.box{
+  background:
+  rgba(255,255,255,0.1);
+
+  backdrop-filter:blur(15px);
+
+  padding:20px;
+
+  border-radius:20px;
+
+  margin-bottom:20px;
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* INPUT */
+
+input,
+select,
+textarea{
+
+  width:100%;
+
+  padding:12px;
+
+  margin-top:10px;
+
+  border:none;
+
+  border-radius:12px;
+
+  outline:none;
+
+  font-size:14px;
+}
+
+/* BUTTON */
+
+button{
+
+  width:100%;
+
+  padding:12px;
+
+  margin-top:12px;
+
+  border:none;
+
+  border-radius:12px;
+
+  background:
+  linear-gradient(
+    45deg,
+    #ffbe0b,
+    #fb5607
+  );
+
+  color:white;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.03);
+}
+
 /* TABLE */
+
+.table-wrap{
+  overflow:auto;
+}
+
 table{
   width:100%;
+  min-width:900px;
   border-collapse:collapse;
   margin-top:10px;
-  font-size:12px;
-  background:rgba(255,255,255,0.1);
 }
 
 th,td{
-  padding:8px;
+  padding:10px;
   text-align:center;
-  border:1px solid rgba(255,255,255,0.2);
+  border:1px solid rgba(255,255,255,0.15);
 }
 
 th{
@@ -117,144 +244,831 @@ th{
 }
 
 /* STATUS */
-.pending{color:yellow;}
-.approved{color:#00ffcc;}
-.rejected{color:#ff6b6b;}
+
+.pending{
+  color:yellow;
+}
+
+.approved{
+  color:#00ffcc;
+}
+
+.rejected{
+  color:#ff6b6b;
+}
+
+/* PROFILE */
+
+.profile{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  flex-wrap:wrap;
+}
+
+.avatar{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  object-fit:cover;
+  border:4px solid #ffd60a;
+  background:white;
+}
+
+/* PDF BUTTON */
+
+.pdf-btn{
+  background:#00c853;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  body{
+    padding:12px;
+  }
+
+}
 
 </style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-<!-- 🔥 ANNOUNCEMENT -->
-<div class="message-box" id="portalMessage">
-📢 Welcome to Employee Portal
+<!-- HEADER -->
+
+<div class="header">
+
+<h1>
+
+<i class="fa-solid fa-user"></i>
+
+Employee Portal
+
+</h1>
+
+<div class="logout"
+onclick="logout()">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+
+Logout
+
 </div>
 
-<!-- USER -->
-<div class="box">
-<div class="logout" onclick="logout()">Logout</div>
-<h2>Employee Dashboard</h2>
-<div id="userInfo"></div>
 </div>
 
-<!-- FORM -->
+<!-- ANNOUNCEMENT -->
+
+<div class="message-box"
+id="portalMessage">
+
+📢 Welcome to PAPPRITO Employee Portal
+
+</div>
+
+<!-- PROFILE -->
+
 <div class="box">
-<h3>Request Leave / Day Off</h3>
+
+<div class="profile">
+
+<img src="logo.png"
+class="avatar">
+
+<div>
+
+<h2 id="empName">
+
+Employee Name
+
+</h2>
+
+<div id="empInfo">
+
+Loading...
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- STATS -->
+
+<div class="stats">
+
+<div class="card">
+
+<h3>
+
+<i class="fa-solid fa-calendar-check"></i>
+
+Present Days
+
+</h3>
+
+<div class="value"
+id="presentDays">
+
+0
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+<i class="fa-solid fa-clock"></i>
+
+Late Count
+
+</h3>
+
+<div class="value"
+id="lateCount">
+
+0
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+<i class="fa-solid fa-money-bill"></i>
+
+Net Salary
+
+</h3>
+
+<div class="value"
+id="netSalary">
+
+₱0
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+<i class="fa-solid fa-file"></i>
+
+Requests
+
+</h3>
+
+<div class="value"
+id="reqCount">
+
+0
+
+</div>
+
+</div>
+
+</div>
+
+<!-- REQUEST -->
+
+<div class="box">
+
+<h2>
+
+<i class="fa-solid fa-paper-plane"></i>
+
+Request Leave / Day Off
+
+</h2>
 
 <select id="type">
-  <option value="Leave">Leave</option>
-  <option value="Day Off">Day Off</option>
-  <option value="Birthday Leave">Birthday Leave</option>
-  <option value="Vacation Leave">Vacation Leave</option>
+
+<option value="Leave">
+
+Leave
+
+</option>
+
+<option value="Day Off">
+
+Day Off
+
+</option>
+
+<option value="Birthday Leave">
+
+Birthday Leave
+
+</option>
+
+<option value="Vacation Leave">
+
+Vacation Leave
+
+</option>
+
 </select>
 
-<input type="date" id="date">
-<textarea id="reason" placeholder="Enter reason..."></textarea>
+<input
+type="date"
+id="date">
 
-<button onclick="submitRequest()">Submit Request</button>
+<textarea
+id="reason"
+placeholder="Enter reason..."></textarea>
+
+<button onclick="submitRequest()">
+
+Submit Request
+
+</button>
+
 </div>
 
-<!-- TABLE -->
+<!-- ATTENDANCE -->
+
 <div class="box">
-<h3>My Requests</h3>
+
+<h2>
+
+<i class="fa-solid fa-clock"></i>
+
+My Attendance
+
+</h2>
+
+<div class="table-wrap">
 
 <table>
+
 <thead>
+
 <tr>
-<th>Type</th>
+
 <th>Date</th>
-<th>Reason</th>
-<th>Status</th>
+
+<th>Time In</th>
+
+<th>Time Out</th>
+
+<th>Break</th>
+
+<th>Total Hours</th>
+
+<th>Late</th>
+
 </tr>
+
 </thead>
 
-<tbody id="reqTable"></tbody>
+<tbody id="attendanceTable"></tbody>
+
 </table>
 
 </div>
 
 </div>
 
-<script>
+<!-- PAYROLL -->
+
+<div class="box">
+
+<h2>
+
+<i class="fa-solid fa-money-check-dollar"></i>
+
+My Payroll
+
+</h2>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Gross</th>
+
+<th>Deductions</th>
+
+<th>Net Salary</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody id="payrollTable"></tbody>
+
+</table>
+
+</div>
+
+<button
+class="pdf-btn"
+onclick="downloadPayslip()">
+
+<i class="fa-solid fa-file-pdf"></i>
+
+Download Payslip PDF
+
+</button>
+
+</div>
+
+<!-- REQUEST TABLE -->
+
+<div class="box">
+
+<h2>
+
+<i class="fa-solid fa-list"></i>
+
+My Requests
+
+</h2>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Type</th>
+
+<th>Date</th>
+
+<th>Reason</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody id="reqTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- FIREBASE -->
+
+<script type="module">
+
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+
+getFirestore,
+collection,
+getDocs,
+addDoc
+
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* FIREBASE */
+
+const firebaseConfig = {
+
+apiKey:
+"AIzaSyClEtSTjrvf52exf2Qtdzb2MMLLlSfwhVg",
+
+authDomain:
+"pappritohr.firebaseapp.com",
+
+projectId:
+"pappritohr",
+
+storageBucket:
+"pappritohr.firebasestorage.app",
+
+messagingSenderId:
+"559428820611",
+
+appId:
+"1:559428820611:web:09344b59fe1b21a5e2c5b6",
+
+measurementId:
+"G-1CEQ4P5XW8"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
 
 /* SESSION */
-let user = JSON.parse(localStorage.getItem("empSession"));
+
+let user =
+
+JSON.parse(
+  localStorage.getItem(
+    "empSession"
+  )
+);
 
 if(!user){
-  window.location.href="login.html";
+
+  window.location.href =
+  "login.html";
 }
 
-document.getElementById("userInfo").innerHTML =
-  `<b>${user.name || ""}</b>`;
+/* PROFILE */
 
-/* 🔥 LOAD ANNOUNCEMENT */
-function loadPortalMessage(){
-  let announcements = JSON.parse(localStorage.getItem("announcements")) || [];
+empName.innerText =
+
+(user.fname || "") +
+
+" " +
+
+(user.lname || "");
+
+empInfo.innerHTML = `
+
+Employee ID:
+<b>${user.empid || "-"}</b>
+
+<br>
+
+Position:
+<b>${user.position || "-"}</b>
+
+`;
+
+/* =====================================
+   ANNOUNCEMENT
+===================================== */
+
+async function loadAnnouncement(){
+
+  const querySnapshot =
+
+  await getDocs(
+    collection(db,"announcements")
+  );
+
+  let announcements = [];
+
+  querySnapshot.forEach((d)=>{
+
+    announcements.push(
+      d.data()
+    );
+  });
 
   if(announcements.length > 0){
-    portalMessage.innerText = announcements[announcements.length - 1].text;
+
+    portalMessage.innerText =
+
+    announcements[
+      announcements.length - 1
+    ].text;
   }
 }
 
-loadPortalMessage();
+loadAnnouncement();
 
-/* STORAGE */
-let requests = JSON.parse(localStorage.getItem("requests")) || [];
+/* =====================================
+   ATTENDANCE
+===================================== */
 
-/* SUBMIT */
-function submitRequest(){
+async function loadAttendance(){
 
-  if(!date.value){
-    alert("Select date");
-    return;
-  }
+  attendanceTable.innerHTML = "";
 
-  let r = {
-    name: user.name,
-    type: type.value,
-    date: date.value,
-    reason: reason.value,
-    status: "Pending"
-  };
+  let totalPresent = 0;
 
-  requests.push(r);
-  localStorage.setItem("requests", JSON.stringify(requests));
+  let totalLate = 0;
 
-  reason.value="";
-  loadRequests();
+  const querySnapshot =
+
+  await getDocs(
+    collection(db,"attendance")
+  );
+
+  querySnapshot.forEach((d)=>{
+
+    let a = d.data();
+
+    if(a.empid == user.empid){
+
+      totalPresent++;
+
+      totalLate +=
+      Number(a.late || 0);
+
+      attendanceTable.innerHTML += `
+
+      <tr>
+
+        <td>
+
+        ${a.date || "-"}
+
+        </td>
+
+        <td>
+
+        ${a.tin || "-"}
+
+        </td>
+
+        <td>
+
+        ${a.tout || "-"}
+
+        </td>
+
+        <td>
+
+        ${a.breakTime || 0}
+
+        </td>
+
+        <td>
+
+        ${a.total || 0}
+
+        </td>
+
+        <td>
+
+        ${a.late || 0}
+
+        </td>
+
+      </tr>
+
+      `;
+    }
+  });
+
+  presentDays.innerText =
+  totalPresent;
+
+  lateCount.innerText =
+  totalLate;
 }
 
-/* LOAD */
-function loadRequests(){
+loadAttendance();
 
-  reqTable.innerHTML="";
+/* =====================================
+   PAYROLL
+===================================== */
 
-  requests
-    .filter(r => r.name === user.name)
-    .forEach(r => {
+async function loadPayroll(){
 
-      let statusClass = r.status.toLowerCase();
+  payrollTable.innerHTML = "";
+
+  const querySnapshot =
+
+  await getDocs(
+    collection(db,"payroll")
+  );
+
+  querySnapshot.forEach((d)=>{
+
+    let p = d.data();
+
+    if(p.empid == user.empid){
+
+      let deductions =
+
+      Number(p.sss || 0)+
+      Number(p.pagibig || 0)+
+      Number(p.philhealth || 0)+
+      Number(p.loan || 0);
+
+      payrollTable.innerHTML += `
+
+      <tr>
+
+        <td>
+
+        ₱${Number(p.gross || 0)
+        .toLocaleString()}
+
+        </td>
+
+        <td>
+
+        ₱${deductions
+        .toLocaleString()}
+
+        </td>
+
+        <td>
+
+        ₱${Number(p.net || 0)
+        .toLocaleString()}
+
+        </td>
+
+        <td>
+
+        PAID
+
+        </td>
+
+      </tr>
+
+      `;
+
+      netSalary.innerText =
+
+      "₱" +
+
+      Number(p.net || 0)
+      .toLocaleString();
+    }
+  });
+}
+
+loadPayroll();
+
+/* =====================================
+   REQUESTS
+===================================== */
+
+async function loadRequests(){
+
+  reqTable.innerHTML = "";
+
+  let total = 0;
+
+  const querySnapshot =
+
+  await getDocs(
+    collection(db,"requests")
+  );
+
+  querySnapshot.forEach((d)=>{
+
+    let r = d.data();
+
+    if(r.empid == user.empid){
+
+      total++;
+
+      let statusClass =
+
+      (r.status || "")
+      .toLowerCase();
 
       reqTable.innerHTML += `
-      <tr>
-        <td>${r.type}</td>
-        <td>${r.date}</td>
-        <td>${r.reason}</td>
-        <td class="${statusClass}">${r.status}</td>
-      </tr>`;
-    });
-}
 
-/* LOGOUT */
-function logout(){
-  localStorage.removeItem("empSession");
-  window.location.href="login.html";
+      <tr>
+
+        <td>
+
+        ${r.type || "-"}
+
+        </td>
+
+        <td>
+
+        ${r.date || "-"}
+
+        </td>
+
+        <td>
+
+        ${r.reason || "-"}
+
+        </td>
+
+        <td class="${statusClass}">
+
+        ${r.status || "-"}
+
+        </td>
+
+      </tr>
+
+      `;
+    }
+  });
+
+  reqCount.innerText =
+  total;
 }
 
 loadRequests();
+
+/* =====================================
+   SUBMIT REQUEST
+===================================== */
+
+window.submitRequest = async function(){
+
+  if(!date.value){
+
+    alert(
+      "Select date"
+    );
+
+    return;
+  }
+
+  let request = {
+
+    empid:
+    user.empid,
+
+    name:
+
+    (user.fname || "") +
+
+    " " +
+
+    (user.lname || ""),
+
+    type:
+    type.value,
+
+    date:
+    date.value,
+
+    reason:
+    reason.value,
+
+    status:
+    "Pending"
+
+  };
+
+  await addDoc(
+
+    collection(db,"requests"),
+
+    request
+
+  );
+
+  alert(
+    "Request Submitted"
+  );
+
+  reason.value = "";
+
+  loadRequests();
+}
+
+/* =====================================
+   PDF
+===================================== */
+
+window.downloadPayslip = function(){
+
+  window.print();
+}
+
+/* =====================================
+   LOGOUT
+===================================== */
+
+window.logout = function(){
+
+  localStorage.removeItem(
+    "empSession"
+  );
+
+  localStorage.removeItem(
+    "employeeLoggedIn"
+  );
+
+  window.location.href =
+  "login.html";
+}
 
 </script>
 
