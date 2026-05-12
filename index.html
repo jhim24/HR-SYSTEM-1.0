@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>HR System Dashboard</title>
+
+<!-- FONT AWESOME ICONS -->
+
+<link rel="stylesheet"
+
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
 
@@ -60,10 +67,16 @@ body::before{
 }
 
 .menu li{
-  padding:10px;
+
+  padding:12px;
+
   cursor:pointer;
+
   border-radius:6px;
+
   margin-bottom:5px;
+
+  transition:0.2s;
 }
 
 .menu li:hover{
@@ -75,19 +88,30 @@ body::before{
   transform:translateX(5px);
 }
 
+.menu li i{
+
+    margin-right:10px;
+
+    width:20px;
+
+    text-align:center;
+}
+
 .logout{
 
   margin-top:auto;
 
   background:#e74c3c;
 
-  padding:10px;
+  padding:12px;
 
   text-align:center;
 
   border-radius:6px;
 
   cursor:pointer;
+
+  font-weight:bold;
 }
 
 /* MAIN */
@@ -368,33 +392,59 @@ if(localStorage.getItem("loggedIn")!=="true"){
 <ul class="menu">
 
 <li onclick="goPage('employee.html')">
+
+<i class="fa-solid fa-users"></i>
+
 Employee
+
 </li>
 
 <li onclick="goPage('attendance.html')">
+
+<i class="fa-solid fa-clock"></i>
+
 Attendance
+
 </li>
 
 <li onclick="goPage('payroll.html')">
+
+<i class="fa-solid fa-money-bill"></i>
+
 Payroll
+
 </li>
 
 <li onclick="goPage('payslip.html')">
+
+<i class="fa-solid fa-file-invoice"></i>
+
 Payslip
+
 </li>
 
 <li onclick="goPage('admin-requests.html')">
-📋 Requests
+
+<i class="fa-solid fa-clipboard-list"></i>
+
+Requests
+
 </li>
 
 <li onclick="goPage('settings.html')">
-⚙️ Settings
+
+<i class="fa-solid fa-gear"></i>
+
+Settings
+
 </li>
 
 </ul>
 
 <div class="logout"
 onclick="logout()">
+
+<i class="fa-solid fa-right-from-bracket"></i>
 
 Logout
 
@@ -535,9 +585,7 @@ initializeApp(firebaseConfig);
 const db =
 getFirestore(app);
 
-/* =====================================
-   PAGE
-===================================== */
+/* PAGE */
 
 window.goPage = function(p){
 
@@ -552,13 +600,9 @@ window.logout = function(){
   "login.html";
 }
 
-/* =====================================
-   EMPLOYEES
-===================================== */
+/* EMPLOYEES */
 
 let employees = [];
-
-/* LOAD EMPLOYEES */
 
 async function loadEmployees(){
 
@@ -578,9 +622,7 @@ async function loadEmployees(){
   loadBirthday();
 }
 
-/* =====================================
-   SEARCH
-===================================== */
+/* SEARCH */
 
 window.searchEmployee = function(){
 
@@ -634,9 +676,7 @@ window.searchEmployee = function(){
   });
 }
 
-/* =====================================
-   SHOW EMPLOYEE
-===================================== */
+/* SHOW EMPLOYEE */
 
 window.showEmp = function(fname,lname){
 
@@ -717,9 +757,7 @@ window.showEmp = function(fname,lname){
   "flex";
 }
 
-/* =====================================
-   CLOSE POPUP
-===================================== */
+/* CLOSE POPUP */
 
 window.closeEmp = function(){
 
@@ -727,9 +765,7 @@ window.closeEmp = function(){
   "none";
 }
 
-/* =====================================
-   ANNOUNCEMENT
-===================================== */
+/* ANNOUNCEMENTS */
 
 let announcements =
 
@@ -738,8 +774,6 @@ localStorage.getItem("announcements")
 )
 
 || [];
-
-/* ADD */
 
 window.addAnnouncement = function(){
 
@@ -766,8 +800,6 @@ window.addAnnouncement = function(){
 
   loadAnnouncements();
 }
-
-/* LOAD */
 
 function loadAnnouncements(){
 
@@ -807,8 +839,6 @@ function loadAnnouncements(){
   });
 }
 
-/* EDIT */
-
 window.editAnnouncement = function(i){
 
   let t = prompt(
@@ -835,8 +865,6 @@ window.editAnnouncement = function(i){
   }
 }
 
-/* DELETE */
-
 window.deleteAnnouncement = function(i){
 
   if(confirm("Delete?")){
@@ -855,9 +883,7 @@ window.deleteAnnouncement = function(i){
   }
 }
 
-/* =====================================
-   BIRTHDAY
-===================================== */
+/* BIRTHDAY */
 
 function loadBirthday(){
 
@@ -899,9 +925,7 @@ function loadBirthday(){
   "No birthday";
 }
 
-/* =====================================
-   START
-===================================== */
+/* START */
 
 loadEmployees();
 
