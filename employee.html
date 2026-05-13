@@ -1,26 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
 <title>Employee Masterlist</title>
 
 <style>
 
 *{
-  margin:0;
-  padding:0;
   box-sizing:border-box;
   font-family:'Segoe UI',sans-serif;
 }
 
 body{
-  background:url('bg.jpg')
-  no-repeat center center fixed;
+  margin:0;
+  background:url('bg.jpg') no-repeat center center fixed;
   background-size:cover;
   color:white;
 }
@@ -29,7 +21,7 @@ body::before{
   content:"";
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.55);
+  background:rgba(0,0,0,0.5);
   z-index:-1;
 }
 
@@ -37,14 +29,14 @@ body::before{
 
 .wrapper{
   display:flex;
-  min-height:100vh;
+  height:100vh;
 }
 
 /* SIDEBAR */
 
 .sidebar{
   width:240px;
-  background:rgba(0,0,0,0.7);
+  background:rgba(0,0,0,0.6);
   padding:20px;
 }
 
@@ -54,6 +46,7 @@ body::before{
 
 .menu{
   list-style:none;
+  padding:0;
 }
 
 .menu li{
@@ -61,20 +54,10 @@ body::before{
   margin-bottom:8px;
   border-radius:6px;
   cursor:pointer;
-  transition:0.3s;
 }
 
 .menu li:hover{
-  background:rgba(255,255,255,0.15);
-}
-
-.logout{
-  margin-top:20px;
-  background:#e74c3c;
-  padding:10px;
-  border-radius:8px;
-  text-align:center;
-  cursor:pointer;
+  background:rgba(255,255,255,0.2);
 }
 
 /* MAIN */
@@ -82,13 +65,13 @@ body::before{
 .main{
   flex:1;
   padding:20px;
-  overflow:auto;
+  overflow-y:auto;
 }
 
 /* FORM */
 
 .form-box{
-  background:rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.1);
   padding:15px;
   border-radius:12px;
   margin-bottom:20px;
@@ -96,19 +79,19 @@ body::before{
 
 .form-grid{
   display:grid;
-  grid-template-columns:
-  repeat(auto-fit,minmax(180px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
   gap:8px;
 }
 
-input,
-select{
-  padding:9px;
-  border:none;
+/* INPUT */
+
+input,select{
+  padding:8px;
   border-radius:6px;
-  background:rgba(128,0,32,0.75);
-  color:white;
+  border:none;
   font-size:12px;
+  background:rgba(128,0,32,0.7);
+  color:white;
 }
 
 input::placeholder{
@@ -118,18 +101,18 @@ input::placeholder{
 input:focus,
 select:focus{
   outline:none;
-  background:rgba(128,0,32,0.95);
+  background:rgba(128,0,32,0.9);
 }
 
 /* BUTTONS */
 
 .add-btn{
-  margin-top:12px;
-  padding:10px 16px;
-  border:none;
-  border-radius:6px;
+  margin-top:10px;
+  padding:10px;
   background:#2ecc71;
+  border:none;
   color:white;
+  border-radius:6px;
   cursor:pointer;
 }
 
@@ -139,11 +122,6 @@ select:focus{
   border-radius:4px;
   cursor:pointer;
   color:white;
-  margin:2px;
-}
-
-.view{
-  background:#9b59b6;
 }
 
 .edit{
@@ -154,140 +132,62 @@ select:focus{
   background:#e74c3c;
 }
 
-/* SEARCH */
-
-.search-box{
-  margin-bottom:10px;
-  display:flex;
-  gap:10px;
-  align-items:center;
-}
-
 /* TABLE */
 
 .table-box{
-  background:#eef6ff;
+  background:#eaf4ff;
   padding:10px;
   border-radius:12px;
-  overflow:auto;
+  overflow-x:auto;
+  width:100%;
 }
 
 table{
   width:100%;
-  min-width:2400px;
+  min-width:1700px;
   border-collapse:collapse;
-  color:#2c3e50;
   font-size:12px;
+  color:#2c3e50;
 }
 
-th,
-td{
-  border:1px solid
-  rgba(0,120,255,0.2);
+th,td{
   padding:6px;
+  border:1px solid rgba(0,150,255,0.3);
+  text-align:left;
   white-space:nowrap;
 }
 
 th{
-  background:#d6e9ff;
+  background:#cfe4ff;
   position:sticky;
   top:0;
   z-index:2;
 }
 
-/* STATUS */
+/* SEARCH */
 
-.status-active{
-  color:#27ae60;
-  font-weight:bold;
-}
-
-.status-resigned{
-  color:#e74c3c;
-  font-weight:bold;
-}
-
-.status-leave{
-  color:#f39c12;
-  font-weight:bold;
-}
-
-/* MODAL */
-
-#profileModal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.7);
-  z-index:9999;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-}
-
-.profile-card{
-  background:white;
-  color:#2c3e50;
-  width:100%;
-  max-width:850px;
-  border-radius:14px;
-  padding:20px;
-  max-height:90vh;
-  overflow:auto;
-  position:relative;
-}
-
-.close-btn{
-  position:absolute;
-  right:15px;
-  top:15px;
-  border:none;
-  background:#e74c3c;
-  color:white;
-  padding:6px 12px;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-.profile-top{
-  text-align:center;
-}
-
-.profile-photo{
-  width:130px;
-  height:130px;
-  border-radius:50%;
-  object-fit:cover;
-  border:4px solid #3498db;
+.search-box{
   margin-bottom:10px;
 }
 
-.profile-grid{
-  display:grid;
-  grid-template-columns:
-  repeat(auto-fit,minmax(220px,1fr));
-  gap:10px;
-  margin-top:15px;
-}
+/* LOGOUT */
 
-.profile-item{
-  background:#f4f7fb;
+.logout{
+  margin-top:20px;
+  background:#e74c3c;
   padding:10px;
   border-radius:8px;
+  text-align:center;
+  cursor:pointer;
 }
 
 </style>
 
 <script>
 
-if(
-localStorage.getItem(
-"loggedIn"
-) !== "true"
-){
+if(localStorage.getItem("loggedIn") !== "true"){
 
-window.location.href =
-"login.html";
+  window.location.href = "login.html";
 
 }
 
@@ -333,8 +233,7 @@ window.location.href =
 
 </ul>
 
-<div class="logout"
-onclick="logout()">
+<div class="logout" onclick="logout()">
 
 Logout
 
@@ -353,10 +252,6 @@ Logout
 <div class="form-box">
 
 <div class="form-grid">
-
-<input class="form-field"
-id="photo"
-placeholder="Photo URL">
 
 <input class="form-field"
 id="fname"
@@ -385,32 +280,9 @@ id="address"
 placeholder="Address">
 
 <select class="form-field"
-id="nationality">
-
-<option value="">
-Nationality
-</option>
-
-<option>
-Filipino
-</option>
-
-</select>
-
-<input class="form-field"
-id="passport"
-placeholder="Passport Number">
-
-<input class="form-field"
-type="date"
-id="passportExpiry">
-
-<select class="form-field"
 id="bank">
 
-<option value="">
-Bank Name
-</option>
+<option>Bank Name</option>
 
 <option>BPI</option>
 <option>BDO</option>
@@ -430,9 +302,7 @@ placeholder="Employee ID">
 <select class="form-field"
 id="govId">
 
-<option value="">
-Government ID
-</option>
+<option>Government ID</option>
 
 <option>Passport</option>
 <option>Driver License</option>
@@ -463,9 +333,7 @@ id="joiningDate">
 <select class="form-field"
 id="employmentType">
 
-<option value="">
-Employment Type
-</option>
+<option>Employment Type</option>
 
 <option>Regular</option>
 <option>Probationary</option>
@@ -477,40 +345,9 @@ Employment Type
 </select>
 
 <select class="form-field"
-id="department">
-
-<option value="">
-Department
-</option>
-
-<option>HR</option>
-<option>Accounting</option>
-<option>Operations</option>
-<option>Kitchen</option>
-<option>Marketing</option>
-
-</select>
-
-<select class="form-field"
-id="status">
-
-<option value="">
-Status
-</option>
-
-<option>Active</option>
-<option>On Leave</option>
-<option>Resigned</option>
-<option>Terminated</option>
-
-</select>
-
-<select class="form-field"
 id="position">
 
-<option value="">
-Position
-</option>
+<option>Position</option>
 
 <option>Admin</option>
 <option>Cashier</option>
@@ -520,43 +357,6 @@ Position
 <option>Supervisor</option>
 
 </select>
-
-<input class="form-field"
-id="salary"
-placeholder="Basic Salary">
-
-<input class="form-field"
-id="allowance"
-placeholder="Allowance">
-
-<input class="form-field"
-id="otRate"
-placeholder="OT Rate">
-
-<select class="form-field"
-id="salaryType">
-
-<option value="">
-Salary Type
-</option>
-
-<option>Monthly</option>
-<option>Daily</option>
-<option>Hourly</option>
-
-</select>
-
-<input class="form-field"
-id="emergencyName"
-placeholder="Emergency Contact Name">
-
-<input class="form-field"
-id="emergencyRelation"
-placeholder="Relationship">
-
-<input class="form-field"
-id="emergencyPhone"
-placeholder="Emergency Number">
 
 </div>
 
@@ -575,7 +375,7 @@ Save Employee
 
 <input type="text"
 id="search"
-placeholder="🔍 Search Employee..."
+placeholder="🔍 Search..."
 onkeyup="searchEmp()">
 
 <span id="total"></span>
@@ -598,9 +398,6 @@ onkeyup="searchEmp()">
 <th>Birthdate</th>
 <th>Age</th>
 <th>Address</th>
-<th>Nationality</th>
-<th>Passport</th>
-<th>Passport Exp.</th>
 <th>Bank</th>
 <th>Account</th>
 <th>Emp ID</th>
@@ -610,17 +407,8 @@ onkeyup="searchEmp()">
 <th>Pag-IBIG</th>
 <th>Health Card</th>
 <th>Joining Date</th>
-<th>Employment</th>
-<th>Department</th>
-<th>Status</th>
+<th>Employment Type</th>
 <th>Position</th>
-<th>Salary</th>
-<th>Allowance</th>
-<th>OT Rate</th>
-<th>Salary Type</th>
-<th>Emergency Name</th>
-<th>Relationship</th>
-<th>Emergency No.</th>
 <th>Action</th>
 
 </tr>
@@ -637,49 +425,12 @@ onkeyup="searchEmp()">
 
 </div>
 
-<!-- PROFILE MODAL -->
-
-<div id="profileModal">
-
-<div class="profile-card">
-
-<button class="close-btn"
-onclick="closeProfile()">
-
-Close
-
-</button>
-
-<div class="profile-top">
-
-<img
-id="profilePhoto"
-src="https://via.placeholder.com/130"
-class="profile-photo">
-
-<h2 id="profileName"></h2>
-
-</div>
-
-<div id="profileDetails"
-class="profile-grid">
-
-</div>
-
-</div>
-
-</div>
-
 <!-- FIREBASE -->
 
 <script type="module">
 
-import {
-initializeApp
-}
-
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
 
@@ -693,35 +444,29 @@ updateDoc
 
 }
 
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* FIREBASE CONFIG */
 
 const firebaseConfig = {
 
-apiKey:
-"AIzaSyClEtSTjrvf52exf2Qtdzb2MMLLlSfwhVg",
+apiKey: "AIzaSyClEtSTjrvf52exf2Qtdzb2MMLLlSfwhVg",
 
-authDomain:
-"pappritohr.firebaseapp.com",
+authDomain: "pappritohr.firebaseapp.com",
 
-projectId:
-"pappritohr",
+projectId: "pappritohr",
 
-storageBucket:
-"pappritohr.firebasestorage.app",
+storageBucket: "pappritohr.firebasestorage.app",
 
-messagingSenderId:
-"559428820611",
+messagingSenderId: "559428820611",
 
-appId:
-"1:559428820611:web:09344b59fe1b21a5e2c5b6",
+appId: "1:559428820611:web:09344b59fe1b21a5e2c5b6",
 
-measurementId:
-"G-1CEQ4P5XW8"
+measurementId: "G-1CEQ4P5XW8"
 
 };
+
+/* INIT */
 
 const app =
 initializeApp(firebaseConfig);
@@ -729,670 +474,378 @@ initializeApp(firebaseConfig);
 const db =
 getFirestore(app);
 
+/* GLOBAL */
+
 let editId = null;
 
-/* AGE */
+/* ======================================
+   AGE
+====================================== */
 
-window.calcAge =
-function(){
+window.calcAge = function(){
 
-let birth =
-new Date(
-document.getElementById(
-"birthdate"
-).value
-);
+  let birth =
+  new Date(birthdate.value);
 
-let today =
-new Date();
+  let today =
+  new Date();
 
-let years =
-today.getFullYear() -
-birth.getFullYear();
+  let years =
+  today.getFullYear() -
+  birth.getFullYear();
 
-let m =
-today.getMonth() -
-birth.getMonth();
+  let m =
+  today.getMonth() -
+  birth.getMonth();
 
-if(
+  if(
+    m < 0 ||
+    (m === 0 &&
+    today.getDate() < birth.getDate())
+  ){
+    years--;
+  }
 
-m < 0 ||
+  age.value = years;
+}
 
-(
-m === 0 &&
-today.getDate() <
-birth.getDate()
-)
+/* ======================================
+   SAVE / UPDATE
+====================================== */
 
-){
+window.addEmployee = async function(){
 
-years--;
+  let emp = {
+
+    fname:
+    fname.value.toUpperCase(),
+
+    mname:
+    mname.value.toUpperCase(),
+
+    lname:
+    lname.value.toUpperCase(),
+
+    birthdate: birthdate.value,
+
+    age: age.value,
+
+    address: address.value,
+
+    bank: bank.value,
+
+    account: bankAcc.value,
+
+    empid: empid.value,
+
+    govId: govId.value,
+
+    sss: sss.value,
+
+    philhealth: philhealth.value,
+
+    pagibig: pagibig.value,
+
+    healthcard: healthcard.value,
+
+    joiningDate:
+    joiningDate.value,
+
+    employmentType:
+    employmentType.value,
+
+    position: position.value
+
+  };
+
+  /* UPDATE */
+
+  if(editId){
+
+    await updateDoc(
+      doc(db,"employees",editId),
+      emp
+    );
+
+    alert("Employee Updated");
+
+    editId = null;
+  }
+
+  /* ADD */
+
+  else{
+
+    await addDoc(
+      collection(db,"employees"),
+      emp
+    );
+
+    alert("Employee Saved");
+  }
+
+  clearForm();
+
+  loadEmployees();
+}
+
+/* ======================================
+   LOAD EMPLOYEES
+====================================== */
+
+window.loadEmployees = async function(){
+
+  let tbody =
+  document.querySelector("#empTable tbody");
+
+  tbody.innerHTML = "";
+
+  const querySnapshot =
+  await getDocs(
+    collection(db,"employees")
+  );
+
+  let count = 0;
+
+  querySnapshot.forEach((d)=>{
+
+    count++;
+
+    let e = d.data();
+
+    tbody.innerHTML += `
+
+    <tr>
+
+      <td>${e.fname || ''}</td>
+
+      <td>${e.mname || ''}</td>
+
+      <td>${e.lname || ''}</td>
+
+      <td>${e.birthdate || ''}</td>
+
+      <td>${e.age || ''}</td>
+
+      <td>${e.address || ''}</td>
+
+      <td>${e.bank || ''}</td>
+
+      <td>${e.account || ''}</td>
+
+      <td>${e.empid || ''}</td>
+
+      <td>${e.govId || ''}</td>
+
+      <td>${e.sss || ''}</td>
+
+      <td>${e.philhealth || ''}</td>
+
+      <td>${e.pagibig || ''}</td>
+
+      <td>${e.healthcard || ''}</td>
+
+      <td>${e.joiningDate || ''}</td>
+
+      <td>${e.employmentType || ''}</td>
+
+      <td>${e.position || ''}</td>
+
+      <td>
+
+      <button class="btn edit"
+
+      onclick='editEmployee(
+      "${d.id}",
+      ${JSON.stringify(e)}
+      )'>
+
+      Edit
+
+      </button>
+
+      <button class="btn delete"
+
+      onclick="deleteEmployee('${d.id}')">
+
+      Delete
+
+      </button>
+
+      </td>
+
+    </tr>
+
+    `;
+  });
+
+  total.innerHTML =
+  "Total : " + count;
+}
+
+/* ======================================
+   EDIT
+====================================== */
+
+window.editEmployee = function(id,e){
+
+  editId = id;
+
+  fname.value = e.fname || "";
+
+  mname.value = e.mname || "";
+
+  lname.value = e.lname || "";
+
+  birthdate.value =
+  e.birthdate || "";
+
+  age.value = e.age || "";
+
+  address.value =
+  e.address || "";
+
+  bank.value = e.bank || "";
+
+  bankAcc.value =
+  e.account || "";
+
+  empid.value =
+  e.empid || "";
+
+  govId.value =
+  e.govId || "";
+
+  sss.value = e.sss || "";
+
+  philhealth.value =
+  e.philhealth || "";
+
+  pagibig.value =
+  e.pagibig || "";
+
+  healthcard.value =
+  e.healthcard || "";
+
+  joiningDate.value =
+  e.joiningDate || "";
+
+  employmentType.value =
+  e.employmentType || "";
+
+  position.value =
+  e.position || "";
+
+  window.scrollTo({
+
+    top:0,
+
+    behavior:'smooth'
+
+  });
 
 }
 
-document.getElementById(
-"age"
-).value = years;
+/* ======================================
+   DELETE
+====================================== */
 
+window.deleteEmployee = async function(id){
+
+  let confirmDelete =
+  confirm("Delete Employee?");
+
+  if(!confirmDelete){
+    return;
+  }
+
+  await deleteDoc(
+    doc(db,"employees",id)
+  );
+
+  loadEmployees();
 }
 
-/* SAVE */
+/* ======================================
+   SEARCH
+====================================== */
 
-window.addEmployee =
-async function(){
+window.searchEmp = function(){
 
-try{
+  let val =
+  search.value.toLowerCase();
 
-let emp = {
+  let rows =
+  document.querySelectorAll(
+  "#empTable tbody tr"
+  );
 
-photo:
-document.getElementById(
-"photo"
-).value,
+  let visible = 0;
 
-fname:
-document.getElementById(
-"fname"
-).value.toUpperCase(),
+  rows.forEach(row=>{
 
-mname:
-document.getElementById(
-"mname"
-).value.toUpperCase(),
+    let show =
+    row.innerText
+    .toLowerCase()
+    .includes(val);
 
-lname:
-document.getElementById(
-"lname"
-).value.toUpperCase(),
+    row.style.display =
+    show ? "" : "none";
 
-birthdate:
-document.getElementById(
-"birthdate"
-).value,
+    if(show){
+      visible++;
+    }
 
-age:
-document.getElementById(
-"age"
-).value,
+  });
 
-address:
-document.getElementById(
-"address"
-).value,
-
-nationality:
-document.getElementById(
-"nationality"
-).value,
-
-passport:
-document.getElementById(
-"passport"
-).value,
-
-passportExpiry:
-document.getElementById(
-"passportExpiry"
-).value,
-
-bank:
-document.getElementById(
-"bank"
-).value,
-
-account:
-document.getElementById(
-"bankAcc"
-).value,
-
-empid:
-document.getElementById(
-"empid"
-).value,
-
-govId:
-document.getElementById(
-"govId"
-).value,
-
-sss:
-document.getElementById(
-"sss"
-).value,
-
-philhealth:
-document.getElementById(
-"philhealth"
-).value,
-
-pagibig:
-document.getElementById(
-"pagibig"
-).value,
-
-healthcard:
-document.getElementById(
-"healthcard"
-).value,
-
-joiningDate:
-document.getElementById(
-"joiningDate"
-).value,
-
-employmentType:
-document.getElementById(
-"employmentType"
-).value,
-
-department:
-document.getElementById(
-"department"
-).value,
-
-status:
-document.getElementById(
-"status"
-).value,
-
-position:
-document.getElementById(
-"position"
-).value,
-
-salary:
-document.getElementById(
-"salary"
-).value,
-
-allowance:
-document.getElementById(
-"allowance"
-).value,
-
-otRate:
-document.getElementById(
-"otRate"
-).value,
-
-salaryType:
-document.getElementById(
-"salaryType"
-).value,
-
-emergencyName:
-document.getElementById(
-"emergencyName"
-).value,
-
-emergencyRelation:
-document.getElementById(
-"emergencyRelation"
-).value,
-
-emergencyPhone:
-document.getElementById(
-"emergencyPhone"
-).value
-
-};
-
-/* UPDATE */
-
-if(editId){
-
-await updateDoc(
-
-doc(
-db,
-"employees",
-editId
-),
-
-emp
-
-);
-
-alert(
-"Employee Updated"
-);
-
-editId = null;
-
+  total.innerHTML =
+  "Showing : " + visible;
 }
 
-/* ADD */
+/* ======================================
+   CLEAR FORM
+====================================== */
 
-else{
+window.clearForm = function(){
 
-await addDoc(
+  document
+  .querySelectorAll(".form-field")
 
-collection(
-db,
-"employees"
-),
+  .forEach(el=>{
 
-emp
+    el.value = "";
 
-);
-
-alert(
-"Employee Saved"
-);
-
+  });
 }
 
-clearForm();
+/* ======================================
+   PAGE
+====================================== */
+
+window.goPage = function(p){
+
+  window.location.href = p;
+}
+
+/* ======================================
+   LOGOUT
+====================================== */
+
+window.logout = function(){
+
+  localStorage.removeItem("loggedIn");
+
+  window.location.href =
+  "login.html";
+}
+
+/* ======================================
+   START
+====================================== */
 
 loadEmployees();
 
-}
+</script>
 
-catch(error){
-
-console.error(error);
-
-alert(
-"ERROR: " +
-error.message
-);
-
-}
-
-}
-
-/* LOAD EMPLOYEE */
-
-window.loadEmployees =
-async function(){
-
-let tbody =
-document.querySelector(
-"#empTable tbody"
-);
-
-tbody.innerHTML = "";
-
-const querySnapshot =
-await getDocs(
-
-collection(
-db,
-"employees"
-)
-
-);
-
-let count = 0;
-
-querySnapshot.forEach((d)=>{
-
-count++;
-
-let e =
-d.data();
-
-let safeData =
-
-encodeURIComponent(
-
-JSON.stringify(e)
-
-);
-
-let statusClass =
-"";
-
-if(
-e.status ===
-"Active"
-){
-
-statusClass =
-"status-active";
-
-}
-
-else if(
-e.status ===
-"Resigned"
-){
-
-statusClass =
-"status-resigned";
-
-}
-
-else{
-
-statusClass =
-"status-leave";
-
-}
-
-tbody.innerHTML += `
-
-<tr>
-
-<td>${e.fname || ''}</td>
-
-<td>${e.mname || ''}</td>
-
-<td>${e.lname || ''}</td>
-
-<td>${e.birthdate || ''}</td>
-
-<td>${e.age || ''}</td>
-
-<td>${e.address || ''}</td>
-
-<td>${e.nationality || ''}</td>
-
-<td>${e.passport || ''}</td>
-
-<td>${e.passportExpiry || ''}</td>
-
-<td>${e.bank || ''}</td>
-
-<td>${e.account || ''}</td>
-
-<td>${e.empid || ''}</td>
-
-<td>${e.govId || ''}</td>
-
-<td>${e.sss || ''}</td>
-
-<td>${e.philhealth || ''}</td>
-
-<td>${e.pagibig || ''}</td>
-
-<td>${e.healthcard || ''}</td>
-
-<td>${e.joiningDate || ''}</td>
-
-<td>${e.employmentType || ''}</td>
-
-<td>${e.department || ''}</td>
-
-<td class="${statusClass}">
-${e.status || ''}
-</td>
-
-<td>${e.position || ''}</td>
-
-<td>${e.salary || ''}</td>
-
-<td>${e.allowance || ''}</td>
-
-<td>${e.otRate || ''}</td>
-
-<td>${e.salaryType || ''}</td>
-
-<td>${e.emergencyName || ''}</td>
-
-<td>${e.emergencyRelation || ''}</td>
-
-<td>${e.emergencyPhone || ''}</td>
-
-<td>
-
-<button
-class="btn view"
-
-onclick="viewProfile(
-'${safeData}'
-)">
-
-View
-
-</button>
-
-<button
-class="btn edit"
-
-onclick="editEmployee(
-'${d.id}',
-'${safeData}'
-)">
-
-Edit
-
-</button>
-
-<button
-class="btn delete"
-
-onclick="deleteEmployee(
-'${d.id}'
-)">
-
-Delete
-
-</button>
-
-</td>
-
-</tr>
-
-`;
-
-});
-
-document.getElementById(
-"total"
-).innerHTML =
-
-"Total Employees : " +
-count;
-
-}
-
-/* VIEW PROFILE */
-
-window.viewProfile =
-function(data){
-
-let e =
-
-JSON.parse(
-
-decodeURIComponent(
-data
-)
-
-);
-
-document.getElementById(
-"profileModal"
-).style.display =
-"flex";
-
-document.getElementById(
-"profilePhoto"
-).src =
-
-e.photo ||
-
-"https://via.placeholder.com/130";
-
-document.getElementById(
-"profileName"
-).innerHTML =
-
-`${e.fname || ''}
-
-${e.mname || ''}
-
-${e.lname || ''}`;
-
-let html = "";
-
-Object.entries(e)
-
-.forEach(([key,val])=>{
-
-html += `
-
-<div class="profile-item">
-
-<b>${key}</b><br>
-
-${val || ''}
-
-</div>
-
-`;
-
-});
-
-document.getElementById(
-"profileDetails"
-).innerHTML = html;
-
-}
-
-/* CLOSE */
-
-window.closeProfile =
-function(){
-
-document.getElementById(
-"profileModal"
-).style.display =
-"none";
-
-}
-
-/* EDIT */
-
-window.editEmployee =
-function(id,data){
-
-let e =
-
-JSON.parse(
-
-decodeURIComponent(
-data
-)
-
-);
-
-editId = id;
-
-Object.keys(e)
-
-.forEach(key=>{
-
-let el =
-
-document.getElementById(
-key
-);
-
-if(el){
-
-el.value = e[key];
-
-}
-
-});
-
-window.scrollTo({
-
-top:0,
-
-behavior:'smooth'
-
-});
-
-}
-
-/* DELETE */
-
-window.deleteEmployee =
-async function(id){
-
-let confirmDelete =
-
-confirm(
-"Delete Employee?"
-);
-
-if(!confirmDelete){
-
-return;
-
-}
-
-await deleteDoc(
-
-doc(
-db,
-"employees",
-id
-)
-
-);
-
-loadEmployees();
-
-}
-
-/* SEARCH */
-
-window.searchEmp =
-function(){
-
-let val =
-
-document.getElementById(
-"search"
-)
-
-.value
-.toLowerCase();
-
-let rows =
-
-document.querySelectorAll(
-"#empTable tbody tr"
-);
-
-let visible = 0;
-
-rows.forEach(row=>{
-
-let show =
-
-row.innerText
-.toLowerCase()
-.includes(val);
-
-row.style.display =
-
-show ? "" : "none";
-
-if(show){
-
-visible++;
-
-}
-
-});
-
-document.getElementById(
-"total"
-).innerHTML =
-
-"Showing : " +
-visible;
-
-}
-
-/* CLEAR */
-
-window.clearForm =
-function(){
-
-document
+</body>
+</html>
