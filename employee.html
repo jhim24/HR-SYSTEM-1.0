@@ -1,19 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Employee Masterlist</title>
 
 <style>
 
 *{
+  margin:0;
+  padding:0;
   box-sizing:border-box;
   font-family:'Segoe UI',sans-serif;
 }
 
 body{
-  margin:0;
-  background:url('bg.jpg') no-repeat center center fixed;
+  background:url('bg.jpg')
+  no-repeat center center fixed;
   background-size:cover;
   color:white;
 }
@@ -26,9 +33,11 @@ body::before{
   z-index:-1;
 }
 
+/* WRAPPER */
+
 .wrapper{
   display:flex;
-  height:100vh;
+  min-height:100vh;
 }
 
 /* SIDEBAR */
@@ -45,7 +54,6 @@ body::before{
 
 .menu{
   list-style:none;
-  padding:0;
 }
 
 .menu li{
@@ -74,7 +82,7 @@ body::before{
 .main{
   flex:1;
   padding:20px;
-  overflow-y:auto;
+  overflow:auto;
 }
 
 /* FORM */
@@ -88,7 +96,8 @@ body::before{
 
 .form-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  grid-template-columns:
+  repeat(auto-fit,minmax(180px,1fr));
   gap:8px;
 }
 
@@ -112,7 +121,7 @@ select:focus{
   background:rgba(128,0,32,0.95);
 }
 
-/* BUTTON */
+/* BUTTONS */
 
 .add-btn{
   margin-top:12px;
@@ -125,11 +134,16 @@ select:focus{
 }
 
 .btn{
-  border:none;
   padding:5px 10px;
+  border:none;
   border-radius:4px;
-  color:white;
   cursor:pointer;
+  color:white;
+  margin:2px;
+}
+
+.view{
+  background:#9b59b6;
 }
 
 .edit{
@@ -138,10 +152,6 @@ select:focus{
 
 .delete{
   background:#e74c3c;
-}
-
-.view{
-  background:#9b59b6;
 }
 
 /* SEARCH */
@@ -159,7 +169,7 @@ select:focus{
   background:#eef6ff;
   padding:10px;
   border-radius:12px;
-  overflow-x:auto;
+  overflow:auto;
 }
 
 table{
@@ -172,7 +182,8 @@ table{
 
 th,
 td{
-  border:1px solid rgba(0,120,255,0.2);
+  border:1px solid
+  rgba(0,120,255,0.2);
   padding:6px;
   white-space:nowrap;
 }
@@ -201,7 +212,7 @@ th{
   font-weight:bold;
 }
 
-/* POPUP */
+/* MODAL */
 
 #profileModal{
   display:none;
@@ -216,11 +227,11 @@ th{
 
 .profile-card{
   background:white;
+  color:#2c3e50;
   width:100%;
   max-width:850px;
   border-radius:14px;
   padding:20px;
-  color:#2c3e50;
   max-height:90vh;
   overflow:auto;
   position:relative;
@@ -256,10 +267,11 @@ th{
   grid-template-columns:
   repeat(auto-fit,minmax(220px,1fr));
   gap:10px;
+  margin-top:15px;
 }
 
 .profile-item{
-  background:#f7f9fc;
+  background:#f4f7fb;
   padding:10px;
   border-radius:8px;
 }
@@ -268,9 +280,14 @@ th{
 
 <script>
 
-if(localStorage.getItem("loggedIn") !== "true"){
+if(
+localStorage.getItem(
+"loggedIn"
+) !== "true"
+){
 
-  window.location.href = "login.html";
+window.location.href =
+"login.html";
 
 }
 
@@ -339,7 +356,7 @@ Logout
 
 <input class="form-field"
 id="photo"
-placeholder="Photo Image URL">
+placeholder="Photo URL">
 
 <input class="form-field"
 id="fname"
@@ -370,9 +387,13 @@ placeholder="Address">
 <select class="form-field"
 id="nationality">
 
-<option>Nationality</option>
+<option value="">
+Nationality
+</option>
 
-<option>Filipino</option>
+<option>
+Filipino
+</option>
 
 </select>
 
@@ -387,7 +408,9 @@ id="passportExpiry">
 <select class="form-field"
 id="bank">
 
-<option>Bank Name</option>
+<option value="">
+Bank Name
+</option>
 
 <option>BPI</option>
 <option>BDO</option>
@@ -407,7 +430,9 @@ placeholder="Employee ID">
 <select class="form-field"
 id="govId">
 
-<option>Government ID</option>
+<option value="">
+Government ID
+</option>
 
 <option>Passport</option>
 <option>Driver License</option>
@@ -438,7 +463,9 @@ id="joiningDate">
 <select class="form-field"
 id="employmentType">
 
-<option>Employment Type</option>
+<option value="">
+Employment Type
+</option>
 
 <option>Regular</option>
 <option>Probationary</option>
@@ -452,7 +479,9 @@ id="employmentType">
 <select class="form-field"
 id="department">
 
-<option>Department</option>
+<option value="">
+Department
+</option>
 
 <option>HR</option>
 <option>Accounting</option>
@@ -465,7 +494,9 @@ id="department">
 <select class="form-field"
 id="status">
 
-<option>Status</option>
+<option value="">
+Status
+</option>
 
 <option>Active</option>
 <option>On Leave</option>
@@ -477,7 +508,9 @@ id="status">
 <select class="form-field"
 id="position">
 
-<option>Position</option>
+<option value="">
+Position
+</option>
 
 <option>Admin</option>
 <option>Cashier</option>
@@ -503,7 +536,9 @@ placeholder="OT Rate">
 <select class="form-field"
 id="salaryType">
 
-<option>Salary Type</option>
+<option value="">
+Salary Type
+</option>
 
 <option>Monthly</option>
 <option>Daily</option>
@@ -521,7 +556,7 @@ placeholder="Relationship">
 
 <input class="form-field"
 id="emergencyPhone"
-placeholder="Emergency Contact Number">
+placeholder="Emergency Number">
 
 </div>
 
@@ -602,7 +637,7 @@ onkeyup="searchEmp()">
 
 </div>
 
-<!-- PROFILE POPUP -->
+<!-- PROFILE MODAL -->
 
 <div id="profileModal">
 
@@ -626,8 +661,6 @@ class="profile-photo">
 
 </div>
 
-<hr>
-
 <div id="profileDetails"
 class="profile-grid">
 
@@ -637,10 +670,16 @@ class="profile-grid">
 
 </div>
 
+<!-- FIREBASE -->
+
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+initializeApp
+}
+
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
 
@@ -654,23 +693,33 @@ updateDoc
 
 }
 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* FIREBASE CONFIG */
 
 const firebaseConfig = {
 
-apiKey: "AIzaSyClEtSTjrvf52exf2Qtdzb2MMLLlSfwhVg",
+apiKey:
+"AIzaSyClEtSTjrvf52exf2Qtdzb2MMLLlSfwhVg",
 
-authDomain: "pappritohr.firebaseapp.com",
+authDomain:
+"pappritohr.firebaseapp.com",
 
-projectId: "pappritohr",
+projectId:
+"pappritohr",
 
-storageBucket: "pappritohr.firebasestorage.app",
+storageBucket:
+"pappritohr.firebasestorage.app",
 
-messagingSenderId: "559428820611",
+messagingSenderId:
+"559428820611",
 
-appId: "1:559428820611:web:09344b59fe1b21a5e2c5b6",
+appId:
+"1:559428820611:web:09344b59fe1b21a5e2c5b6",
 
-measurementId: "G-1CEQ4P5XW8"
+measurementId:
+"G-1CEQ4P5XW8"
 
 };
 
@@ -684,588 +733,666 @@ let editId = null;
 
 /* AGE */
 
-window.calcAge = function(){
+window.calcAge =
+function(){
 
-  let birth =
-  new Date(birthdate.value);
+let birth =
+new Date(
+document.getElementById(
+"birthdate"
+).value
+);
 
-  let today =
-  new Date();
+let today =
+new Date();
 
-  let years =
-  today.getFullYear() -
-  birth.getFullYear();
+let years =
+today.getFullYear() -
+birth.getFullYear();
 
-  let m =
-  today.getMonth() -
-  birth.getMonth();
+let m =
+today.getMonth() -
+birth.getMonth();
 
-  if(
-    m < 0 ||
-    (m === 0 &&
-    today.getDate() <
-    birth.getDate())
-  ){
-    years--;
-  }
+if(
 
-  age.value = years;
+m < 0 ||
+
+(
+m === 0 &&
+today.getDate() <
+birth.getDate()
+)
+
+){
+
+years--;
+
+}
+
+document.getElementById(
+"age"
+).value = years;
 
 }
 
 /* SAVE */
 
-window.addEmployee = async function(){
+window.addEmployee =
+async function(){
 
-  try{
+try{
 
-    let emp = {
+let emp = {
 
-      photo: photo.value,
+photo:
+document.getElementById(
+"photo"
+).value,
 
-      fname:
-      fname.value.toUpperCase(),
+fname:
+document.getElementById(
+"fname"
+).value.toUpperCase(),
 
-      mname:
-      mname.value.toUpperCase(),
+mname:
+document.getElementById(
+"mname"
+).value.toUpperCase(),
 
-      lname:
-      lname.value.toUpperCase(),
+lname:
+document.getElementById(
+"lname"
+).value.toUpperCase(),
 
-      birthdate:
-      birthdate.value,
+birthdate:
+document.getElementById(
+"birthdate"
+).value,
 
-      age:
-      age.value,
+age:
+document.getElementById(
+"age"
+).value,
 
-      address:
-      address.value,
+address:
+document.getElementById(
+"address"
+).value,
 
-      nationality:
-      nationality.value,
+nationality:
+document.getElementById(
+"nationality"
+).value,
 
-      passport:
-      passport.value,
+passport:
+document.getElementById(
+"passport"
+).value,
 
-      passportExpiry:
-      passportExpiry.value,
+passportExpiry:
+document.getElementById(
+"passportExpiry"
+).value,
 
-      bank:
-      bank.value,
+bank:
+document.getElementById(
+"bank"
+).value,
 
-      account:
-      bankAcc.value,
+account:
+document.getElementById(
+"bankAcc"
+).value,
 
-      empid:
-      empid.value,
+empid:
+document.getElementById(
+"empid"
+).value,
 
-      govId:
-      govId.value,
+govId:
+document.getElementById(
+"govId"
+).value,
 
-      sss:
-      sss.value,
+sss:
+document.getElementById(
+"sss"
+).value,
 
-      philhealth:
-      philhealth.value,
+philhealth:
+document.getElementById(
+"philhealth"
+).value,
 
-      pagibig:
-      pagibig.value,
+pagibig:
+document.getElementById(
+"pagibig"
+).value,
 
-      healthcard:
-      healthcard.value,
+healthcard:
+document.getElementById(
+"healthcard"
+).value,
 
-      joiningDate:
-      joiningDate.value,
+joiningDate:
+document.getElementById(
+"joiningDate"
+).value,
 
-      employmentType:
-      employmentType.value,
+employmentType:
+document.getElementById(
+"employmentType"
+).value,
 
-      department:
-      department.value,
+department:
+document.getElementById(
+"department"
+).value,
 
-      status:
-      status.value,
+status:
+document.getElementById(
+"status"
+).value,
 
-      position:
-      position.value,
+position:
+document.getElementById(
+"position"
+).value,
 
-      salary:
-      salary.value,
+salary:
+document.getElementById(
+"salary"
+).value,
 
-      allowance:
-      allowance.value,
+allowance:
+document.getElementById(
+"allowance"
+).value,
 
-      otRate:
-      otRate.value,
+otRate:
+document.getElementById(
+"otRate"
+).value,
 
-      salaryType:
-      salaryType.value,
+salaryType:
+document.getElementById(
+"salaryType"
+).value,
 
-      emergencyName:
-      emergencyName.value,
+emergencyName:
+document.getElementById(
+"emergencyName"
+).value,
 
-      emergencyRelation:
-      emergencyRelation.value,
+emergencyRelation:
+document.getElementById(
+"emergencyRelation"
+).value,
 
-      emergencyPhone:
-      emergencyPhone.value
+emergencyPhone:
+document.getElementById(
+"emergencyPhone"
+).value
 
-    };
+};
 
-    if(editId){
+/* UPDATE */
 
-      await updateDoc(
-        doc(db,"employees",editId),
-        emp
-      );
+if(editId){
 
-      alert("Employee Updated");
+await updateDoc(
 
-      editId = null;
+doc(
+db,
+"employees",
+editId
+),
 
-    }
+emp
 
-    else{
+);
 
-      await addDoc(
-        collection(db,"employees"),
-        emp
-      );
+alert(
+"Employee Updated"
+);
 
-      alert("Employee Saved");
-
-    }
-
-    clearForm();
-
-    loadEmployees();
-
-  }
-
-  catch(error){
-
-    console.error(error);
-
-    alert("Error Saving Employee");
-
-  }
+editId = null;
 
 }
 
-/* LOAD */
+/* ADD */
 
-window.loadEmployees = async function(){
+else{
 
-  let tbody =
-  document.querySelector(
-  "#empTable tbody"
-  );
+await addDoc(
 
-  tbody.innerHTML = "";
+collection(
+db,
+"employees"
+),
 
-  const querySnapshot =
-  await getDocs(
-    collection(db,"employees")
-  );
+emp
 
-  let count = 0;
+);
 
-  querySnapshot.forEach((d)=>{
+alert(
+"Employee Saved"
+);
 
-    count++;
+}
 
-    let e = d.data();
+clearForm();
 
-    let safeData =
-    encodeURIComponent(
-    JSON.stringify(e)
-    );
+loadEmployees();
 
-    let statusClass = "";
+}
 
-    if(e.status === "Active"){
+catch(error){
 
-      statusClass =
-      "status-active";
+console.error(error);
 
-    }
+alert(
+"ERROR: " +
+error.message
+);
 
-    else if(
-      e.status === "Resigned"
-    ){
+}
 
-      statusClass =
-      "status-resigned";
+}
 
-    }
+/* LOAD EMPLOYEE */
 
-    else{
+window.loadEmployees =
+async function(){
 
-      statusClass =
-      "status-leave";
+let tbody =
+document.querySelector(
+"#empTable tbody"
+);
 
-    }
+tbody.innerHTML = "";
 
-    tbody.innerHTML += `
+const querySnapshot =
+await getDocs(
 
-    <tr>
+collection(
+db,
+"employees"
+)
 
-    <td>${e.fname || ''}</td>
+);
 
-    <td>${e.mname || ''}</td>
+let count = 0;
 
-    <td>${e.lname || ''}</td>
+querySnapshot.forEach((d)=>{
 
-    <td>${e.birthdate || ''}</td>
+count++;
 
-    <td>${e.age || ''}</td>
+let e =
+d.data();
 
-    <td>${e.address || ''}</td>
+let safeData =
 
-    <td>${e.nationality || ''}</td>
+encodeURIComponent(
 
-    <td>${e.passport || ''}</td>
+JSON.stringify(e)
 
-    <td>${e.passportExpiry || ''}</td>
+);
 
-    <td>${e.bank || ''}</td>
+let statusClass =
+"";
 
-    <td>${e.account || ''}</td>
+if(
+e.status ===
+"Active"
+){
 
-    <td>${e.empid || ''}</td>
+statusClass =
+"status-active";
 
-    <td>${e.govId || ''}</td>
+}
 
-    <td>${e.sss || ''}</td>
+else if(
+e.status ===
+"Resigned"
+){
 
-    <td>${e.philhealth || ''}</td>
+statusClass =
+"status-resigned";
 
-    <td>${e.pagibig || ''}</td>
+}
 
-    <td>${e.healthcard || ''}</td>
+else{
 
-    <td>${e.joiningDate || ''}</td>
+statusClass =
+"status-leave";
 
-    <td>${e.employmentType || ''}</td>
+}
 
-    <td>${e.department || ''}</td>
+tbody.innerHTML += `
 
-    <td class="${statusClass}">
-    ${e.status || ''}
-    </td>
+<tr>
 
-    <td>${e.position || ''}</td>
+<td>${e.fname || ''}</td>
 
-    <td>${e.salary || ''}</td>
+<td>${e.mname || ''}</td>
 
-    <td>${e.allowance || ''}</td>
+<td>${e.lname || ''}</td>
 
-    <td>${e.otRate || ''}</td>
+<td>${e.birthdate || ''}</td>
 
-    <td>${e.salaryType || ''}</td>
+<td>${e.age || ''}</td>
 
-    <td>${e.emergencyName || ''}</td>
+<td>${e.address || ''}</td>
 
-    <td>${e.emergencyRelation || ''}</td>
+<td>${e.nationality || ''}</td>
 
-    <td>${e.emergencyPhone || ''}</td>
+<td>${e.passport || ''}</td>
 
-    <td>
+<td>${e.passportExpiry || ''}</td>
 
-    <button class="btn view"
+<td>${e.bank || ''}</td>
 
-    onclick="viewProfile(
-    '${safeData}'
-    )">
+<td>${e.account || ''}</td>
 
-    View
+<td>${e.empid || ''}</td>
 
-    </button>
+<td>${e.govId || ''}</td>
 
-    <button class="btn edit"
+<td>${e.sss || ''}</td>
 
-    onclick="editEmployee(
-    '${d.id}',
-    '${safeData}'
-    )">
+<td>${e.philhealth || ''}</td>
 
-    Edit
+<td>${e.pagibig || ''}</td>
 
-    </button>
+<td>${e.healthcard || ''}</td>
 
-    <button class="btn delete"
+<td>${e.joiningDate || ''}</td>
 
-    onclick="deleteEmployee(
-    '${d.id}'
-    )">
+<td>${e.employmentType || ''}</td>
 
-    Delete
+<td>${e.department || ''}</td>
 
-    </button>
+<td class="${statusClass}">
+${e.status || ''}
+</td>
 
-    </td>
+<td>${e.position || ''}</td>
 
-    </tr>
+<td>${e.salary || ''}</td>
 
-    `;
+<td>${e.allowance || ''}</td>
 
-  });
+<td>${e.otRate || ''}</td>
 
-  total.innerHTML =
-  "Total Employees : " + count;
+<td>${e.salaryType || ''}</td>
+
+<td>${e.emergencyName || ''}</td>
+
+<td>${e.emergencyRelation || ''}</td>
+
+<td>${e.emergencyPhone || ''}</td>
+
+<td>
+
+<button
+class="btn view"
+
+onclick="viewProfile(
+'${safeData}'
+)">
+
+View
+
+</button>
+
+<button
+class="btn edit"
+
+onclick="editEmployee(
+'${d.id}',
+'${safeData}'
+)">
+
+Edit
+
+</button>
+
+<button
+class="btn delete"
+
+onclick="deleteEmployee(
+'${d.id}'
+)">
+
+Delete
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+document.getElementById(
+"total"
+).innerHTML =
+
+"Total Employees : " +
+count;
 
 }
 
 /* VIEW PROFILE */
 
-window.viewProfile = function(data){
+window.viewProfile =
+function(data){
 
-  let e =
-  JSON.parse(
-  decodeURIComponent(data)
-  );
+let e =
 
-  profileModal.style.display =
-  "flex";
+JSON.parse(
 
-  profilePhoto.src =
+decodeURIComponent(
+data
+)
 
-  e.photo ||
+);
 
-  "https://via.placeholder.com/130";
+document.getElementById(
+"profileModal"
+).style.display =
+"flex";
 
-  profileName.innerHTML =
+document.getElementById(
+"profilePhoto"
+).src =
 
-  (e.fname || '') + ' ' +
+e.photo ||
 
-  (e.mname || '') + ' ' +
+"https://via.placeholder.com/130";
 
-  (e.lname || '');
+document.getElementById(
+"profileName"
+).innerHTML =
 
-  profileDetails.innerHTML = `
+`${e.fname || ''}
 
-  <div class="profile-item">
-  <b>Birthdate</b><br>
-  ${e.birthdate || ''}
-  </div>
+${e.mname || ''}
 
-  <div class="profile-item">
-  <b>Age</b><br>
-  ${e.age || ''}
-  </div>
+${e.lname || ''}`;
 
-  <div class="profile-item">
-  <b>Address</b><br>
-  ${e.address || ''}
-  </div>
+let html = "";
 
-  <div class="profile-item">
-  <b>Nationality</b><br>
-  ${e.nationality || ''}
-  </div>
+Object.entries(e)
 
-  <div class="profile-item">
-  <b>Passport</b><br>
-  ${e.passport || ''}
-  </div>
+.forEach(([key,val])=>{
 
-  <div class="profile-item">
-  <b>Passport Expiry</b><br>
-  ${e.passportExpiry || ''}
-  </div>
+html += `
 
-  <div class="profile-item">
-  <b>Bank</b><br>
-  ${e.bank || ''}
-  </div>
+<div class="profile-item">
 
-  <div class="profile-item">
-  <b>Bank Account</b><br>
-  ${e.account || ''}
-  </div>
+<b>${key}</b><br>
 
-  <div class="profile-item">
-  <b>Employee ID</b><br>
-  ${e.empid || ''}
-  </div>
+${val || ''}
 
-  <div class="profile-item">
-  <b>Government ID</b><br>
-  ${e.govId || ''}
-  </div>
+</div>
 
-  <div class="profile-item">
-  <b>SSS</b><br>
-  ${e.sss || ''}
-  </div>
+`;
 
-  <div class="profile-item">
-  <b>PhilHealth</b><br>
-  ${e.philhealth || ''}
-  </div>
+});
 
-  <div class="profile-item">
-  <b>Pag-IBIG</b><br>
-  ${e.pagibig || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Health Card</b><br>
-  ${e.healthcard || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Joining Date</b><br>
-  ${e.joiningDate || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Employment Type</b><br>
-  ${e.employmentType || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Department</b><br>
-  ${e.department || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Status</b><br>
-  ${e.status || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Position</b><br>
-  ${e.position || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Salary</b><br>
-  ${e.salary || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Allowance</b><br>
-  ${e.allowance || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>OT Rate</b><br>
-  ${e.otRate || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Salary Type</b><br>
-  ${e.salaryType || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Emergency Contact</b><br>
-  ${e.emergencyName || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Relationship</b><br>
-  ${e.emergencyRelation || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Emergency Number</b><br>
-  ${e.emergencyPhone || ''}
-  </div>
-
-  `;
+document.getElementById(
+"profileDetails"
+).innerHTML = html;
 
 }
 
 /* CLOSE */
 
-window.closeProfile = function(){
+window.closeProfile =
+function(){
 
-  profileModal.style.display =
-  "none";
+document.getElementById(
+"profileModal"
+).style.display =
+"none";
 
 }
 
 /* EDIT */
 
-window.editEmployee = function(id,data){
+window.editEmployee =
+function(id,data){
 
-  let e =
-  JSON.parse(
-  decodeURIComponent(data)
-  );
+let e =
 
-  editId = id;
+JSON.parse(
 
-  photo.value =
-  e.photo || "";
+decodeURIComponent(
+data
+)
 
-  fname.value =
-  e.fname || "";
+);
 
-  mname.value =
-  e.mname || "";
+editId = id;
 
-  lname.value =
-  e.lname || "";
+Object.keys(e)
 
-  birthdate.value =
-  e.birthdate || "";
+.forEach(key=>{
 
-  age.value =
-  e.age || "";
+let el =
 
-  address.value =
-  e.address || "";
+document.getElementById(
+key
+);
 
-  nationality.value =
-  e.nationality || "";
+if(el){
 
-  passport.value =
-  e.passport || "";
+el.value = e[key];
 
-  passportExpiry.value =
-  e.passportExpiry || "";
+}
 
-  bank.value =
-  e.bank || "";
+});
 
-  bankAcc.value =
-  e.account || "";
+window.scrollTo({
 
-  empid.value =
-  e.empid || "";
+top:0,
 
-  govId.value =
-  e.govId || "";
+behavior:'smooth'
 
-  sss.value =
-  e.sss || "";
+});
 
-  philhealth.value =
-  e.philhealth || "";
+}
 
-  pagibig.value =
-  e.pagibig || "";
+/* DELETE */
 
-  healthcard.value =
-  e.healthcard || "";
+window.deleteEmployee =
+async function(id){
 
-  joiningDate.value =
-  e.joiningDate || "";
+let confirmDelete =
 
-  employmentType.value =
-  e.employmentType || "";
+confirm(
+"Delete Employee?"
+);
 
-  department.value =
-  e.department || "";
+if(!confirmDelete){
 
-  status.value =
-  e.status || "";
+return;
 
-  position.value =
-  e.position || "";
+}
 
-  salary.value =
-  e.salary || "";
+await deleteDoc(
+
+doc(
+db,
+"employees",
+id
+)
+
+);
+
+loadEmployees();
+
+}
+
+/* SEARCH */
+
+window.searchEmp =
+function(){
+
+let val =
+
+document.getElementById(
+"search"
+)
+
+.value
+.toLowerCase();
+
+let rows =
+
+document.querySelectorAll(
+"#empTable tbody tr"
+);
+
+let visible = 0;
+
+rows.forEach(row=>{
+
+let show =
+
+row.innerText
+.toLowerCase()
+.includes(val);
+
+row.style.display =
+
+show ? "" : "none";
+
+if(show){
+
+visible++;
+
+}
+
+});
+
+document.getElementById(
+"total"
+).innerHTML =
+
+"Showing : " +
+visible;
+
+}
+
+/* CLEAR */
+
+window.clearForm =
+function(){
+
+document
