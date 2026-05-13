@@ -138,12 +138,13 @@ select:focus{
   background:#eaf4ff;
   padding:10px;
   border-radius:12px;
-  overflow:auto;
+  overflow-x:auto;
+  width:100%;
 }
 
 table{
   width:100%;
-  min-width:1400px;
+  min-width:1700px;
   border-collapse:collapse;
   font-size:12px;
   color:#2c3e50;
@@ -158,6 +159,9 @@ th,td{
 
 th{
   background:#cfe4ff;
+  position:sticky;
+  top:0;
+  z-index:2;
 }
 
 /* SEARCH */
@@ -249,24 +253,34 @@ Logout
 
 <div class="form-grid">
 
-<input id="fname" placeholder="First Name">
+<input class="form-field"
+id="fname"
+placeholder="First Name">
 
-<input id="mname" placeholder="Middle Name">
+<input class="form-field"
+id="mname"
+placeholder="Middle Name">
 
-<input id="lname" placeholder="Last Name">
+<input class="form-field"
+id="lname"
+placeholder="Last Name">
 
-<input type="date"
+<input class="form-field"
+type="date"
 id="birthdate"
 onchange="calcAge()">
 
-<input id="age"
+<input class="form-field"
+id="age"
 placeholder="Age"
 readonly>
 
-<input id="address"
+<input class="form-field"
+id="address"
 placeholder="Address">
 
-<select id="bank">
+<select class="form-field"
+id="bank">
 
 <option>Bank Name</option>
 
@@ -277,13 +291,16 @@ placeholder="Address">
 
 </select>
 
-<input id="bankAcc"
+<input class="form-field"
+id="bankAcc"
 placeholder="Bank Account">
 
-<input id="empid"
+<input class="form-field"
+id="empid"
 placeholder="Employee ID">
 
-<select id="govId">
+<select class="form-field"
+id="govId">
 
 <option>Government ID</option>
 
@@ -293,19 +310,42 @@ placeholder="Employee ID">
 
 </select>
 
-<input id="sss"
+<input class="form-field"
+id="sss"
 placeholder="SSS">
 
-<input id="philhealth"
+<input class="form-field"
+id="philhealth"
 placeholder="PhilHealth">
 
-<input id="pagibig"
+<input class="form-field"
+id="pagibig"
 placeholder="Pag-IBIG">
 
-<input id="healthcard"
+<input class="form-field"
+id="healthcard"
 placeholder="Health Card">
 
-<select id="position">
+<input class="form-field"
+type="date"
+id="joiningDate">
+
+<select class="form-field"
+id="employmentType">
+
+<option>Employment Type</option>
+
+<option>Regular</option>
+<option>Probationary</option>
+<option>Contractual</option>
+<option>Part-Time</option>
+<option>Seasonal</option>
+<option>Intern</option>
+
+</select>
+
+<select class="form-field"
+id="position">
 
 <option>Position</option>
 
@@ -366,6 +406,8 @@ onkeyup="searchEmp()">
 <th>PhilHealth</th>
 <th>Pag-IBIG</th>
 <th>Health Card</th>
+<th>Joining Date</th>
+<th>Employment Type</th>
 <th>Position</th>
 <th>Action</th>
 
@@ -452,6 +494,18 @@ window.calcAge = function(){
   today.getFullYear() -
   birth.getFullYear();
 
+  let m =
+  today.getMonth() -
+  birth.getMonth();
+
+  if(
+    m < 0 ||
+    (m === 0 &&
+    today.getDate() < birth.getDate())
+  ){
+    years--;
+  }
+
   age.value = years;
 }
 
@@ -463,9 +517,14 @@ window.addEmployee = async function(){
 
   let emp = {
 
-    fname: fname.value,
-    mname: mname.value,
-    lname: lname.value,
+    fname:
+    fname.value.toUpperCase(),
+
+    mname:
+    mname.value.toUpperCase(),
+
+    lname:
+    lname.value.toUpperCase(),
 
     birthdate: birthdate.value,
 
@@ -488,6 +547,12 @@ window.addEmployee = async function(){
     pagibig: pagibig.value,
 
     healthcard: healthcard.value,
+
+    joiningDate:
+    joiningDate.value,
+
+    employmentType:
+    employmentType.value,
 
     position: position.value
 
@@ -580,47 +645,20 @@ window.loadEmployees = async function(){
 
       <td>${e.healthcard || ''}</td>
 
+      <td>${e.joiningDate || ''}</td>
+
+      <td>${e.employmentType || ''}</td>
+
       <td>${e.position || ''}</td>
 
       <td>
 
       <button class="btn edit"
 
-      onclick="editEmployee(
-
-      '${d.id}',
-
-      '${e.fname || ''}',
-
-      '${e.mname || ''}',
-
-      '${e.lname || ''}',
-
-      '${e.birthdate || ''}',
-
-      '${e.age || ''}',
-
-      '${e.address || ''}',
-
-      '${e.bank || ''}',
-
-      '${e.account || ''}',
-
-      '${e.empid || ''}',
-
-      '${e.govId || ''}',
-
-      '${e.sss || ''}',
-
-      '${e.philhealth || ''}',
-
-      '${e.pagibig || ''}',
-
-      '${e.healthcard || ''}',
-
-      '${e.position || ''}'
-
-      )">
+      onclick='editEmployee(
+      "${d.id}",
+      ${JSON.stringify(e)}
+      )'>
 
       Edit
 
@@ -649,58 +687,54 @@ window.loadEmployees = async function(){
    EDIT
 ====================================== */
 
-window.editEmployee = function(
-
-id,
-fnameVal,
-mnameVal,
-lnameVal,
-birthVal,
-ageVal,
-addressVal,
-bankVal,
-accountVal,
-empidVal,
-govVal,
-sssVal,
-philVal,
-pagibigVal,
-healthVal,
-positionVal
-
-){
+window.editEmployee = function(id,e){
 
   editId = id;
 
-  fname.value = fnameVal;
+  fname.value = e.fname || "";
 
-  mname.value = mnameVal;
+  mname.value = e.mname || "";
 
-  lname.value = lnameVal;
+  lname.value = e.lname || "";
 
-  birthdate.value = birthVal;
+  birthdate.value =
+  e.birthdate || "";
 
-  age.value = ageVal;
+  age.value = e.age || "";
 
-  address.value = addressVal;
+  address.value =
+  e.address || "";
 
-  bank.value = bankVal;
+  bank.value = e.bank || "";
 
-  bankAcc.value = accountVal;
+  bankAcc.value =
+  e.account || "";
 
-  empid.value = empidVal;
+  empid.value =
+  e.empid || "";
 
-  govId.value = govVal;
+  govId.value =
+  e.govId || "";
 
-  sss.value = sssVal;
+  sss.value = e.sss || "";
 
-  philhealth.value = philVal;
+  philhealth.value =
+  e.philhealth || "";
 
-  pagibig.value = pagibigVal;
+  pagibig.value =
+  e.pagibig || "";
 
-  healthcard.value = healthVal;
+  healthcard.value =
+  e.healthcard || "";
 
-  position.value = positionVal;
+  joiningDate.value =
+  e.joiningDate || "";
+
+  employmentType.value =
+  e.employmentType || "";
+
+  position.value =
+  e.position || "";
 
   window.scrollTo({
 
@@ -741,22 +775,31 @@ window.searchEmp = function(){
   let val =
   search.value.toLowerCase();
 
-  document
-  .querySelectorAll("#empTable tbody tr")
+  let rows =
+  document.querySelectorAll(
+  "#empTable tbody tr"
+  );
 
-  .forEach(row=>{
+  let visible = 0;
 
-    row.style.display =
+  rows.forEach(row=>{
 
+    let show =
     row.innerText
     .toLowerCase()
-    .includes(val)
+    .includes(val);
 
-    ? ""
+    row.style.display =
+    show ? "" : "none";
 
-    : "none";
+    if(show){
+      visible++;
+    }
 
   });
+
+  total.innerHTML =
+  "Showing : " + visible;
 }
 
 /* ======================================
@@ -766,15 +809,11 @@ window.searchEmp = function(){
 window.clearForm = function(){
 
   document
-  .querySelectorAll("input, select")
+  .querySelectorAll(".form-field")
 
   .forEach(el=>{
 
-    if(el.type !== "button"){
-
-      el.value = "";
-
-    }
+    el.value = "";
 
   });
 }
