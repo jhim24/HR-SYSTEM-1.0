@@ -144,7 +144,7 @@ select:focus{
 
 table{
   width:100%;
-  min-width:2600px;
+  min-width:2400px;
   border-collapse:collapse;
   color:#2c3e50;
   font-size:12px;
@@ -376,10 +376,6 @@ id="nationality">
 <option>Nationality</option>
 
 <option>Filipino</option>
-<option>Indian</option>
-<option>Nepali</option>
-<option>Bangladeshi</option>
-<option>Sri Lankan</option>
 
 </select>
 
@@ -390,14 +386,6 @@ placeholder="Passport Number">
 <input class="form-field"
 type="date"
 id="passportExpiry">
-
-<input class="form-field"
-id="qid"
-placeholder="QID Number">
-
-<input class="form-field"
-type="date"
-id="qidExpiry">
 
 <select class="form-field"
 id="bank">
@@ -581,8 +569,6 @@ onkeyup="searchEmp()">
 <th>Nationality</th>
 <th>Passport</th>
 <th>Passport Exp.</th>
-<th>QID</th>
-<th>QID Exp.</th>
 <th>Bank</th>
 <th>Account</th>
 <th>Emp ID</th>
@@ -734,125 +720,151 @@ window.calcAge = function(){
 
 window.addEmployee = async function(){
 
-  let emp = {
+  try{
 
-    photo: photo.value,
+    let emp = {
 
-    fname:
-    fname.value.toUpperCase(),
+      photo: photo.value,
 
-    mname:
-    mname.value.toUpperCase(),
+      fname:
+      fname.value.toUpperCase(),
 
-    lname:
-    lname.value.toUpperCase(),
+      mname:
+      mname.value.toUpperCase(),
 
-    birthdate: birthdate.value,
+      lname:
+      lname.value.toUpperCase(),
 
-    age: age.value,
+      birthdate:
+      birthdate.value,
 
-    address: address.value,
+      age:
+      age.value,
 
-    nationality:
-    nationality.value,
+      address:
+      address.value,
 
-    passport:
-    passport.value,
+      nationality:
+      nationality.value,
 
-    passportExpiry:
-    passportExpiry.value,
+      passport:
+      passport.value,
 
-    qid: qid.value,
+      passportExpiry:
+      passportExpiry.value,
 
-    qidExpiry:
-    qidExpiry.value,
+      bank:
+      bank.value,
 
-    bank: bank.value,
+      account:
+      bankAcc.value,
 
-    account:
-    bankAcc.value,
+      empid:
+      empid.value,
 
-    empid:
-    empid.value,
+      govId:
+      govId.value,
 
-    govId:
-    govId.value,
+      sss:
+      sss.value,
 
-    sss:
-    sss.value,
+      philhealth:
+      philhealth.value,
 
-    philhealth:
-    philhealth.value,
+      pagibig:
+      pagibig.value,
 
-    pagibig:
-    pagibig.value,
+      healthcard:
+      healthcard.value,
 
-    healthcard:
-    healthcard.value,
+      joiningDate:
+      joiningDate.value,
 
-    joiningDate:
-    joiningDate.value,
+      employmentType:
+      employmentType.value,
 
-    employmentType:
-    employmentType.value,
+      department:
+      department.value,
 
-    department:
-    department.value,
+      status:
+      status.value,
 
-    status:
-    status.value,
+      position:
+      position.value,
 
-    position:
-    position.value,
+      salary:
+      salary.value,
 
-    salary:
-    salary.value,
+      allowance:
+      allowance.value,
 
-    allowance:
-    allowance.value,
+      otRate:
+      otRate.value,
 
-    otRate:
-    otRate.value,
+      salaryType:
+      salaryType.value,
 
-    salaryType:
-    salaryType.value,
+      emergencyName:
+      emergencyName.value,
 
-    emergencyName:
-    emergencyName.value,
+      emergencyRelation:
+      emergencyRelation.value,
 
-    emergencyRelation:
-    emergencyRelation.value,
+      emergencyPhone:
+      emergencyPhone.value
 
-    emergencyPhone:
-    emergencyPhone.value
+    };
 
-  };
+    if(editId){
 
-  if(editId){
+      await updateDoc(
+        doc(
+          db,
+          "employees",
+          editId
+        ),
+        emp
+      );
 
-    await updateDoc(
-      doc(db,"employees",editId),
-      emp
-    );
+      alert(
+      "Employee Updated"
+      );
 
-    alert("Employee Updated");
+      editId = null;
 
-    editId = null;
+    }
 
-  }else{
+    else{
 
-    await addDoc(
-      collection(db,"employees"),
-      emp
-    );
+      await addDoc(
+        collection(
+          db,
+          "employees"
+        ),
+        emp
+      );
 
-    alert("Employee Saved");
+      alert(
+      "Employee Saved"
+      );
+
+    }
+
+    clearForm();
+
+    loadEmployees();
 
   }
 
-  clearForm();
+  catch(error){
 
-  loadEmployees();
+    console.error(error);
+
+    alert(
+    "Error Saving Employee"
+    );
+
+  }
 
 }
 
@@ -939,10 +951,6 @@ window.loadEmployees = async function(){
     <td>${e.passport || ''}</td>
 
     <td>${e.passportExpiry || ''}</td>
-
-    <td>${e.qid || ''}</td>
-
-    <td>${e.qidExpiry || ''}</td>
 
     <td>${e.bank || ''}</td>
 
@@ -1076,16 +1084,6 @@ window.viewProfile = function(e){
   </div>
 
   <div class="profile-item">
-  <b>QID</b><br>
-  ${e.qid || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>QID Expiry</b><br>
-  ${e.qidExpiry || ''}
-  </div>
-
-  <div class="profile-item">
   <b>Bank</b><br>
   ${e.bank || ''}
   </div>
@@ -1154,261 +1152,3 @@ window.viewProfile = function(e){
   <b>Salary</b><br>
   ${e.salary || ''}
   </div>
-
-  <div class="profile-item">
-  <b>Allowance</b><br>
-  ${e.allowance || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>OT Rate</b><br>
-  ${e.otRate || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Salary Type</b><br>
-  ${e.salaryType || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Emergency Contact</b><br>
-  ${e.emergencyName || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Relationship</b><br>
-  ${e.emergencyRelation || ''}
-  </div>
-
-  <div class="profile-item">
-  <b>Emergency Number</b><br>
-  ${e.emergencyPhone || ''}
-  </div>
-
-  `;
-
-}
-
-/* CLOSE POPUP */
-
-window.closeProfile = function(){
-
-  profileModal.style.display =
-  "none";
-
-}
-
-/* EDIT */
-
-window.editEmployee = function(id,e){
-
-  editId = id;
-
-  photo.value =
-  e.photo || "";
-
-  fname.value =
-  e.fname || "";
-
-  mname.value =
-  e.mname || "";
-
-  lname.value =
-  e.lname || "";
-
-  birthdate.value =
-  e.birthdate || "";
-
-  age.value =
-  e.age || "";
-
-  address.value =
-  e.address || "";
-
-  nationality.value =
-  e.nationality || "";
-
-  passport.value =
-  e.passport || "";
-
-  passportExpiry.value =
-  e.passportExpiry || "";
-
-  qid.value =
-  e.qid || "";
-
-  qidExpiry.value =
-  e.qidExpiry || "";
-
-  bank.value =
-  e.bank || "";
-
-  bankAcc.value =
-  e.account || "";
-
-  empid.value =
-  e.empid || "";
-
-  govId.value =
-  e.govId || "";
-
-  sss.value =
-  e.sss || "";
-
-  philhealth.value =
-  e.philhealth || "";
-
-  pagibig.value =
-  e.pagibig || "";
-
-  healthcard.value =
-  e.healthcard || "";
-
-  joiningDate.value =
-  e.joiningDate || "";
-
-  employmentType.value =
-  e.employmentType || "";
-
-  department.value =
-  e.department || "";
-
-  status.value =
-  e.status || "";
-
-  position.value =
-  e.position || "";
-
-  salary.value =
-  e.salary || "";
-
-  allowance.value =
-  e.allowance || "";
-
-  otRate.value =
-  e.otRate || "";
-
-  salaryType.value =
-  e.salaryType || "";
-
-  emergencyName.value =
-  e.emergencyName || "";
-
-  emergencyRelation.value =
-  e.emergencyRelation || "";
-
-  emergencyPhone.value =
-  e.emergencyPhone || "";
-
-  window.scrollTo({
-
-    top:0,
-
-    behavior:'smooth'
-
-  });
-
-}
-
-/* DELETE */
-
-window.deleteEmployee = async function(id){
-
-  let confirmDelete =
-  confirm(
-  "Delete Employee?"
-  );
-
-  if(!confirmDelete){
-    return;
-  }
-
-  await deleteDoc(
-    doc(db,"employees",id)
-  );
-
-  loadEmployees();
-
-}
-
-/* SEARCH */
-
-window.searchEmp = function(){
-
-  let val =
-  search.value.toLowerCase();
-
-  let rows =
-  document.querySelectorAll(
-  "#empTable tbody tr"
-  );
-
-  let visible = 0;
-
-  rows.forEach(row=>{
-
-    let show =
-    row.innerText
-    .toLowerCase()
-    .includes(val);
-
-    row.style.display =
-    show ? "" : "none";
-
-    if(show){
-      visible++;
-    }
-
-  });
-
-  total.innerHTML =
-  "Showing : " + visible;
-
-}
-
-/* CLEAR */
-
-window.clearForm = function(){
-
-  document
-  .querySelectorAll(
-  ".form-field"
-  )
-
-  .forEach(el=>{
-
-    el.value = "";
-
-  });
-
-}
-
-/* PAGE */
-
-window.goPage = function(p){
-
-  window.location.href = p;
-
-}
-
-/* LOGOUT */
-
-window.logout = function(){
-
-  localStorage.removeItem(
-  "loggedIn"
-  );
-
-  window.location.href =
-  "login.html";
-
-}
-
-/* START */
-
-loadEmployees();
-
-</script>
-
-</body>
-</html>
