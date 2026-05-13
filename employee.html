@@ -124,6 +124,26 @@ select:focus{
   cursor:pointer;
 }
 
+.btn{
+  border:none;
+  padding:5px 10px;
+  border-radius:4px;
+  color:white;
+  cursor:pointer;
+}
+
+.edit{
+  background:#3498db;
+}
+
+.delete{
+  background:#e74c3c;
+}
+
+.view{
+  background:#9b59b6;
+}
+
 /* SEARCH */
 
 .search-box{
@@ -164,22 +184,6 @@ th{
   z-index:2;
 }
 
-.btn{
-  border:none;
-  padding:5px 10px;
-  border-radius:4px;
-  color:white;
-  cursor:pointer;
-}
-
-.edit{
-  background:#3498db;
-}
-
-.delete{
-  background:#e74c3c;
-}
-
 /* STATUS */
 
 .status-active{
@@ -213,7 +217,7 @@ th{
 .profile-card{
   background:white;
   width:100%;
-  max-width:750px;
+  max-width:850px;
   border-radius:14px;
   padding:20px;
   color:#2c3e50;
@@ -239,8 +243,8 @@ th{
 }
 
 .profile-photo{
-  width:120px;
-  height:120px;
+  width:130px;
+  height:130px;
   border-radius:50%;
   object-fit:cover;
   border:4px solid #3498db;
@@ -258,13 +262,6 @@ th{
   background:#f7f9fc;
   padding:10px;
   border-radius:8px;
-}
-
-.name-link{
-  color:#2980b9;
-  font-weight:bold;
-  cursor:pointer;
-  text-decoration:underline;
 }
 
 </style>
@@ -622,7 +619,7 @@ Close
 
 <img
 id="profilePhoto"
-src="https://via.placeholder.com/120"
+src="https://via.placeholder.com/130"
 class="profile-photo">
 
 <h2 id="profileName"></h2>
@@ -818,17 +815,11 @@ window.addEmployee = async function(){
     if(editId){
 
       await updateDoc(
-        doc(
-          db,
-          "employees",
-          editId
-        ),
+        doc(db,"employees",editId),
         emp
       );
 
-      alert(
-      "Employee Updated"
-      );
+      alert("Employee Updated");
 
       editId = null;
 
@@ -837,16 +828,11 @@ window.addEmployee = async function(){
     else{
 
       await addDoc(
-        collection(
-          db,
-          "employees"
-        ),
+        collection(db,"employees"),
         emp
       );
 
-      alert(
-      "Employee Saved"
-      );
+      alert("Employee Saved");
 
     }
 
@@ -860,9 +846,7 @@ window.addEmployee = async function(){
 
     console.error(error);
 
-    alert(
-    "Error Saving Employee"
-    );
+    alert("Error Saving Employee");
 
   }
 
@@ -891,6 +875,11 @@ window.loadEmployees = async function(){
     count++;
 
     let e = d.data();
+
+    let safeData =
+    encodeURIComponent(
+    JSON.stringify(e)
+    );
 
     let statusClass = "";
 
@@ -921,20 +910,7 @@ window.loadEmployees = async function(){
 
     <tr>
 
-    <td>
-
-    <span
-    class="name-link"
-
-    onclick='viewProfile(
-    ${JSON.stringify(e)}
-    )'>
-
-    ${e.fname || ''}
-
-    </span>
-
-    </td>
+    <td>${e.fname || ''}</td>
 
     <td>${e.mname || ''}</td>
 
@@ -996,12 +972,22 @@ window.loadEmployees = async function(){
 
     <td>
 
+    <button class="btn view"
+
+    onclick="viewProfile(
+    '${safeData}'
+    )">
+
+    View
+
+    </button>
+
     <button class="btn edit"
 
-    onclick='editEmployee(
-    "${d.id}",
-    ${JSON.stringify(e)}
-    )'>
+    onclick="editEmployee(
+    '${d.id}',
+    '${safeData}'
+    )">
 
     Edit
 
@@ -1032,7 +1018,12 @@ window.loadEmployees = async function(){
 
 /* VIEW PROFILE */
 
-window.viewProfile = function(e){
+window.viewProfile = function(data){
+
+  let e =
+  JSON.parse(
+  decodeURIComponent(data)
+  );
 
   profileModal.style.display =
   "flex";
@@ -1041,7 +1032,7 @@ window.viewProfile = function(e){
 
   e.photo ||
 
-  "https://via.placeholder.com/120";
+  "https://via.placeholder.com/130";
 
   profileName.innerHTML =
 
@@ -1148,7 +1139,4 @@ window.viewProfile = function(e){
   ${e.position || ''}
   </div>
 
-  <div class="profile-item">
-  <b>Salary</b><br>
-  ${e.salary || ''}
-  </div>
+  <div
