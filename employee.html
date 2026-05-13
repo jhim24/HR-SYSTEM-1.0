@@ -144,7 +144,7 @@ select:focus{
 
 table{
   width:100%;
-  min-width:1400px;
+  min-width:2600px;
   border-collapse:collapse;
   color:#2c3e50;
   font-size:12px;
@@ -197,7 +197,7 @@ th{
   font-weight:bold;
 }
 
-/* PROFILE POPUP */
+/* POPUP */
 
 #profileModal{
   display:none;
@@ -252,7 +252,6 @@ th{
   grid-template-columns:
   repeat(auto-fit,minmax(220px,1fr));
   gap:10px;
-  font-size:14px;
 }
 
 .profile-item{
@@ -573,13 +572,37 @@ onkeyup="searchEmp()">
 
 <tr>
 
-<th>Name</th>
+<th>First</th>
+<th>Middle</th>
+<th>Last</th>
 <th>Birthdate</th>
 <th>Age</th>
+<th>Address</th>
+<th>Nationality</th>
+<th>Passport</th>
+<th>Passport Exp.</th>
+<th>QID</th>
+<th>QID Exp.</th>
+<th>Bank</th>
+<th>Account</th>
+<th>Emp ID</th>
+<th>Gov ID</th>
+<th>SSS</th>
+<th>PhilHealth</th>
+<th>Pag-IBIG</th>
+<th>Health Card</th>
+<th>Joining Date</th>
+<th>Employment</th>
 <th>Department</th>
 <th>Status</th>
 <th>Position</th>
 <th>Salary</th>
+<th>Allowance</th>
+<th>OT Rate</th>
+<th>Salary Type</th>
+<th>Emergency Name</th>
+<th>Relationship</th>
+<th>Emergency No.</th>
 <th>Action</th>
 
 </tr>
@@ -897,17 +920,49 @@ window.loadEmployees = async function(){
 
     ${e.fname || ''}
 
-    ${e.mname || ''}
-
-    ${e.lname || ''}
-
     </span>
 
     </td>
 
+    <td>${e.mname || ''}</td>
+
+    <td>${e.lname || ''}</td>
+
     <td>${e.birthdate || ''}</td>
 
     <td>${e.age || ''}</td>
+
+    <td>${e.address || ''}</td>
+
+    <td>${e.nationality || ''}</td>
+
+    <td>${e.passport || ''}</td>
+
+    <td>${e.passportExpiry || ''}</td>
+
+    <td>${e.qid || ''}</td>
+
+    <td>${e.qidExpiry || ''}</td>
+
+    <td>${e.bank || ''}</td>
+
+    <td>${e.account || ''}</td>
+
+    <td>${e.empid || ''}</td>
+
+    <td>${e.govId || ''}</td>
+
+    <td>${e.sss || ''}</td>
+
+    <td>${e.philhealth || ''}</td>
+
+    <td>${e.pagibig || ''}</td>
+
+    <td>${e.healthcard || ''}</td>
+
+    <td>${e.joiningDate || ''}</td>
+
+    <td>${e.employmentType || ''}</td>
 
     <td>${e.department || ''}</td>
 
@@ -918,6 +973,18 @@ window.loadEmployees = async function(){
     <td>${e.position || ''}</td>
 
     <td>${e.salary || ''}</td>
+
+    <td>${e.allowance || ''}</td>
+
+    <td>${e.otRate || ''}</td>
+
+    <td>${e.salaryType || ''}</td>
+
+    <td>${e.emergencyName || ''}</td>
+
+    <td>${e.emergencyRelation || ''}</td>
+
+    <td>${e.emergencyPhone || ''}</td>
 
     <td>
 
