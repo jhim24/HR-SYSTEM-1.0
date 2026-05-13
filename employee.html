@@ -1139,4 +1139,133 @@ window.viewProfile = function(data){
   ${e.position || ''}
   </div>
 
-  <div
+  <div class="profile-item">
+  <b>Salary</b><br>
+  ${e.salary || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Allowance</b><br>
+  ${e.allowance || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>OT Rate</b><br>
+  ${e.otRate || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Salary Type</b><br>
+  ${e.salaryType || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Emergency Contact</b><br>
+  ${e.emergencyName || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Relationship</b><br>
+  ${e.emergencyRelation || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Emergency Number</b><br>
+  ${e.emergencyPhone || ''}
+  </div>
+
+  `;
+
+}
+
+/* CLOSE */
+
+window.closeProfile = function(){
+
+  profileModal.style.display =
+  "none";
+
+}
+
+/* EDIT */
+
+window.editEmployee = function(id,data){
+
+  let e =
+  JSON.parse(
+  decodeURIComponent(data)
+  );
+
+  editId = id;
+
+  photo.value =
+  e.photo || "";
+
+  fname.value =
+  e.fname || "";
+
+  mname.value =
+  e.mname || "";
+
+  lname.value =
+  e.lname || "";
+
+  birthdate.value =
+  e.birthdate || "";
+
+  age.value =
+  e.age || "";
+
+  address.value =
+  e.address || "";
+
+  nationality.value =
+  e.nationality || "";
+
+  passport.value =
+  e.passport || "";
+
+  passportExpiry.value =
+  e.passportExpiry || "";
+
+  bank.value =
+  e.bank || "";
+
+  bankAcc.value =
+  e.account || "";
+
+  empid.value =
+  e.empid || "";
+
+  govId.value =
+  e.govId || "";
+
+  sss.value =
+  e.sss || "";
+
+  philhealth.value =
+  e.philhealth || "";
+
+  pagibig.value =
+  e.pagibig || "";
+
+  healthcard.value =
+  e.healthcard || "";
+
+  joiningDate.value =
+  e.joiningDate || "";
+
+  employmentType.value =
+  e.employmentType || "";
+
+  department.value =
+  e.department || "";
+
+  status.value =
+  e.status || "";
+
+  position.value =
+  e.position || "";
+
+  salary.value =
+  e.salary || "";
