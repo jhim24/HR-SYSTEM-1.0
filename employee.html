@@ -31,6 +31,8 @@ body::before{
   height:100vh;
 }
 
+/* SIDEBAR */
+
 .sidebar{
   width:240px;
   background:rgba(0,0,0,0.7);
@@ -67,11 +69,15 @@ body::before{
   cursor:pointer;
 }
 
+/* MAIN */
+
 .main{
   flex:1;
   padding:20px;
   overflow-y:auto;
 }
+
+/* FORM */
 
 .form-box{
   background:rgba(255,255,255,0.08);
@@ -106,6 +112,8 @@ select:focus{
   background:rgba(128,0,32,0.95);
 }
 
+/* BUTTON */
+
 .add-btn{
   margin-top:12px;
   padding:10px 16px;
@@ -116,6 +124,17 @@ select:focus{
   cursor:pointer;
 }
 
+/* SEARCH */
+
+.search-box{
+  margin-bottom:10px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+/* TABLE */
+
 .table-box{
   background:#eef6ff;
   padding:10px;
@@ -125,7 +144,7 @@ select:focus{
 
 table{
   width:100%;
-  min-width:2600px;
+  min-width:1400px;
   border-collapse:collapse;
   color:#2c3e50;
   font-size:12px;
@@ -161,21 +180,7 @@ th{
   background:#e74c3c;
 }
 
-.search-box{
-  margin-bottom:10px;
-  display:flex;
-  gap:10px;
-  align-items:center;
-}
-
-.photo-preview{
-  width:70px;
-  height:70px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid white;
-  background:#ddd;
-}
+/* STATUS */
 
 .status-active{
   color:#27ae60;
@@ -190,6 +195,77 @@ th{
 .status-leave{
   color:#f39c12;
   font-weight:bold;
+}
+
+/* PROFILE POPUP */
+
+#profileModal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  z-index:9999;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.profile-card{
+  background:white;
+  width:100%;
+  max-width:750px;
+  border-radius:14px;
+  padding:20px;
+  color:#2c3e50;
+  max-height:90vh;
+  overflow:auto;
+  position:relative;
+}
+
+.close-btn{
+  position:absolute;
+  right:15px;
+  top:15px;
+  border:none;
+  background:#e74c3c;
+  color:white;
+  padding:6px 12px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.profile-top{
+  text-align:center;
+}
+
+.profile-photo{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  object-fit:cover;
+  border:4px solid #3498db;
+  margin-bottom:10px;
+}
+
+.profile-grid{
+  display:grid;
+  grid-template-columns:
+  repeat(auto-fit,minmax(220px,1fr));
+  gap:10px;
+  font-size:14px;
+}
+
+.profile-item{
+  background:#f7f9fc;
+  padding:10px;
+  border-radius:8px;
+}
+
+.name-link{
+  color:#2980b9;
+  font-weight:bold;
+  cursor:pointer;
+  text-decoration:underline;
 }
 
 </style>
@@ -244,7 +320,8 @@ if(localStorage.getItem("loggedIn") !== "true"){
 
 </ul>
 
-<div class="logout" onclick="logout()">
+<div class="logout"
+onclick="logout()">
 
 Logout
 
@@ -496,38 +573,13 @@ onkeyup="searchEmp()">
 
 <tr>
 
-<th>Photo</th>
-<th>First</th>
-<th>Middle</th>
-<th>Last</th>
+<th>Name</th>
 <th>Birthdate</th>
 <th>Age</th>
-<th>Address</th>
-<th>Nationality</th>
-<th>Passport</th>
-<th>Passport Exp.</th>
-<th>QID</th>
-<th>QID Exp.</th>
-<th>Bank</th>
-<th>Account</th>
-<th>Emp ID</th>
-<th>Gov ID</th>
-<th>SSS</th>
-<th>PhilHealth</th>
-<th>Pag-IBIG</th>
-<th>Health Card</th>
-<th>Joining Date</th>
-<th>Employment</th>
 <th>Department</th>
 <th>Status</th>
 <th>Position</th>
 <th>Salary</th>
-<th>Allowance</th>
-<th>OT Rate</th>
-<th>Salary Type</th>
-<th>Emergency Name</th>
-<th>Relationship</th>
-<th>Emergency No.</th>
 <th>Action</th>
 
 </tr>
@@ -537,6 +589,41 @@ onkeyup="searchEmp()">
 <tbody></tbody>
 
 </table>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- PROFILE POPUP -->
+
+<div id="profileModal">
+
+<div class="profile-card">
+
+<button class="close-btn"
+onclick="closeProfile()">
+
+Close
+
+</button>
+
+<div class="profile-top">
+
+<img
+id="profilePhoto"
+src="https://via.placeholder.com/120"
+class="profile-photo">
+
+<h2 id="profileName"></h2>
+
+</div>
+
+<hr>
+
+<div id="profileDetails"
+class="profile-grid">
 
 </div>
 
@@ -617,6 +704,7 @@ window.calcAge = function(){
   }
 
   age.value = years;
+
 }
 
 /* SAVE */
@@ -658,13 +746,17 @@ window.addEmployee = async function(){
 
     bank: bank.value,
 
-    account: bankAcc.value,
+    account:
+    bankAcc.value,
 
-    empid: empid.value,
+    empid:
+    empid.value,
 
-    govId: govId.value,
+    govId:
+    govId.value,
 
-    sss: sss.value,
+    sss:
+    sss.value,
 
     philhealth:
     philhealth.value,
@@ -768,20 +860,26 @@ window.loadEmployees = async function(){
     let statusClass = "";
 
     if(e.status === "Active"){
+
       statusClass =
       "status-active";
+
     }
 
     else if(
       e.status === "Resigned"
     ){
+
       statusClass =
       "status-resigned";
+
     }
 
     else{
+
       statusClass =
       "status-leave";
+
     }
 
     tbody.innerHTML += `
@@ -789,32 +887,28 @@ window.loadEmployees = async function(){
     <tr>
 
     <td>
-    <img
-    src="${e.photo || 'https://via.placeholder.com/70'}"
-    class="photo-preview">
+
+    <span
+    class="name-link"
+
+    onclick='viewProfile(
+    ${JSON.stringify(e)}
+    )'>
+
+    ${e.fname || ''}
+
+    ${e.mname || ''}
+
+    ${e.lname || ''}
+
+    </span>
+
     </td>
 
-    <td>${e.fname || ''}</td>
-    <td>${e.mname || ''}</td>
-    <td>${e.lname || ''}</td>
     <td>${e.birthdate || ''}</td>
+
     <td>${e.age || ''}</td>
-    <td>${e.address || ''}</td>
-    <td>${e.nationality || ''}</td>
-    <td>${e.passport || ''}</td>
-    <td>${e.passportExpiry || ''}</td>
-    <td>${e.qid || ''}</td>
-    <td>${e.qidExpiry || ''}</td>
-    <td>${e.bank || ''}</td>
-    <td>${e.account || ''}</td>
-    <td>${e.empid || ''}</td>
-    <td>${e.govId || ''}</td>
-    <td>${e.sss || ''}</td>
-    <td>${e.philhealth || ''}</td>
-    <td>${e.pagibig || ''}</td>
-    <td>${e.healthcard || ''}</td>
-    <td>${e.joiningDate || ''}</td>
-    <td>${e.employmentType || ''}</td>
+
     <td>${e.department || ''}</td>
 
     <td class="${statusClass}">
@@ -822,13 +916,8 @@ window.loadEmployees = async function(){
     </td>
 
     <td>${e.position || ''}</td>
+
     <td>${e.salary || ''}</td>
-    <td>${e.allowance || ''}</td>
-    <td>${e.otRate || ''}</td>
-    <td>${e.salaryType || ''}</td>
-    <td>${e.emergencyName || ''}</td>
-    <td>${e.emergencyRelation || ''}</td>
-    <td>${e.emergencyPhone || ''}</td>
 
     <td>
 
@@ -863,6 +952,182 @@ window.loadEmployees = async function(){
 
   total.innerHTML =
   "Total Employees : " + count;
+
+}
+
+/* VIEW PROFILE */
+
+window.viewProfile = function(e){
+
+  profileModal.style.display =
+  "flex";
+
+  profilePhoto.src =
+
+  e.photo ||
+
+  "https://via.placeholder.com/120";
+
+  profileName.innerHTML =
+
+  (e.fname || '') + ' ' +
+
+  (e.mname || '') + ' ' +
+
+  (e.lname || '');
+
+  profileDetails.innerHTML = `
+
+  <div class="profile-item">
+  <b>Birthdate</b><br>
+  ${e.birthdate || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Age</b><br>
+  ${e.age || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Address</b><br>
+  ${e.address || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Nationality</b><br>
+  ${e.nationality || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Passport</b><br>
+  ${e.passport || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Passport Expiry</b><br>
+  ${e.passportExpiry || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>QID</b><br>
+  ${e.qid || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>QID Expiry</b><br>
+  ${e.qidExpiry || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Bank</b><br>
+  ${e.bank || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Bank Account</b><br>
+  ${e.account || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Employee ID</b><br>
+  ${e.empid || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Government ID</b><br>
+  ${e.govId || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>SSS</b><br>
+  ${e.sss || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>PhilHealth</b><br>
+  ${e.philhealth || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Pag-IBIG</b><br>
+  ${e.pagibig || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Health Card</b><br>
+  ${e.healthcard || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Joining Date</b><br>
+  ${e.joiningDate || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Employment Type</b><br>
+  ${e.employmentType || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Department</b><br>
+  ${e.department || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Status</b><br>
+  ${e.status || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Position</b><br>
+  ${e.position || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Salary</b><br>
+  ${e.salary || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Allowance</b><br>
+  ${e.allowance || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>OT Rate</b><br>
+  ${e.otRate || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Salary Type</b><br>
+  ${e.salaryType || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Emergency Contact</b><br>
+  ${e.emergencyName || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Relationship</b><br>
+  ${e.emergencyRelation || ''}
+  </div>
+
+  <div class="profile-item">
+  <b>Emergency Number</b><br>
+  ${e.emergencyPhone || ''}
+  </div>
+
+  `;
+
+}
+
+/* CLOSE POPUP */
+
+window.closeProfile = function(){
+
+  profileModal.style.display =
+  "none";
 
 }
 
