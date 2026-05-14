@@ -1,184 +1,316 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>Employee Masterlist</title>
 
 <style>
 
 *{
-  box-sizing:border-box;
-  font-family:'Segoe UI',sans-serif;
+box-sizing:border-box;
+font-family:Tahoma,sans-serif;
 }
 
 body{
-  margin:0;
-  background:url('bg.jpg') no-repeat center center fixed;
-  background-size:cover;
-  color:white;
-}
-
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.5);
-  z-index:-1;
+margin:0;
+background:#d4d0c8;
+color:black;
 }
 
 /* WRAPPER */
 
 .wrapper{
-  display:flex;
-  height:100vh;
+display:flex;
+height:100vh;
 }
 
 /* SIDEBAR */
 
 .sidebar{
-  width:240px;
-  background:rgba(0,0,0,0.6);
-  padding:20px;
+
+width:220px;
+
+background:#c0c0c0;
+
+border-right:2px solid #808080;
+
+padding:15px;
 }
 
 .sidebar h3{
-  margin-bottom:20px;
+margin-bottom:20px;
+font-size:20px;
 }
 
 .menu{
-  list-style:none;
-  padding:0;
+list-style:none;
+padding:0;
 }
 
 .menu li{
-  padding:10px;
-  margin-bottom:8px;
-  border-radius:6px;
-  cursor:pointer;
+
+background:#dcdcdc;
+
+border-top:1px solid white;
+border-left:1px solid white;
+
+border-right:1px solid #808080;
+border-bottom:1px solid #808080;
+
+padding:10px;
+
+margin-bottom:8px;
+
+cursor:pointer;
+
+font-size:13px;
 }
 
 .menu li:hover{
-  background:rgba(255,255,255,0.2);
+background:#efefef;
 }
 
 /* MAIN */
 
 .main{
-  flex:1;
-  padding:20px;
-  overflow-y:auto;
+flex:1;
+padding:15px;
+overflow-y:auto;
+}
+
+/* CLASSIC TABS */
+
+.classic-tabs{
+
+display:flex;
+flex-wrap:wrap;
+
+gap:2px;
+
+background:#c0c0c0;
+
+padding:4px 4px 0 4px;
+
+border:1px solid #808080;
+
+border-bottom:none;
+
+overflow-x:auto;
+}
+
+.tab-btn{
+
+background:#dcdcdc;
+
+border-top:1px solid white;
+border-left:1px solid white;
+
+border-right:1px solid #808080;
+border-bottom:1px solid #808080;
+
+padding:6px 14px;
+
+font-size:12px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+white-space:nowrap;
+}
+
+.tab-btn.active{
+
+background:white;
+
+border-bottom:1px solid white;
+
+position:relative;
+
+top:1px;
 }
 
 /* FORM */
 
 .form-box{
-  background:rgba(255,255,255,0.1);
-  padding:15px;
-  border-radius:12px;
-  margin-bottom:20px;
+
+background:white;
+
+border:1px solid #808080;
+
+border-top:none;
+
+padding:15px;
+
+margin-bottom:20px;
 }
 
 .form-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:8px;
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(180px,1fr));
+
+gap:8px;
 }
 
 /* INPUT */
 
-input,select{
-  padding:8px;
-  border-radius:6px;
-  border:none;
-  font-size:12px;
-  background:rgba(128,0,32,0.7);
-  color:white;
-}
+input,
+select{
 
-input::placeholder{
-  color:#ffd6e0;
+padding:8px;
+
+border:1px solid #808080;
+
+font-size:12px;
+
+background:white;
+
+color:black;
 }
 
 input:focus,
 select:focus{
-  outline:none;
-  background:rgba(128,0,32,0.9);
+
+outline:none;
+
+border:1px solid #0066cc;
 }
 
-/* BUTTONS */
+/* BUTTON */
 
 .add-btn{
-  margin-top:10px;
-  padding:10px;
-  background:#2ecc71;
-  border:none;
-  color:white;
-  border-radius:6px;
-  cursor:pointer;
+
+margin-top:10px;
+
+padding:10px 15px;
+
+background:#dcdcdc;
+
+border-top:1px solid white;
+border-left:1px solid white;
+
+border-right:1px solid #808080;
+border-bottom:1px solid #808080;
+
+cursor:pointer;
+
+font-weight:bold;
+}
+
+.add-btn:hover{
+background:#efefef;
 }
 
 .btn{
-  padding:5px 10px;
-  border:none;
-  border-radius:4px;
-  cursor:pointer;
-  color:white;
-}
 
-.edit{
-  background:#3498db;
-}
+padding:5px 10px;
 
-.delete{
-  background:#e74c3c;
+background:#dcdcdc;
+
+border-top:1px solid white;
+border-left:1px solid white;
+
+border-right:1px solid #808080;
+border-bottom:1px solid #808080;
+
+cursor:pointer;
+
+font-size:11px;
 }
 
 /* TABLE */
 
 .table-box{
-  background:#eaf4ff;
-  padding:10px;
-  border-radius:12px;
-  overflow-x:auto;
-  width:100%;
+
+background:white;
+
+border:1px solid #808080;
+
+overflow-x:auto;
+
+width:100%;
 }
 
 table{
-  width:100%;
-  min-width:1700px;
-  border-collapse:collapse;
-  font-size:12px;
-  color:#2c3e50;
+
+width:100%;
+
+min-width:1700px;
+
+border-collapse:collapse;
+
+font-size:12px;
 }
 
-th,td{
-  padding:6px;
-  border:1px solid rgba(0,150,255,0.3);
-  text-align:left;
-  white-space:nowrap;
+th,
+td{
+
+padding:6px;
+
+border:1px solid #808080;
+
+text-align:left;
+
+white-space:nowrap;
 }
 
 th{
-  background:#cfe4ff;
-  position:sticky;
-  top:0;
-  z-index:2;
+
+background:#dcdcdc;
+
+position:sticky;
+
+top:0;
+
+z-index:2;
 }
 
 /* SEARCH */
 
 .search-box{
-  margin-bottom:10px;
+margin-bottom:10px;
 }
 
 /* LOGOUT */
 
 .logout{
-  margin-top:20px;
-  background:#e74c3c;
-  padding:10px;
-  border-radius:8px;
-  text-align:center;
-  cursor:pointer;
+
+margin-top:20px;
+
+background:#dcdcdc;
+
+border-top:1px solid white;
+border-left:1px solid white;
+
+border-right:1px solid #808080;
+border-bottom:1px solid #808080;
+
+padding:10px;
+
+text-align:center;
+
+cursor:pointer;
+
+font-weight:bold;
+}
+
+.logout:hover{
+background:#efefef;
+}
+
+@media(max-width:768px){
+
+.wrapper{
+flex-direction:column;
+}
+
+.sidebar{
+width:100%;
+}
+
 }
 
 </style>
@@ -187,7 +319,7 @@ th{
 
 if(localStorage.getItem("loggedIn") !== "true"){
 
-  window.location.href = "login.html";
+window.location.href = "login.html";
 
 }
 
@@ -234,9 +366,7 @@ if(localStorage.getItem("loggedIn") !== "true"){
 </ul>
 
 <div class="logout" onclick="logout()">
-
 Logout
-
 </div>
 
 </div>
@@ -246,6 +376,52 @@ Logout
 <div class="main">
 
 <h2>Employee Masterlist</h2>
+
+<!-- TABS -->
+
+<div class="classic-tabs">
+
+<button class="tab-btn active">
+Personal
+</button>
+
+<button class="tab-btn">
+Contact
+</button>
+
+<button class="tab-btn">
+Identification
+</button>
+
+<button class="tab-btn">
+Job Related
+</button>
+
+<button class="tab-btn">
+Allowances
+</button>
+
+<button class="tab-btn">
+Deductions
+</button>
+
+<button class="tab-btn">
+Leaves
+</button>
+
+<button class="tab-btn">
+General
+</button>
+
+<button class="tab-btn">
+Additional Info
+</button>
+
+<button class="tab-btn">
+Application
+</button>
+
+</div>
 
 <!-- FORM -->
 
@@ -375,7 +551,7 @@ Save Employee
 
 <input type="text"
 id="search"
-placeholder="🔍 Search..."
+placeholder="Search..."
 onkeyup="searchEmp()">
 
 <span id="total"></span>
@@ -424,428 +600,6 @@ onkeyup="searchEmp()">
 </div>
 
 </div>
-
-<!-- FIREBASE -->
-
-<script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-
-getFirestore,
-collection,
-addDoc,
-getDocs,
-deleteDoc,
-doc,
-updateDoc
-
-}
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-/* FIREBASE CONFIG */
-
-const firebaseConfig = {
-
-apiKey: "AIzaSyClEtSTjrvf52exf2Qtdzb2MMLLlSfwhVg",
-
-authDomain: "pappritohr.firebaseapp.com",
-
-projectId: "pappritohr",
-
-storageBucket: "pappritohr.firebasestorage.app",
-
-messagingSenderId: "559428820611",
-
-appId: "1:559428820611:web:09344b59fe1b21a5e2c5b6",
-
-measurementId: "G-1CEQ4P5XW8"
-
-};
-
-/* INIT */
-
-const app =
-initializeApp(firebaseConfig);
-
-const db =
-getFirestore(app);
-
-/* GLOBAL */
-
-let editId = null;
-
-/* ======================================
-   AGE
-====================================== */
-
-window.calcAge = function(){
-
-  let birth =
-  new Date(birthdate.value);
-
-  let today =
-  new Date();
-
-  let years =
-  today.getFullYear() -
-  birth.getFullYear();
-
-  let m =
-  today.getMonth() -
-  birth.getMonth();
-
-  if(
-    m < 0 ||
-    (m === 0 &&
-    today.getDate() < birth.getDate())
-  ){
-    years--;
-  }
-
-  age.value = years;
-}
-
-/* ======================================
-   SAVE / UPDATE
-====================================== */
-
-window.addEmployee = async function(){
-
-  let emp = {
-
-    fname:
-    fname.value.toUpperCase(),
-
-    mname:
-    mname.value.toUpperCase(),
-
-    lname:
-    lname.value.toUpperCase(),
-
-    birthdate: birthdate.value,
-
-    age: age.value,
-
-    address: address.value,
-
-    bank: bank.value,
-
-    account: bankAcc.value,
-
-    empid: empid.value,
-
-    govId: govId.value,
-
-    sss: sss.value,
-
-    philhealth: philhealth.value,
-
-    pagibig: pagibig.value,
-
-    healthcard: healthcard.value,
-
-    joiningDate:
-    joiningDate.value,
-
-    employmentType:
-    employmentType.value,
-
-    position: position.value
-
-  };
-
-  /* UPDATE */
-
-  if(editId){
-
-    await updateDoc(
-      doc(db,"employees",editId),
-      emp
-    );
-
-    alert("Employee Updated");
-
-    editId = null;
-  }
-
-  /* ADD */
-
-  else{
-
-    await addDoc(
-      collection(db,"employees"),
-      emp
-    );
-
-    alert("Employee Saved");
-  }
-
-  clearForm();
-
-  loadEmployees();
-}
-
-/* ======================================
-   LOAD EMPLOYEES
-====================================== */
-
-window.loadEmployees = async function(){
-
-  let tbody =
-  document.querySelector("#empTable tbody");
-
-  tbody.innerHTML = "";
-
-  const querySnapshot =
-  await getDocs(
-    collection(db,"employees")
-  );
-
-  let count = 0;
-
-  querySnapshot.forEach((d)=>{
-
-    count++;
-
-    let e = d.data();
-
-    tbody.innerHTML += `
-
-    <tr>
-
-      <td>${e.fname || ''}</td>
-
-      <td>${e.mname || ''}</td>
-
-      <td>${e.lname || ''}</td>
-
-      <td>${e.birthdate || ''}</td>
-
-      <td>${e.age || ''}</td>
-
-      <td>${e.address || ''}</td>
-
-      <td>${e.bank || ''}</td>
-
-      <td>${e.account || ''}</td>
-
-      <td>${e.empid || ''}</td>
-
-      <td>${e.govId || ''}</td>
-
-      <td>${e.sss || ''}</td>
-
-      <td>${e.philhealth || ''}</td>
-
-      <td>${e.pagibig || ''}</td>
-
-      <td>${e.healthcard || ''}</td>
-
-      <td>${e.joiningDate || ''}</td>
-
-      <td>${e.employmentType || ''}</td>
-
-      <td>${e.position || ''}</td>
-
-      <td>
-
-      <button class="btn edit"
-
-      onclick='editEmployee(
-      "${d.id}",
-      ${JSON.stringify(e)}
-      )'>
-
-      Edit
-
-      </button>
-
-      <button class="btn delete"
-
-      onclick="deleteEmployee('${d.id}')">
-
-      Delete
-
-      </button>
-
-      </td>
-
-    </tr>
-
-    `;
-  });
-
-  total.innerHTML =
-  "Total : " + count;
-}
-
-/* ======================================
-   EDIT
-====================================== */
-
-window.editEmployee = function(id,e){
-
-  editId = id;
-
-  fname.value = e.fname || "";
-
-  mname.value = e.mname || "";
-
-  lname.value = e.lname || "";
-
-  birthdate.value =
-  e.birthdate || "";
-
-  age.value = e.age || "";
-
-  address.value =
-  e.address || "";
-
-  bank.value = e.bank || "";
-
-  bankAcc.value =
-  e.account || "";
-
-  empid.value =
-  e.empid || "";
-
-  govId.value =
-  e.govId || "";
-
-  sss.value = e.sss || "";
-
-  philhealth.value =
-  e.philhealth || "";
-
-  pagibig.value =
-  e.pagibig || "";
-
-  healthcard.value =
-  e.healthcard || "";
-
-  joiningDate.value =
-  e.joiningDate || "";
-
-  employmentType.value =
-  e.employmentType || "";
-
-  position.value =
-  e.position || "";
-
-  window.scrollTo({
-
-    top:0,
-
-    behavior:'smooth'
-
-  });
-
-}
-
-/* ======================================
-   DELETE
-====================================== */
-
-window.deleteEmployee = async function(id){
-
-  let confirmDelete =
-  confirm("Delete Employee?");
-
-  if(!confirmDelete){
-    return;
-  }
-
-  await deleteDoc(
-    doc(db,"employees",id)
-  );
-
-  loadEmployees();
-}
-
-/* ======================================
-   SEARCH
-====================================== */
-
-window.searchEmp = function(){
-
-  let val =
-  search.value.toLowerCase();
-
-  let rows =
-  document.querySelectorAll(
-  "#empTable tbody tr"
-  );
-
-  let visible = 0;
-
-  rows.forEach(row=>{
-
-    let show =
-    row.innerText
-    .toLowerCase()
-    .includes(val);
-
-    row.style.display =
-    show ? "" : "none";
-
-    if(show){
-      visible++;
-    }
-
-  });
-
-  total.innerHTML =
-  "Showing : " + visible;
-}
-
-/* ======================================
-   CLEAR FORM
-====================================== */
-
-window.clearForm = function(){
-
-  document
-  .querySelectorAll(".form-field")
-
-  .forEach(el=>{
-
-    el.value = "";
-
-  });
-}
-
-/* ======================================
-   PAGE
-====================================== */
-
-window.goPage = function(p){
-
-  window.location.href = p;
-}
-
-/* ======================================
-   LOGOUT
-====================================== */
-
-window.logout = function(){
-
-  localStorage.removeItem("loggedIn");
-
-  window.location.href =
-  "login.html";
-}
-
-/* ======================================
-   START
-====================================== */
-
-loadEmployees();
-
-</script>
 
 </body>
 </html>
