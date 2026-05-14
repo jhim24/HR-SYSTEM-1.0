@@ -1,310 +1,247 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>Employee Masterlist</title>
 
 <style>
 
 *{
-  box-sizing:border-box;
-  font-family:Tahoma,sans-serif;
+box-sizing:border-box;
+font-family:Tahoma,sans-serif;
 }
 
 body{
-  margin:0;
-  background:#d4d0c8;
-  color:black;
-}
-
-/* WRAPPER */
-
-.wrapper{
-  display:flex;
-  height:100vh;
-}
-
-/* SIDEBAR */
-
-.sidebar{
-  width:220px;
-  background:#c0c0c0;
-  border-right:2px solid #808080;
-  padding:15px;
-}
-
-.sidebar h3{
-  margin-bottom:20px;
-  font-size:20px;
-}
-
-.menu{
-  list-style:none;
-  padding:0;
-}
-
-.menu li{
-  background:#dcdcdc;
-
-  border-top:1px solid white;
-  border-left:1px solid white;
-
-  border-right:1px solid #808080;
-  border-bottom:1px solid #808080;
-
-  padding:10px;
-  margin-bottom:8px;
-
-  cursor:pointer;
-
-  font-size:13px;
-}
-
-.menu li:hover{
-  background:#efefef;
+margin:0;
+background:#d4d0c8;
+color:black;
 }
 
 /* MAIN */
 
-.main{
-  flex:1;
-  padding:15px;
-  overflow-y:auto;
+.wrapper{
+width:100%;
+min-height:100vh;
 }
 
+.main{
+width:100%;
+padding:15px;
+overflow-y:auto;
+}
+
+/* TITLE */
+
 h2{
-  margin-top:0;
+margin-top:0;
+margin-bottom:10px;
 }
 
 /* CLASSIC TABS */
 
 .classic-tabs{
 
-  display:flex;
-  flex-wrap:wrap;
+display:flex;
+flex-wrap:wrap;
 
-  gap:2px;
+gap:2px;
 
-  background:#c0c0c0;
+background:#c0c0c0;
 
-  padding:4px 4px 0 4px;
+padding:4px 4px 0 4px;
 
-  border:1px solid #808080;
+border:1px solid #808080;
 
-  border-bottom:none;
+border-bottom:none;
 
-  margin-bottom:0;
-
-  overflow-x:auto;
+overflow-x:auto;
 }
 
 .tab-btn{
 
-  background:#dcdcdc;
+background:#dcdcdc;
 
-  border-top:1px solid white;
-  border-left:1px solid white;
+border-top:1px solid white;
+border-left:1px solid white;
 
-  border-right:1px solid #808080;
-  border-bottom:1px solid #808080;
+border-right:1px solid #808080;
+border-bottom:1px solid #808080;
 
-  padding:6px 14px;
+padding:6px 14px;
 
-  font-size:12px;
+font-size:12px;
 
-  cursor:pointer;
+font-weight:bold;
 
-  color:#000;
+cursor:pointer;
 
-  font-weight:bold;
-
-  white-space:nowrap;
-
-  min-width:max-content;
-}
-
-.tab-btn:hover{
-  background:#efefef;
+white-space:nowrap;
 }
 
 .tab-btn.active{
 
-  background:white;
+background:white;
 
-  border-bottom:1px solid white;
+border-bottom:1px solid white;
 
-  position:relative;
+position:relative;
 
-  top:1px;
+top:1px;
 }
 
 /* FORM */
 
 .form-box{
-  background:white;
 
-  border:1px solid #808080;
-  border-top:none;
+background:white;
 
-  padding:15px;
+border:1px solid #808080;
 
-  margin-bottom:20px;
+border-top:none;
+
+padding:15px;
+
+margin-bottom:20px;
 }
 
 .form-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:8px;
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(180px,1fr));
+
+gap:8px;
 }
 
 /* INPUT */
 
-input,select{
-  padding:8px;
+input,
+select{
 
-  border:1px solid #808080;
+padding:8px;
 
-  font-size:12px;
+border:1px solid #808080;
 
-  background:white;
+font-size:12px;
 
-  color:black;
+background:white;
+
+color:black;
 }
 
 input:focus,
 select:focus{
-  outline:none;
-  border:1px solid #0066cc;
+
+outline:none;
+
+border:1px solid #0066cc;
 }
 
-/* BUTTONS */
+/* BUTTON */
 
 .add-btn{
-  margin-top:10px;
-  padding:10px 15px;
 
-  background:#dcdcdc;
+margin-top:10px;
 
-  border-top:1px solid white;
-  border-left:1px solid white;
+padding:10px 15px;
 
-  border-right:1px solid #808080;
-  border-bottom:1px solid #808080;
+background:#dcdcdc;
 
-  color:black;
+border-top:1px solid white;
+border-left:1px solid white;
 
-  cursor:pointer;
+border-right:1px solid #808080;
+border-bottom:1px solid #808080;
 
-  font-weight:bold;
+cursor:pointer;
+
+font-weight:bold;
 }
 
 .add-btn:hover{
-  background:#efefef;
+background:#efefef;
 }
 
 .btn{
-  padding:5px 10px;
 
-  background:#dcdcdc;
+padding:5px 10px;
 
-  border-top:1px solid white;
-  border-left:1px solid white;
+background:#dcdcdc;
 
-  border-right:1px solid #808080;
-  border-bottom:1px solid #808080;
+border-top:1px solid white;
+border-left:1px solid white;
 
-  cursor:pointer;
+border-right:1px solid #808080;
+border-bottom:1px solid #808080;
 
-  color:black;
+cursor:pointer;
 
-  font-size:11px;
+font-size:11px;
 }
 
 /* TABLE */
 
 .table-box{
-  background:white;
 
-  border:1px solid #808080;
+background:white;
 
-  overflow-x:auto;
-  width:100%;
+border:1px solid #808080;
+
+overflow-x:auto;
+
+width:100%;
 }
 
 table{
-  width:100%;
-  min-width:1700px;
-  border-collapse:collapse;
-  font-size:12px;
-  color:black;
+
+width:100%;
+
+min-width:1700px;
+
+border-collapse:collapse;
+
+font-size:12px;
 }
 
-th,td{
-  padding:6px;
-  border:1px solid #808080;
-  text-align:left;
-  white-space:nowrap;
+th,
+td{
+
+padding:6px;
+
+border:1px solid #808080;
+
+text-align:left;
+
+white-space:nowrap;
 }
 
 th{
-  background:#dcdcdc;
-  position:sticky;
-  top:0;
-  z-index:2;
+
+background:#dcdcdc;
+
+position:sticky;
+
+top:0;
+
+z-index:2;
 }
 
 /* SEARCH */
 
 .search-box{
-  margin-bottom:10px;
-}
-
-/* LOGOUT */
-
-.logout{
-  margin-top:20px;
-
-  background:#dcdcdc;
-
-  border-top:1px solid white;
-  border-left:1px solid white;
-
-  border-right:1px solid #808080;
-  border-bottom:1px solid #808080;
-
-  padding:10px;
-
-  text-align:center;
-
-  cursor:pointer;
-
-  font-weight:bold;
-}
-
-.logout:hover{
-  background:#efefef;
+margin-bottom:10px;
 }
 
 @media(max-width:768px){
 
-.wrapper{
-  flex-direction:column;
-}
-
-.sidebar{
-  width:100%;
+.form-grid{
+grid-template-columns:1fr;
 }
 
 }
 
 </style>
-
-<script>
-
-if(localStorage.getItem("loggedIn") !== "true"){
-  window.location.href = "login.html";
-}
-
-</script>
 
 </head>
 
@@ -312,135 +249,179 @@ if(localStorage.getItem("loggedIn") !== "true"){
 
 <div class="wrapper">
 
-<div class="sidebar">
-
-<h3>HR System</h3>
-
-<ul class="menu">
-
-<li onclick="goPage('index.html')">
-🏠 Dashboard
-</li>
-
-<li onclick="goPage('employee.html')">
-👨‍💼 Employees
-</li>
-
-<li onclick="goPage('attendance.html')">
-🕒 Attendance
-</li>
-
-<li onclick="goPage('payroll.html')">
-💰 Payroll
-</li>
-
-<li onclick="goPage('payslip.html')">
-🧾 Payslips
-</li>
-
-<li onclick="goPage('payroll-history.html')">
-📄 History
-</li>
-
-</ul>
-
-<div class="logout" onclick="logout()">
-Logout
-</div>
-
-</div>
-
 <div class="main">
 
 <h2>Employee Masterlist</h2>
 
+<!-- TABS -->
+
 <div class="classic-tabs">
 
-<button class="tab-btn active">Personal</button>
-<button class="tab-btn">Contact</button>
-<button class="tab-btn">Identification</button>
-<button class="tab-btn">Job Related</button>
-<button class="tab-btn">Allowances</button>
-<button class="tab-btn">Deductions</button>
-<button class="tab-btn">Leaves</button>
-<button class="tab-btn">General</button>
-<button class="tab-btn">Additional Info</button>
-<button class="tab-btn">Application</button>
+<button class="tab-btn active">
+Personal
+</button>
+
+<button class="tab-btn">
+Contact
+</button>
+
+<button class="tab-btn">
+Identification
+</button>
+
+<button class="tab-btn">
+Job Related
+</button>
+
+<button class="tab-btn">
+Allowances
+</button>
+
+<button class="tab-btn">
+Deductions
+</button>
+
+<button class="tab-btn">
+Leaves
+</button>
+
+<button class="tab-btn">
+General
+</button>
+
+<button class="tab-btn">
+Additional Info
+</button>
+
+<button class="tab-btn">
+Application
+</button>
 
 </div>
+
+<!-- FORM -->
 
 <div class="form-box">
 
 <div class="form-grid">
 
-<input class="form-field" id="fname" placeholder="First Name">
+<input class="form-field"
+id="fname"
+placeholder="First Name">
 
-<input class="form-field" id="mname" placeholder="Middle Name">
+<input class="form-field"
+id="mname"
+placeholder="Middle Name">
 
-<input class="form-field" id="lname" placeholder="Last Name">
+<input class="form-field"
+id="lname"
+placeholder="Last Name">
 
-<input class="form-field" type="date" id="birthdate" onchange="calcAge()">
+<input class="form-field"
+type="date"
+id="birthdate"
+onchange="calcAge()">
 
-<input class="form-field" id="age" placeholder="Age" readonly>
+<input class="form-field"
+id="age"
+placeholder="Age"
+readonly>
 
-<input class="form-field" id="address" placeholder="Address">
+<input class="form-field"
+id="address"
+placeholder="Address">
 
-<select class="form-field" id="bank">
+<select class="form-field"
+id="bank">
+
 <option>Bank Name</option>
+
 <option>BPI</option>
 <option>BDO</option>
 <option>Metrobank</option>
 <option>Landbank</option>
+
 </select>
 
-<input class="form-field" id="bankAcc" placeholder="Bank Account">
+<input class="form-field"
+id="bankAcc"
+placeholder="Bank Account">
 
-<input class="form-field" id="empid" placeholder="Employee ID">
+<input class="form-field"
+id="empid"
+placeholder="Employee ID">
 
-<select class="form-field" id="govId">
+<select class="form-field"
+id="govId">
+
 <option>Government ID</option>
+
 <option>Passport</option>
 <option>Driver License</option>
 <option>National ID</option>
+
 </select>
 
-<input class="form-field" id="sss" placeholder="SSS">
+<input class="form-field"
+id="sss"
+placeholder="SSS">
 
-<input class="form-field" id="philhealth" placeholder="PhilHealth">
+<input class="form-field"
+id="philhealth"
+placeholder="PhilHealth">
 
-<input class="form-field" id="pagibig" placeholder="Pag-IBIG">
+<input class="form-field"
+id="pagibig"
+placeholder="Pag-IBIG">
 
-<input class="form-field" id="healthcard" placeholder="Health Card">
+<input class="form-field"
+id="healthcard"
+placeholder="Health Card">
 
-<input class="form-field" type="date" id="joiningDate">
+<input class="form-field"
+type="date"
+id="joiningDate">
 
-<select class="form-field" id="employmentType">
+<select class="form-field"
+id="employmentType">
+
 <option>Employment Type</option>
+
 <option>Regular</option>
 <option>Probationary</option>
 <option>Contractual</option>
 <option>Part-Time</option>
 <option>Seasonal</option>
 <option>Intern</option>
+
 </select>
 
-<select class="form-field" id="position">
+<select class="form-field"
+id="position">
+
 <option>Position</option>
+
 <option>Admin</option>
 <option>Cashier</option>
 <option>Waiter</option>
 <option>Waitress</option>
 <option>Manager</option>
 <option>Supervisor</option>
+
 </select>
 
 </div>
 
-<button class="add-btn" onclick="addEmployee()">
+<button class="add-btn"
+onclick="addEmployee()">
+
 Save Employee
+
 </button>
 
 </div>
+
+<!-- SEARCH -->
 
 <div class="search-box">
 
@@ -453,12 +434,16 @@ onkeyup="searchEmp()">
 
 </div>
 
+<!-- TABLE -->
+
 <div class="table-box">
 
 <table id="empTable">
 
 <thead>
+
 <tr>
+
 <th>First</th>
 <th>Middle</th>
 <th>Last</th>
@@ -477,7 +462,9 @@ onkeyup="searchEmp()">
 <th>Employment Type</th>
 <th>Position</th>
 <th>Action</th>
+
 </tr>
+
 </thead>
 
 <tbody></tbody>
@@ -494,73 +481,87 @@ onkeyup="searchEmp()">
 
 /* TAB ACTIVE */
 
-const tabs = document.querySelectorAll('.tab-btn');
+const tabs =
+document.querySelectorAll('.tab-btn');
 
 tabs.forEach(tab=>{
 
-  tab.addEventListener('click',()=>{
+tab.addEventListener('click',()=>{
 
-    tabs.forEach(t=>t.classList.remove('active'));
+tabs.forEach(t=>
+t.classList.remove('active')
+);
 
-    tab.classList.add('active');
-
-  });
+tab.classList.add('active');
 
 });
 
-/* PAGE NAVIGATION */
-
-function goPage(page){
-window.location.href = page;
-}
-
-/* LOGOUT */
-
-function logout(){
-
-localStorage.removeItem('loggedIn');
-
-window.location.href='login.html';
-
-}
+});
 
 /* SAVE EMPLOYEE */
 
 function addEmployee(){
 
 let table =
-  document.querySelector('#empTable tbody');
+document.querySelector(
+'#empTable tbody'
+);
 
-let row = document.createElement('tr');
+let row =
+document.createElement('tr');
 
 row.innerHTML = `
 
 <td>${fname.value}</td>
+
 <td>${mname.value}</td>
+
 <td>${lname.value}</td>
+
 <td>${birthdate.value}</td>
+
 <td>${age.value}</td>
+
 <td>${address.value}</td>
+
 <td>${bank.value}</td>
+
 <td>${bankAcc.value}</td>
+
 <td>${empid.value}</td>
+
 <td>${govId.value}</td>
+
 <td>${sss.value}</td>
+
 <td>${philhealth.value}</td>
+
 <td>${pagibig.value}</td>
+
 <td>${healthcard.value}</td>
+
 <td>${joiningDate.value}</td>
+
 <td>${employmentType.value}</td>
+
 <td>${position.value}</td>
 
 <td>
 
-<button class='btn' onclick='editRow(this)'>
+<button
+class='btn'
+onclick='editRow(this)'>
+
 Edit
+
 </button>
 
-<button class='btn' onclick='deleteRow(this)'>
+<button
+class='btn'
+onclick='deleteRow(this)'>
+
 Delete
+
 </button>
 
 </td>
@@ -591,33 +592,74 @@ updateTotal();
 
 function editRow(btn){
 
-let row = btn.closest('tr');
+let row =
+btn.closest('tr');
 
-let cells = row.querySelectorAll('td');
+let cells =
+row.querySelectorAll('td');
 
-fname.value = cells[0].innerText;
-mname.value = cells[1].innerText;
-lname.value = cells[2].innerText;
-birthdate.value = cells[3].innerText;
-age.value = cells[4].innerText;
-address.value = cells[5].innerText;
-bank.value = cells[6].innerText;
-bankAcc.value = cells[7].innerText;
-empid.value = cells[8].innerText;
-govId.value = cells[9].innerText;
-sss.value = cells[10].innerText;
-philhealth.value = cells[11].innerText;
-pagibig.value = cells[12].innerText;
-healthcard.value = cells[13].innerText;
-joiningDate.value = cells[14].innerText;
-employmentType.value = cells[15].innerText;
-position.value = cells[16].innerText;
+fname.value =
+cells[0].innerText;
+
+mname.value =
+cells[1].innerText;
+
+lname.value =
+cells[2].innerText;
+
+birthdate.value =
+cells[3].innerText;
+
+age.value =
+cells[4].innerText;
+
+address.value =
+cells[5].innerText;
+
+bank.value =
+cells[6].innerText;
+
+bankAcc.value =
+cells[7].innerText;
+
+empid.value =
+cells[8].innerText;
+
+govId.value =
+cells[9].innerText;
+
+sss.value =
+cells[10].innerText;
+
+philhealth.value =
+cells[11].innerText;
+
+pagibig.value =
+cells[12].innerText;
+
+healthcard.value =
+cells[13].innerText;
+
+joiningDate.value =
+cells[14].innerText;
+
+employmentType.value =
+cells[15].innerText;
+
+position.value =
+cells[16].innerText;
 
 row.remove();
 
 updateTotal();
 
-window.scrollTo({top:0,behavior:'smooth'});
+window.scrollTo({
+
+top:0,
+
+behavior:'smooth'
+
+});
 
 }
 
@@ -629,16 +671,21 @@ let val =
 search.value.toLowerCase();
 
 let rows =
-document.querySelectorAll('#empTable tbody tr');
+document.querySelectorAll(
+'#empTable tbody tr'
+);
 
 let visible = 0;
 
 rows.forEach(row=>{
 
 let show =
-row.innerText.toLowerCase().includes(val);
+row.innerText
+.toLowerCase()
+.includes(val);
 
-row.style.display = show ? '' : 'none';
+row.style.display =
+show ? '' : 'none';
 
 if(show) visible++;
 
@@ -653,18 +700,31 @@ total.innerText =
 
 function calcAge(){
 
-let birth = new Date(birthdate.value);
+let birth =
+new Date(birthdate.value);
 
-let today = new Date();
+let today =
+new Date();
 
 let years =
-today.getFullYear() - birth.getFullYear();
+today.getFullYear() -
+birth.getFullYear();
 
-let m = today.getMonth() - birth.getMonth();
+let m =
+today.getMonth() -
+birth.getMonth();
 
-if(m < 0 ||
-(m === 0 && today.getDate() < birth.getDate())){
+if(
+m < 0 ||
+
+(m === 0 &&
+today.getDate() <
+birth.getDate())
+
+){
+
 years--;
+
 }
 
 age.value = years;
@@ -675,8 +735,14 @@ age.value = years;
 
 function clearForm(){
 
- document.querySelectorAll('.form-field')
- .forEach(el=>el.value='');
+document
+.querySelectorAll('.form-field')
+
+.forEach(el=>{
+
+el.value='';
+
+});
 
 }
 
@@ -685,7 +751,9 @@ function clearForm(){
 function updateTotal(){
 
 let rows =
-document.querySelectorAll('#empTable tbody tr');
+document.querySelectorAll(
+'#empTable tbody tr'
+);
 
 total.innerText =
 'Total : ' + rows.length;
