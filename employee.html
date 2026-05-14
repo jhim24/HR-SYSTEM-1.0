@@ -17,7 +17,7 @@ background:#d4d0c8;
 padding:15px;
 }
 
-/* TITLE */
+/* TOP */
 
 .top-bar{
 
@@ -34,9 +34,11 @@ margin:0;
 
 /* BUTTON */
 
-.add-btn{
+.add-btn,
+.save-btn,
+.btn{
 
-padding:10px 16px;
+padding:8px 15px;
 
 background:#dcdcdc;
 
@@ -49,10 +51,6 @@ border-bottom:1px solid #808080;
 cursor:pointer;
 
 font-weight:bold;
-}
-
-.add-btn:hover{
-background:#efefef;
 }
 
 /* SEARCH */
@@ -87,7 +85,7 @@ width:100%;
 
 border-collapse:collapse;
 
-min-width:1200px;
+min-width:1400px;
 
 font-size:12px;
 }
@@ -106,25 +104,6 @@ white-space:nowrap;
 
 th{
 background:#dcdcdc;
-}
-
-/* ACTION BUTTON */
-
-.btn{
-
-padding:4px 10px;
-
-background:#dcdcdc;
-
-border-top:1px solid white;
-border-left:1px solid white;
-
-border-right:1px solid #808080;
-border-bottom:1px solid #808080;
-
-cursor:pointer;
-
-font-size:11px;
 }
 
 /* MODAL */
@@ -152,9 +131,9 @@ background:white;
 
 width:95%;
 
-max-width:1000px;
+max-width:1200px;
 
-height:90vh;
+height:95vh;
 
 overflow:auto;
 
@@ -249,7 +228,7 @@ display:block;
 display:grid;
 
 grid-template-columns:
-repeat(auto-fit,minmax(180px,1fr));
+repeat(auto-fit,minmax(200px,1fr));
 
 gap:8px;
 }
@@ -264,27 +243,6 @@ padding:8px;
 border:1px solid #808080;
 
 font-size:12px;
-}
-
-/* SAVE */
-
-.save-btn{
-
-margin-top:15px;
-
-padding:10px 20px;
-
-background:#dcdcdc;
-
-border-top:1px solid white;
-border-left:1px solid white;
-
-border-right:1px solid #808080;
-border-bottom:1px solid #808080;
-
-cursor:pointer;
-
-font-weight:bold;
 }
 
 </style>
@@ -328,13 +286,13 @@ onkeyup="searchEmp()">
 
 <tr>
 
-<th>First</th>
-<th>Middle</th>
-<th>Last</th>
+<th>First Name</th>
+<th>Last Name</th>
 <th>Mobile</th>
 <th>Email</th>
 <th>Position</th>
 <th>Department</th>
+<th>Employment</th>
 <th>Action</th>
 
 </tr>
@@ -368,36 +326,61 @@ X
 
 <div class="classic-tabs">
 
-<button
-class="tab-btn active"
+<button class="tab-btn active"
 onclick="openTab(event,'personal')">
-
 Personal
-
 </button>
 
-<button
-class="tab-btn"
+<button class="tab-btn"
 onclick="openTab(event,'contact')">
-
 Contact
-
 </button>
 
-<button
-class="tab-btn"
+<button class="tab-btn"
+onclick="openTab(event,'identification')">
+Identification
+</button>
+
+<button class="tab-btn"
 onclick="openTab(event,'job')">
-
 Job
+</button>
 
+<button class="tab-btn"
+onclick="openTab(event,'allowances')">
+Allowances
+</button>
+
+<button class="tab-btn"
+onclick="openTab(event,'deductions')">
+Deductions
+</button>
+
+<button class="tab-btn"
+onclick="openTab(event,'leaves')">
+Leaves
+</button>
+
+<button class="tab-btn"
+onclick="openTab(event,'general')">
+General
+</button>
+
+<button class="tab-btn"
+onclick="openTab(event,'additional')">
+Additional
+</button>
+
+<button class="tab-btn"
+onclick="openTab(event,'application')">
+Application
 </button>
 
 </div>
 
 <!-- PERSONAL -->
 
-<div
-id="personal"
+<div id="personal"
 class="tab-content active">
 
 <div class="form-grid">
@@ -411,13 +394,11 @@ placeholder="Middle Name">
 <input id="lname"
 placeholder="Last Name">
 
-<input
-type="date"
+<input type="date"
 id="birthdate"
 onchange="calcAge()">
 
-<input
-id="age"
+<input id="age"
 placeholder="Age"
 readonly>
 
@@ -426,10 +407,27 @@ readonly>
 <option>Gender</option>
 
 <option>Male</option>
-
 <option>Female</option>
 
 </select>
+
+<select id="civilstatus">
+
+<option>Civil Status</option>
+
+<option>Single</option>
+<option>Married</option>
+
+</select>
+
+<input id="nationality"
+placeholder="Nationality">
+
+<input id="religion"
+placeholder="Religion">
+
+<input type="file"
+id="profilephoto">
 
 </div>
 
@@ -437,8 +435,7 @@ readonly>
 
 <!-- CONTACT -->
 
-<div
-id="contact"
+<div id="contact"
 class="tab-content">
 
 <div class="form-grid">
@@ -449,20 +446,25 @@ placeholder="Mobile Number">
 <input id="email"
 placeholder="Email Address">
 
-<input id="address"
-placeholder="Address">
+<input id="currentaddress"
+placeholder="Current Address">
 
-<input id="emergency"
+<input id="permanentaddress"
+placeholder="Permanent Address">
+
+<input id="emergencycontact"
 placeholder="Emergency Contact">
 
-</div>
+<input id="emergencynumber"
+placeholder="Emergency Number">
 
 </div>
 
-<!-- JOB -->
+</div>
 
-<div
-id="job"
+<!-- IDENTIFICATION -->
+
+<div id="identification"
 class="tab-content">
 
 <div class="form-grid">
@@ -470,50 +472,252 @@ class="tab-content">
 <input id="empid"
 placeholder="Employee ID">
 
-<select id="department">
+<input id="sss"
+placeholder="SSS">
 
-<option>Department</option>
+<input id="philhealth"
+placeholder="PhilHealth">
 
-<option>HR</option>
+<input id="pagibig"
+placeholder="Pag-IBIG">
 
-<option>Accounting</option>
+<input id="tin"
+placeholder="TIN">
 
-<option>Operations</option>
+<input id="passport"
+placeholder="Passport">
 
-</select>
+<input id="nationalid"
+placeholder="National ID">
 
-<select id="position">
+<input id="healthcard"
+placeholder="Health Card">
 
-<option>Position</option>
+</div>
 
-<option>Manager</option>
+</div>
 
-<option>Supervisor</option>
+<!-- JOB -->
 
-<option>Cashier</option>
+<div id="job"
+class="tab-content">
 
-<option>Staff</option>
+<div class="form-grid">
 
-</select>
+<input id="position"
+placeholder="Position">
+
+<input id="department"
+placeholder="Department">
+
+<input id="branch"
+placeholder="Branch">
 
 <select id="employment">
 
 <option>Employment Type</option>
 
 <option>Regular</option>
-
 <option>Probationary</option>
-
 <option>Contractual</option>
 
 </select>
 
-</div>
+<input type="date"
+id="datehired">
+
+<input id="supervisor"
+placeholder="Supervisor">
+
+<input id="schedule"
+placeholder="Schedule">
+
+<input id="salaryrate"
+placeholder="Salary Rate">
 
 </div>
 
-<button
-class="save-btn"
+</div>
+
+<!-- ALLOWANCES -->
+
+<div id="allowances"
+class="tab-content">
+
+<div class="form-grid">
+
+<input id="mealallowance"
+placeholder="Meal Allowance">
+
+<input id="transportation"
+placeholder="Transportation">
+
+<input id="communication"
+placeholder="Communication">
+
+<input id="ricesubsidy"
+placeholder="Rice Subsidy">
+
+<input id="otherallowance"
+placeholder="Other Allowance">
+
+</div>
+
+</div>
+
+<!-- DEDUCTIONS -->
+
+<div id="deductions"
+class="tab-content">
+
+<div class="form-grid">
+
+<input id="sssdeduction"
+placeholder="SSS Deduction">
+
+<input id="pagibigdeduction"
+placeholder="Pag-IBIG Deduction">
+
+<input id="philhealthdeduction"
+placeholder="PhilHealth Deduction">
+
+<input id="cashadvance"
+placeholder="Cash Advance">
+
+<input id="loans"
+placeholder="Loans">
+
+<input id="latededuction"
+placeholder="Late Deduction">
+
+</div>
+
+</div>
+
+<!-- LEAVES -->
+
+<div id="leaves"
+class="tab-content">
+
+<div class="form-grid">
+
+<input id="vacationleave"
+placeholder="Vacation Leave">
+
+<input id="sickleave"
+placeholder="Sick Leave">
+
+<input id="emergencyleave"
+placeholder="Emergency Leave">
+
+<input id="maternityleave"
+placeholder="Maternity Leave">
+
+<input id="paternityleave"
+placeholder="Paternity Leave">
+
+<input id="leavebalance"
+placeholder="Leave Balance">
+
+</div>
+
+</div>
+
+<!-- GENERAL -->
+
+<div id="general"
+class="tab-content">
+
+<div class="form-grid">
+
+<input id="bankname"
+placeholder="Bank Name">
+
+<input id="bankaccount"
+placeholder="Bank Account">
+
+<input id="atmnumber"
+placeholder="ATM Number">
+
+<input id="uniformsize"
+placeholder="Uniform Size">
+
+<input id="bloodtype"
+placeholder="Blood Type">
+
+<input id="notes"
+placeholder="Notes">
+
+</div>
+
+</div>
+
+<!-- ADDITIONAL -->
+
+<div id="additional"
+class="tab-content">
+
+<div class="form-grid">
+
+<input id="education"
+placeholder="Education">
+
+<input id="skills"
+placeholder="Skills">
+
+<input id="experience"
+placeholder="Experience">
+
+<input id="training"
+placeholder="Training">
+
+<input id="certificates"
+placeholder="Certificates">
+
+<input id="references"
+placeholder="References">
+
+</div>
+
+</div>
+
+<!-- APPLICATION -->
+
+<div id="application"
+class="tab-content">
+
+<div class="form-grid">
+
+<input type="file"
+id="resume">
+
+<input id="nbi"
+placeholder="NBI Clearance">
+
+<input id="medical"
+placeholder="Medical">
+
+<input id="contract"
+placeholder="Contract">
+
+<select id="applicationstatus">
+
+<option>Application Status</option>
+
+<option>Pending</option>
+<option>Approved</option>
+<option>Rejected</option>
+
+</select>
+
+<input type="date"
+id="interviewdate">
+
+</div>
+
+</div>
+
+<button class="save-btn"
 onclick="addEmployee()">
 
 Save Employee
@@ -623,8 +827,6 @@ row.innerHTML = `
 
 <td>${fname.value}</td>
 
-<td>${mname.value}</td>
-
 <td>${lname.value}</td>
 
 <td>${mobile.value}</td>
@@ -635,18 +837,15 @@ row.innerHTML = `
 
 <td>${department.value}</td>
 
+<td>${employment.value}</td>
+
 <td>
 
-<button
-class='btn'
-onclick='editRow(this)'>
-
+<button class='btn'>
 Edit
-
 </button>
 
-<button
-class='btn'
+<button class='btn'
 onclick='deleteRow(this)'>
 
 Delete
@@ -661,9 +860,9 @@ table.appendChild(row);
 
 updateTotal();
 
-clearForm();
-
 closeModal();
+
+clearForm();
 
 alert('Employee Saved');
 
@@ -676,14 +875,6 @@ function deleteRow(btn){
 btn.closest('tr').remove();
 
 updateTotal();
-
-}
-
-/* EDIT */
-
-function editRow(btn){
-
-openModal();
 
 }
 
