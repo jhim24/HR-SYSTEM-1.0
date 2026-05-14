@@ -36,7 +36,8 @@ margin:0;
 
 .add-btn,
 .save-btn,
-.btn{
+.btn,
+.close-btn{
 
 padding:8px 15px;
 
@@ -85,7 +86,7 @@ width:100%;
 
 border-collapse:collapse;
 
-min-width:1400px;
+min-width:5000px;
 
 font-size:12px;
 }
@@ -131,7 +132,7 @@ background:white;
 
 width:95%;
 
-max-width:1200px;
+max-width:1300px;
 
 height:95vh;
 
@@ -152,10 +153,6 @@ position:absolute;
 
 top:10px;
 right:10px;
-
-padding:5px 10px;
-
-cursor:pointer;
 }
 
 /* TABS */
@@ -276,8 +273,6 @@ onkeyup="searchEmp()">
 
 </div>
 
-<!-- TABLE -->
-
 <div class="table-box">
 
 <table id="empTable">
@@ -287,12 +282,80 @@ onkeyup="searchEmp()">
 <tr>
 
 <th>First Name</th>
+<th>Middle Name</th>
 <th>Last Name</th>
+<th>Birthdate</th>
+<th>Age</th>
+<th>Gender</th>
+<th>Civil Status</th>
+<th>Nationality</th>
+<th>Religion</th>
+
 <th>Mobile</th>
 <th>Email</th>
+<th>Current Address</th>
+<th>Permanent Address</th>
+<th>Emergency Contact</th>
+<th>Emergency Number</th>
+
+<th>Employee ID</th>
+<th>SSS</th>
+<th>PhilHealth</th>
+<th>Pag-IBIG</th>
+<th>TIN</th>
+<th>Passport</th>
+<th>National ID</th>
+<th>Health Card</th>
+
 <th>Position</th>
 <th>Department</th>
+<th>Branch</th>
 <th>Employment</th>
+<th>Date Hired</th>
+<th>Supervisor</th>
+<th>Schedule</th>
+<th>Salary Rate</th>
+
+<th>Meal Allowance</th>
+<th>Transportation</th>
+<th>Communication</th>
+<th>Rice Subsidy</th>
+<th>Other Allowance</th>
+
+<th>SSS Deduction</th>
+<th>Pag-IBIG Deduction</th>
+<th>PhilHealth Deduction</th>
+<th>Cash Advance</th>
+<th>Loans</th>
+<th>Late Deduction</th>
+
+<th>Vacation Leave</th>
+<th>Sick Leave</th>
+<th>Emergency Leave</th>
+<th>Maternity Leave</th>
+<th>Paternity Leave</th>
+<th>Leave Balance</th>
+
+<th>Bank Name</th>
+<th>Bank Account</th>
+<th>ATM Number</th>
+<th>Uniform Size</th>
+<th>Blood Type</th>
+<th>Notes</th>
+
+<th>Education</th>
+<th>Skills</th>
+<th>Experience</th>
+<th>Training</th>
+<th>Certificates</th>
+<th>References</th>
+
+<th>NBI</th>
+<th>Medical</th>
+<th>Contract</th>
+<th>Application Status</th>
+<th>Interview Date</th>
+
 <th>Action</th>
 
 </tr>
@@ -321,8 +384,6 @@ X
 </button>
 
 <h3>Employee Information</h3>
-
-<!-- TABS -->
 
 <div class="classic-tabs">
 
@@ -385,14 +446,9 @@ class="tab-content active">
 
 <div class="form-grid">
 
-<input id="fname"
-placeholder="First Name">
-
-<input id="mname"
-placeholder="Middle Name">
-
-<input id="lname"
-placeholder="Last Name">
+<input id="fname" placeholder="First Name">
+<input id="mname" placeholder="Middle Name">
+<input id="lname" placeholder="Last Name">
 
 <input type="date"
 id="birthdate"
@@ -405,7 +461,6 @@ readonly>
 <select id="gender">
 
 <option>Gender</option>
-
 <option>Male</option>
 <option>Female</option>
 
@@ -414,7 +469,6 @@ readonly>
 <select id="civilstatus">
 
 <option>Civil Status</option>
-
 <option>Single</option>
 <option>Married</option>
 
@@ -516,7 +570,6 @@ placeholder="Branch">
 <select id="employment">
 
 <option>Employment Type</option>
-
 <option>Regular</option>
 <option>Probationary</option>
 <option>Contractual</option>
@@ -688,11 +741,8 @@ class="tab-content">
 
 <div class="form-grid">
 
-<input type="file"
-id="resume">
-
 <input id="nbi"
-placeholder="NBI Clearance">
+placeholder="NBI">
 
 <input id="medical"
 placeholder="Medical">
@@ -703,7 +753,6 @@ placeholder="Contract">
 <select id="applicationstatus">
 
 <option>Application Status</option>
-
 <option>Pending</option>
 <option>Approved</option>
 <option>Rejected</option>
@@ -729,6 +778,8 @@ Save Employee
 </div>
 
 <script>
+
+let editRowIndex = null;
 
 /* MODAL */
 
@@ -820,32 +871,95 @@ document.querySelector(
 '#empTable tbody'
 );
 
-let row =
-document.createElement('tr');
-
-row.innerHTML = `
+let data = `
 
 <td>${fname.value}</td>
-
+<td>${mname.value}</td>
 <td>${lname.value}</td>
+<td>${birthdate.value}</td>
+<td>${age.value}</td>
+<td>${gender.value}</td>
+<td>${civilstatus.value}</td>
+<td>${nationality.value}</td>
+<td>${religion.value}</td>
 
 <td>${mobile.value}</td>
-
 <td>${email.value}</td>
+<td>${currentaddress.value}</td>
+<td>${permanentaddress.value}</td>
+<td>${emergencycontact.value}</td>
+<td>${emergencynumber.value}</td>
+
+<td>${empid.value}</td>
+<td>${sss.value}</td>
+<td>${philhealth.value}</td>
+<td>${pagibig.value}</td>
+<td>${tin.value}</td>
+<td>${passport.value}</td>
+<td>${nationalid.value}</td>
+<td>${healthcard.value}</td>
 
 <td>${position.value}</td>
-
 <td>${department.value}</td>
-
+<td>${branch.value}</td>
 <td>${employment.value}</td>
+<td>${datehired.value}</td>
+<td>${supervisor.value}</td>
+<td>${schedule.value}</td>
+<td>${salaryrate.value}</td>
+
+<td>${mealallowance.value}</td>
+<td>${transportation.value}</td>
+<td>${communication.value}</td>
+<td>${ricesubsidy.value}</td>
+<td>${otherallowance.value}</td>
+
+<td>${sssdeduction.value}</td>
+<td>${pagibigdeduction.value}</td>
+<td>${philhealthdeduction.value}</td>
+<td>${cashadvance.value}</td>
+<td>${loans.value}</td>
+<td>${latededuction.value}</td>
+
+<td>${vacationleave.value}</td>
+<td>${sickleave.value}</td>
+<td>${emergencyleave.value}</td>
+<td>${maternityleave.value}</td>
+<td>${paternityleave.value}</td>
+<td>${leavebalance.value}</td>
+
+<td>${bankname.value}</td>
+<td>${bankaccount.value}</td>
+<td>${atmnumber.value}</td>
+<td>${uniformsize.value}</td>
+<td>${bloodtype.value}</td>
+<td>${notes.value}</td>
+
+<td>${education.value}</td>
+<td>${skills.value}</td>
+<td>${experience.value}</td>
+<td>${training.value}</td>
+<td>${certificates.value}</td>
+<td>${references.value}</td>
+
+<td>${nbi.value}</td>
+<td>${medical.value}</td>
+<td>${contract.value}</td>
+<td>${applicationstatus.value}</td>
+<td>${interviewdate.value}</td>
 
 <td>
 
-<button class='btn'>
+<button
+class='btn'
+onclick='editRow(this)'>
+
 Edit
+
 </button>
 
-<button class='btn'
+<button
+class='btn'
 onclick='deleteRow(this)'>
 
 Delete
@@ -856,7 +970,26 @@ Delete
 
 `;
 
+if(editRowIndex){
+
+editRowIndex.innerHTML = data;
+
+alert('Employee Updated');
+
+editRowIndex = null;
+
+}else{
+
+let row =
+document.createElement('tr');
+
+row.innerHTML = data;
+
 table.appendChild(row);
+
+alert('Employee Saved');
+
+}
 
 updateTotal();
 
@@ -864,7 +997,96 @@ closeModal();
 
 clearForm();
 
-alert('Employee Saved');
+}
+
+/* EDIT */
+
+function editRow(btn){
+
+openModal();
+
+let row =
+btn.closest('tr');
+
+editRowIndex = row;
+
+let cells =
+row.querySelectorAll('td');
+
+fname.value = cells[0].innerText;
+mname.value = cells[1].innerText;
+lname.value = cells[2].innerText;
+birthdate.value = cells[3].innerText;
+age.value = cells[4].innerText;
+gender.value = cells[5].innerText;
+civilstatus.value = cells[6].innerText;
+nationality.value = cells[7].innerText;
+religion.value = cells[8].innerText;
+
+mobile.value = cells[9].innerText;
+email.value = cells[10].innerText;
+currentaddress.value = cells[11].innerText;
+permanentaddress.value = cells[12].innerText;
+emergencycontact.value = cells[13].innerText;
+emergencynumber.value = cells[14].innerText;
+
+empid.value = cells[15].innerText;
+sss.value = cells[16].innerText;
+philhealth.value = cells[17].innerText;
+pagibig.value = cells[18].innerText;
+tin.value = cells[19].innerText;
+passport.value = cells[20].innerText;
+nationalid.value = cells[21].innerText;
+healthcard.value = cells[22].innerText;
+
+position.value = cells[23].innerText;
+department.value = cells[24].innerText;
+branch.value = cells[25].innerText;
+employment.value = cells[26].innerText;
+datehired.value = cells[27].innerText;
+supervisor.value = cells[28].innerText;
+schedule.value = cells[29].innerText;
+salaryrate.value = cells[30].innerText;
+
+mealallowance.value = cells[31].innerText;
+transportation.value = cells[32].innerText;
+communication.value = cells[33].innerText;
+ricesubsidy.value = cells[34].innerText;
+otherallowance.value = cells[35].innerText;
+
+sssdeduction.value = cells[36].innerText;
+pagibigdeduction.value = cells[37].innerText;
+philhealthdeduction.value = cells[38].innerText;
+cashadvance.value = cells[39].innerText;
+loans.value = cells[40].innerText;
+latededuction.value = cells[41].innerText;
+
+vacationleave.value = cells[42].innerText;
+sickleave.value = cells[43].innerText;
+emergencyleave.value = cells[44].innerText;
+maternityleave.value = cells[45].innerText;
+paternityleave.value = cells[46].innerText;
+leavebalance.value = cells[47].innerText;
+
+bankname.value = cells[48].innerText;
+bankaccount.value = cells[49].innerText;
+atmnumber.value = cells[50].innerText;
+uniformsize.value = cells[51].innerText;
+bloodtype.value = cells[52].innerText;
+notes.value = cells[53].innerText;
+
+education.value = cells[54].innerText;
+skills.value = cells[55].innerText;
+experience.value = cells[56].innerText;
+training.value = cells[57].innerText;
+certificates.value = cells[58].innerText;
+references.value = cells[59].innerText;
+
+nbi.value = cells[60].innerText;
+medical.value = cells[61].innerText;
+contract.value = cells[62].innerText;
+applicationstatus.value = cells[63].innerText;
+interviewdate.value = cells[64].innerText;
 
 }
 
